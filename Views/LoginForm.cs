@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Security.Policy;
+using System.Text;
 using System.Windows.Forms;
-using iGPS_Help_Desk.Forms;
+using BC = BCrypt.Net.BCrypt;
 
 namespace iGPS_Help_Desk.Views
 {
@@ -13,17 +16,43 @@ namespace iGPS_Help_Desk.Views
             InitializeComponent();
         }
 
-        private void clickLoginButton(object sender, EventArgs e)
+        private void ClickLoginButton(object sender, EventArgs e)
         {
-            string username = txtUsername.Text;
             string password = txtPassword.Text;
-            string siteId = ConfigurationManager.AppSettings.Get("siteId");
+            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var settings = configFile.AppSettings.Settings;
+
+            string pwHash = BC.EnhancedHashPassword(password, 13);
             
-            // Check for connection to sql
+            // If there is no password set, should only be ran if passsword gets deleted
+            if (settings["admin"].Value == "")
+            {
+                settings["admin"].Value = pwHash;
+
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            }
+
+            try
+            {
+                string pwFromConfig = settings["admin"].Value;
+                if (BC.EnhancedVerify(password, pwFromConfig));
+                {
+                    DialogResult = DialogResult.OK;
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                MessageBox.Show($"Message: {ex.Message}\n Check Config");
+                
+            }
+        
+            
+            /*// Check for connection to sql
             try
             {
                 SqlConnection connection = new SqlConnection
-                    ($"Server={siteId}\\SQLEXPRESS;Database=epcdocmandb_igps; " +
+                    ($"Server={pcName}\\SQLEXPRESS;Database=epcdocmandb_igps; " +
                      $"User ID={username}; password={password};");
                 connection.Open();
                 DialogResult = DialogResult.OK;
@@ -31,7 +60,25 @@ namespace iGPS_Help_Desk.Views
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }*/
+        }
+        private static string generateSalt() {
+            byte[] bytes = new byte[128 / 8];
+            using (var keyGenerator = RandomNumberGenerator.Create()) {
+                keyGenerator.GetBytes(bytes);
+ 
+                return BitConverter.ToString(bytes).Replace("-", "").ToLower();
             }
+        }
+        private static string hashPassword(string password, string salt)
+        {
+            var hmac = new SHA256Managed();
+
+            // hash password from user
+            byte[] passwordHash = Encoding.UTF8.GetBytes(password + salt);
+            passwordHash = hmac.ComputeHash(passwordHash);
+            return Encoding.UTF8.GetString(passwordHash);
+
         }
     }
 }

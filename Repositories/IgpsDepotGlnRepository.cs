@@ -12,7 +12,7 @@ namespace iGPS_Help_Desk.Models.Repositories
             List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
             
             Connect();
-            ExecuteQuery("SELECT * FROM IGPS_DEPOT_GLN ORDER BY GLN ");
+            ExecuteQuery("SELECT * FROM IGPS_DEPOT_GLN ORDER BY GLN");
 
             if (reader.HasRows)
             {

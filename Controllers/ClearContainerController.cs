@@ -38,6 +38,14 @@ namespace iGPS_Help_Desk.Controllers
             return result;
         }
 
+        public List<IGPS_DEPOT_GLN> GetAllContainers()
+        {
+            var result = new List<IGPS_DEPOT_GLN>();
+            result = _igpsDepotGlnRepository.ReadAllContainers();
+
+            return result;
+        }
+
         public void ClearContainers(List<string> glnList)
         {
             List<string> listToDelete = new List<string>();

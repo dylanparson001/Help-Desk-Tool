@@ -33,8 +33,6 @@ namespace iGPS_Help_Desk.Views
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.btnLogin = new System.Windows.Forms.Button();
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.lblUsername = new System.Windows.Forms.Label();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,32 +40,17 @@ namespace iGPS_Help_Desk.Views
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(248, 304);
+            this.btnLogin.Location = new System.Drawing.Point(248, 211);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(222, 45);
             this.btnLogin.TabIndex = 0;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.clickLoginButton);
-            // 
-            // txtUsername
-            // 
-            this.txtUsername.Location = new System.Drawing.Point(220, 148);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(297, 26);
-            this.txtUsername.TabIndex = 1;
-            // 
-            // lblUsername
-            // 
-            this.lblUsername.Location = new System.Drawing.Point(220, 122);
-            this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(174, 21);
-            this.lblUsername.TabIndex = 2;
-            this.lblUsername.Text = "Username";
+            this.btnLogin.Click += new System.EventHandler(this.ClickLoginButton);
             // 
             // lblPassword
             // 
-            this.lblPassword.Location = new System.Drawing.Point(219, 203);
+            this.lblPassword.Location = new System.Drawing.Point(219, 110);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(174, 21);
             this.lblPassword.TabIndex = 4;
@@ -75,7 +58,7 @@ namespace iGPS_Help_Desk.Views
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(220, 229);
+            this.txtPassword.Location = new System.Drawing.Point(220, 136);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(297, 26);
@@ -98,8 +81,6 @@ namespace iGPS_Help_Desk.Views
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.lblUsername);
-            this.Controls.Add(this.txtUsername);
             this.Controls.Add(this.btnLogin);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LoginForm";
@@ -110,8 +91,6 @@ namespace iGPS_Help_Desk.Views
 
         private System.Windows.Forms.Label label2;
 
-        private System.Windows.Forms.TextBox txtUsername;
-        private System.Windows.Forms.Label lblUsername;
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;
 

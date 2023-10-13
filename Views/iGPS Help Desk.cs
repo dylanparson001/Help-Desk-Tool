@@ -8,38 +8,49 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Controllers;
 using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Models.Repositories;
 
-namespace iGPS_Help_Desk.Forms
+namespace iGPS_Help_Desk.Views
 {
     public partial class Igps : Form
     {
         private string _siteId = ConfigurationManager.AppSettings.Get("siteId");
-        public string ClearContainerFilePath = ConfigurationManager.AppSettings.Get("clearContainerPath");
+        public string _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
         private readonly ChangeStatusController _changeStatusController = new ChangeStatusController();
         private readonly ClearContainerController _clearContainerController = new ClearContainerController();
         private readonly CsvFileController _csvFileController = new CsvFileController();
-        
+        private readonly FacilityContainerStatusRepository _facilityContainerStatusRepository = new FacilityContainerStatusRepository();
+
         public Igps()
         {
             InitializeComponent();
+            GetStatuses();
         }
 
         //  ------------- Status Change Tab  ---------------------------------// 
         private void ClickStatusChange(object sender, EventArgs e)
         {
+            if (txtGlnList.Text == "")
+            {
+                MessageBox.Show("No Containers");
+                return;
+            }
+
+            if (cbNewStatus.Text == "" || cbNewSubStatus.Text == "")
+            {
+                MessageBox.Show("Enter a status and substatus");
+                return;
+            }
+
             List<string> listGlns = new List<string>();
             string inputFromUser = txtGlnList.Text;
-            string  newStatus = txtNewStatus.Text;
-            string newSubStatus = txtNewSubStatus.Text;
+            string  newStatus = cbNewStatus.GetItemText(cbNewStatus.Text);
+            string newSubStatus = cbNewSubStatus.GetItemText(cbNewSubStatus.Text);
             
-            if (inputFromUser.Length == 0 || inputFromUser == null) return;
-
             List<string> newList = ParseGln(inputFromUser);
             
             string stringGlns = string.Join(",", newList.Select(i => $"'{i}'"));
@@ -49,6 +60,45 @@ namespace iGPS_Help_Desk.Forms
             
             UpdateGlnList(listContainers);
         }
+
+        private void GetStatuses()
+        {
+            var listStatuses = new List<string>();
+            
+            listStatuses = _facilityContainerStatusRepository.GetStatuses();
+
+            listStatuses = listStatuses.Distinct().ToList();
+            
+            foreach(string status in listStatuses)
+            {
+                cbNewStatus.Items.Add(status);
+
+            }
+
+        }
+        // Click the dropdown list for 
+        private void statusSelected(object sender, EventArgs e)
+        {
+            cbNewSubStatus.Items.Clear();
+            GetSubStatuses(cbNewStatus.SelectedItem.ToString());
+        }
+
+        private void GetSubStatuses(string selectedStatus)
+        {
+            var listSubStatuses = new List<string>();
+
+            listSubStatuses = _facilityContainerStatusRepository.GetSubStatusesFromStatus(selectedStatus);
+
+            listSubStatuses = listSubStatuses.Distinct().ToList();
+
+            // listGlns.Select(x => x.Gln).Distinct();
+            foreach (string subStatus in listSubStatuses)
+            {
+                cbNewSubStatus.Items.Add(subStatus);
+
+            }
+
+        }
         private void ClickCancel(object sender, EventArgs e)
         {
             ClearStatusFields();
@@ -57,8 +107,8 @@ namespace iGPS_Help_Desk.Forms
         private void ClearStatusFields()
         {
             txtGlnList.Text = string.Empty;
-            txtNewStatus.Text = string.Empty;
-            txtNewSubStatus.Text = string.Empty;
+            cbNewStatus.Text = string.Empty;
+            cbNewSubStatus.Text = string.Empty;
             lvGlnList.Items.Clear();
         }
 
@@ -103,6 +153,11 @@ namespace iGPS_Help_Desk.Forms
         
         private void ClickClearContainers(object sender, EventArgs e)
         {
+            if (lvGlnContent.Items.Count == 0)
+            {
+                MessageBox.Show("Container list is empty");
+                return;
+            }
 
             // Initial List from user of glns (will be parsed to get rid of spaces, returns, quotes, etc)
             List<string> glnList = new List<string>();
@@ -140,7 +195,12 @@ namespace iGPS_Help_Desk.Forms
         }
 
         private void ClickShowContent(object sender, EventArgs e)
-        { 
+        {
+            if (txtContainersToClear.Text == string.Empty)
+            {
+                MessageBox.Show("Container list is empty");
+                return;
+            }
             // Initial List from user of glns (will be parsed to get rid of spaces, returns, quotes, etc)
             List<string> glnList = new List<string>();
 
@@ -167,10 +227,40 @@ namespace iGPS_Help_Desk.Forms
 
         private void BtnSaveContent(object sender, EventArgs e)
         {
-           
-           var glnList = ParseGln(txtContainersToClear.Text);
-            _csvFileController.SaveContainersFromList(txtNumToBeDeleted.Text, ClearContainerFilePath, glnList, _siteId);
-            
+            if (lvGlnContent.Items.Count == 0)
+            {
+                MessageBox.Show("Container list is empty");
+                return;
+            }
+
+            if (_clearContainerPath == null)
+            {
+                MessageBox.Show("No file path shown");
+                return;
+            }
+
+            // Save current container clear request
+            var glnList = ParseGln(txtContainersToClear.Text);
+
+            _csvFileController.SaveContainersFromList(txtNumToBeDeleted.Text, _clearContainerPath, glnList, _siteId);
+
+
+            // Get data for snapshot
+            var allContainers = _clearContainerController.GetAllContainers();
+            var allGlnList = new List<string>();
+
+            foreach(IGPS_DEPOT_GLN gln in allContainers)
+            {
+                allGlnList.Add(gln.Gln);
+            }
+
+            _csvFileController.SaveSnapShot(allContainers.Count.ToString(),
+                _clearContainerPath, allGlnList, _siteId);
+
+
+            // Gets rid of excess memory usage from snapshot
+            GC.Collect();
+
         }
 
 
@@ -185,21 +275,29 @@ namespace iGPS_Help_Desk.Forms
             catch
             {
                 MessageBox.Show("No DNUS found");
-                return;
             }
         }
 
-        private void clickSettings(object sender, EventArgs e)
+        private void ClickSettings(object sender, EventArgs e)
         {
             SettingsForm settingsForm = new SettingsForm();
             settingsForm.Show();
             _siteId = ConfigurationManager.AppSettings.Get("siteId");
-            ClearContainerFilePath = ConfigurationManager.AppSettings.Get("clearContainerPath");
+            _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
         }
 
-        private void clickCancel(object sender, EventArgs e)
+        private void ClickContainerCancel(object sender, EventArgs e)
         {
             ClearContainerFields();
         }
+        
+        // ROLLBACK Tab
+
+        private void ClickRollback(object sender, EventArgs e)
+        {
+            MessageBox.Show("Test");
+        }
+
+
     }
 }

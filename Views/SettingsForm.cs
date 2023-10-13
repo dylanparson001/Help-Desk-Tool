@@ -14,7 +14,7 @@ namespace iGPS_Help_Desk
             txtPath.Text = ConfigurationManager.AppSettings.Get("clearContainerPath");
         }
 
-        private void clickSaveSettings(object sender, EventArgs e)
+        private void ClickSaveSettings(object sender, EventArgs e)
         {
             string siteId = txtSiteId.Text;
             string path = txtPath.Text;
@@ -24,7 +24,7 @@ namespace iGPS_Help_Desk
                 var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 var settings = configFile.AppSettings.Settings;
 
-
+                // Set site id
                 if (settings["siteId"] == null)
                 {
                     settings.Add("siteId", siteId);
@@ -33,6 +33,8 @@ namespace iGPS_Help_Desk
                 {
                     settings["siteId"].Value = siteId;
                 }
+
+                // Set clear container path
                 if (settings["clearContainerPath"] == null)
                 {
                     settings.Add("clearContainerPath", path);
@@ -41,10 +43,10 @@ namespace iGPS_Help_Desk
                 {
                     settings["clearContainerPath"].Value = path;
                 }
+
                 configFile.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
                 Application.Restart();
-
             }
             catch (ConfigurationErrorsException)
             {
@@ -52,7 +54,7 @@ namespace iGPS_Help_Desk
             }
         }
 
-        private void clickCancel(object sender, EventArgs e)
+        private void ClickCancel(object sender, EventArgs e)
         {
             Close();
         }

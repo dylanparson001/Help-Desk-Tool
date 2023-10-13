@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Views
@@ -11,12 +13,33 @@ namespace iGPS_Help_Desk.Views
             InitializeComponent();
         }
 
-        private void clickSubmitId(object sender, EventArgs e)
+        private void ClickSubmitId(object sender, EventArgs e)
         {
             string siteId = txtSiteId.Text;
-            ConfigurationManager.AppSettings.Set("siteId", siteId);
+            try
+            {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = configFile.AppSettings.Settings;
 
-            DialogResult = DialogResult.OK;
+
+                if (settings["siteId"] == null)
+                {
+                    settings.Add("siteId", siteId);
+                }
+                else
+                {
+                    settings["siteId"].Value = siteId;
+                }
+ 
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+                Application.Restart();
+
+            }
+            catch (ConfigurationErrorsException)
+            {
+                Console.WriteLine("Error writing app settings");
+            }
         }
     }
 }
