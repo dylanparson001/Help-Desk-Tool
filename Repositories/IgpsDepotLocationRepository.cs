@@ -1,25 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Models.Repositories
 {
     public class IgpsDepotLocationRepository : BaseRepository
     {
-        public List<IGPS_DEPOT_LOCATION> ReadAllContainers()
-        {
+        public async Task<List<IGPS_DEPOT_LOCATION>> ReadAllContainers() { 
+        
             List<IGPS_DEPOT_LOCATION> Glns = new List<IGPS_DEPOT_LOCATION>();
 
             Connect();
-            ExecuteQuery("SELECT * FROM IGPS_DEPOT_LOCATION ORDER BY GLN ");
+            await ExecuteQuery("SELECT GLN, Status, SubStatus, Description FROM IGPS_DEPOT_LOCATION ORDER BY GLN ");
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    var glnsFromDb = new IGPS_DEPOT_LOCATION(reader);
+                    var gln = reader["GLN"].ToString();
+                    var status = reader["Status"].ToString();
+                    var subStatus = reader["SubStatus"].ToString();
+                    var description = reader["Description"].ToString();
+                    var glnsFromDb = new IGPS_DEPOT_LOCATION(gln, status, subStatus, description);
                     Glns.Add(glnsFromDb);
                 }
             }
@@ -29,21 +31,24 @@ namespace iGPS_Help_Desk.Models.Repositories
             return Glns;
         }
 
-        public List<IGPS_DEPOT_LOCATION> ReadContainersFromList(string list)
+        public async Task<List<IGPS_DEPOT_LOCATION>> ReadContainersFromList(string list)
         {
 
             List<IGPS_DEPOT_LOCATION> Glns = new List<IGPS_DEPOT_LOCATION>();
 
-            string query = $"SELECT * FROM IGPS_DEPOT_LOCATION WHERE GLN IN ({list})";
+            string query = $"SELECT Gln, Status, SubStatus FROM IGPS_DEPOT_LOCATION WHERE GLN IN ({list})";
 
             Connect();
-            ExecuteQuery(query);
+            await ExecuteQuery(query);
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    var glnsFromDb = new IGPS_DEPOT_LOCATION(reader);
+                    var gln = reader["GLN"].ToString();
+                    var status = reader["Status"].ToString();
+                    var subStatus = reader["SubStatus"].ToString();
+                    var glnsFromDb = new IGPS_DEPOT_LOCATION(gln, status, subStatus);
                     Glns.Add(glnsFromDb);
                 }
             }
@@ -52,22 +57,22 @@ namespace iGPS_Help_Desk.Models.Repositories
             return Glns;
         }
 
-        public List<string> ReadDnus()
+        public async Task<List<string>> ReadDnus()
         {
             List<string> containers = new List<string>();
 
-            string query = $"SELECT * FROM IGPS_DEPOT_LOCATION WHERE DESCRIPTION LIKE ('%DNU%')" +
+            string query = $"SELECT Gln FROM IGPS_DEPOT_LOCATION WHERE DESCRIPTION LIKE ('%DNU%')" +
                            $" ORDER BY GLN;";
 
             Connect();
-            ExecuteQuery(query);
+            await ExecuteQuery(query);
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    var containersFromDb = new IGPS_DEPOT_LOCATION(reader);
-                    containers.Add(containersFromDb.Gln);
+                    var gln = reader["GLN"].ToString();
+                    containers.Add(gln);
                 }
             }
             
@@ -75,7 +80,27 @@ namespace iGPS_Help_Desk.Models.Repositories
             return containers;
         }
 
-        public void ChangeStatus(string list, string newStatus)
+        public async Task<List<IGPS_DEPOT_LOCATION>> ReadFromSearch(string search)
+        {
+            List<IGPS_DEPOT_LOCATION> containers = new List<IGPS_DEPOT_LOCATION>();
+
+            string query = $"SELECT * FROM IGPS_DEPOT_LOCATION WHERE DESCRIPTION LIKE ('{search}%') OR GLN LIKE ('{search}%')";
+
+            Connect();
+            await ExecuteQuery(query);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {;
+                    var container = new IGPS_DEPOT_LOCATION(reader);
+                    containers.Add(container);
+                }
+            }
+            Disconnect();
+            return containers;
+        }
+
+        public async void ChangeStatus(string list, string newStatus)
         {
 
             string query = $"UPDATE IGPS_DEPOT_LOCATION " +
@@ -83,33 +108,39 @@ namespace iGPS_Help_Desk.Models.Repositories
                            $"WHERE GLN IN ({list})";
 
             Connect();
-            ExecuteQuery(query);
+            await ExecuteQuery(query);
 
             Disconnect();
         }
 
-        public void ChangeSubStatus(string list, string newSubStatus)
+        public async void ChangeSubStatus(string list, string newSubStatus)
         {
             string query = $"UPDATE IGPS_DEPOT_LOCATION " +
                            $"SET SubStatus = '{newSubStatus}'" +
                            $"WHERE GLN IN ({list})";
 
             Connect();
-            ExecuteQuery(query);
+            await ExecuteQuery(query);
 
             Disconnect();
         }
 
-        public void DeleteContainersFromList(string list)
+        public async void DeleteContainersFromList(string list)
         {
+            if (list.Length == 0)
+            {
+                MessageBox.Show("No containers found");
+                return;
+            }
             string query = $"DELETE FROM IGPS_DEPOT_LOCATION WHERE GLN IN ({list})";
             Connect();
-            ExecuteQuery(query);
+            await ExecuteQuery(query);
             
             Disconnect();
             
         }
-        
+
+
         
 
     }

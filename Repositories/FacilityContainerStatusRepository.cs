@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace iGPS_Help_Desk.Models.Repositories
 {
     public class FacilityContainerStatusRepository : BaseRepository
     {
-        public List<string> GetStatuses()
+        public async Task<List<string>> GetStatuses()
         {
             List<string> statusList = new List<string>();
 
             string query = "SELECT * FROM FacilityContainerStatus";
 
             Connect();
-            ExecuteQuery(query);
+            await ExecuteQuery(query);
 
             if (reader.HasRows)
             {
@@ -30,9 +32,17 @@ namespace iGPS_Help_Desk.Models.Repositories
         public List<string> GetSubStatusesFromStatus(string status)
         {
             List<string> subStatusList = new List<string>();
-            string query = $"SELECT * FROM FacilityContainerStatus WHERE Status = '{status}';";
+            string query = $"SELECT * FROM FacilityContainerStatus WHERE Status = @Status;";
+
             Connect();
-            ExecuteQuery(query);
+
+            // ExecuteQuery(query);
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Status", status);
+
+            reader = command.ExecuteReader();
+
 
             if (reader.HasRows)
             {

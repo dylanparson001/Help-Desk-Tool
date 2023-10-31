@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using iGPS_Help_Desk.Models;
-using iGPS_Help_Desk.Models.Repositories;
 
 namespace iGPS_Help_Desk.Controllers
 {
     public class ChangeStatusController : BaseController
     {
-        public List<IGPS_DEPOT_LOCATION> ChangeStatus(string stringGlns, string newStatus, string newSubStatus)
+        public async Task<List<IGPS_DEPOT_LOCATION>> ChangeStatus(string stringGlns, string newStatus, string newSubStatus)
         {
             
             _igpsDepotLocationRepository.ChangeStatus(stringGlns, newStatus);
             _igpsDepotLocationRepository.ChangeSubStatus(stringGlns, newSubStatus);
             
-            return _igpsDepotLocationRepository.ReadContainersFromList(stringGlns);
+            return await _igpsDepotLocationRepository.ReadContainersFromList(stringGlns);
         }
         
         

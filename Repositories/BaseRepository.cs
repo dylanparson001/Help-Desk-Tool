@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace iGPS_Help_Desk.Models.Repositories
 {
@@ -20,6 +21,10 @@ namespace iGPS_Help_Desk.Models.Repositories
             connection = new SqlConnection($"Data Source=localhost\\SqlExpress;Initial Catalog=epcdocmandb_igps; MultipleActiveResultSets=true;Uid=epcdocman;Pwd=just4us;");
 
         }
+        protected string ConcatStringFromList(List<string> listOfString)
+        {
+            return string.Join(",", listOfString.Select(i => $"'{i}'"));
+        }
 
         public void Connect()
         {
@@ -34,7 +39,7 @@ namespace iGPS_Help_Desk.Models.Repositories
             }
         }
 
-        public void Disconnect()
+        public  void Disconnect()
         {
             if (connection == null) return;
 
@@ -45,17 +50,11 @@ namespace iGPS_Help_Desk.Models.Repositories
 
         }
 
-        public void ExecuteQuery(string query)
+        public async Task ExecuteQuery(string query)
         {
             SqlCommand command = new SqlCommand(query, connection);
-            if (parameters != null)
-            {
-                if (parameters.Count > 0)
-                {
-                    parameters.AddRange(parameters.ToArray());
-                }
-            }
-            reader = command.ExecuteReader(); 
+
+            reader = await command.ExecuteReaderAsync(); 
         }
     }
 }

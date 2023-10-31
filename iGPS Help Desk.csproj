@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -121,6 +121,7 @@
     <Compile Include="Controllers\ChangeStatusController.cs" />
     <Compile Include="Controllers\ClearContainerController.cs" />
     <Compile Include="Controllers\CsvFileController.cs" />
+    <Compile Include="Controllers\MoveContainerController.cs" />
     <Compile Include="Models\IGPS_DEPOT_GLN.cs" />
     <Compile Include="Models\IGPS_DEPOT_LOCATION.cs" />
     <Compile Include="Models\FacilityContainerStatus.cs" />
@@ -128,6 +129,12 @@
     <Compile Include="Repositories\FacilityContainerStatusRepository.cs" />
     <Compile Include="Repositories\IgpsDepotGlnRepository.cs" />
     <Compile Include="Repositories\IgpsDepotLocationRepository.cs" />
+    <Compile Include="Views\BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\BaseForm.Designer.cs">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EnterSiteId.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +154,12 @@
     </Compile>
     <Compile Include="Views\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MoveContainersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\MoveContainersForm.Designer.cs">
+      <DependentUpon>MoveContainersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsForm.cs">
       <SubType>Form</SubType>
@@ -172,6 +185,9 @@
     </Compile>
     <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\MoveContainersForm.resx">
+      <DependentUpon>MoveContainersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>

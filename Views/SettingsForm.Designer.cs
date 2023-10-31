@@ -61,8 +61,8 @@
             // 
             // txtSiteId
             // 
-            this.txtSiteId.Location = new System.Drawing.Point(39, 55);
-            this.txtSiteId.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSiteId.Location = new System.Drawing.Point(36, 54);
+            this.txtSiteId.Margin = new System.Windows.Forms.Padding(2);
             this.txtSiteId.Name = "txtSiteId";
             this.txtSiteId.Size = new System.Drawing.Size(173, 20);
             this.txtSiteId.TabIndex = 2;
@@ -70,7 +70,7 @@
             // btnSaveSettings
             // 
             this.btnSaveSettings.Location = new System.Drawing.Point(145, 257);
-            this.btnSaveSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSaveSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(97, 28);
             this.btnSaveSettings.TabIndex = 3;
@@ -90,8 +90,8 @@
             // 
             // txtPath
             // 
-            this.txtPath.Location = new System.Drawing.Point(36, 122);
-            this.txtPath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPath.Location = new System.Drawing.Point(36, 113);
+            this.txtPath.Margin = new System.Windows.Forms.Padding(2);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(173, 20);
             this.txtPath.TabIndex = 5;
@@ -99,7 +99,7 @@
             // btnCancel
             // 
             this.btnCancel.Location = new System.Drawing.Point(267, 257);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(97, 28);
             this.btnCancel.TabIndex = 6;
@@ -120,7 +120,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SettingsForm";
             this.Text = "SettingsForm";
             this.ResumeLayout(false);

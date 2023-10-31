@@ -41,7 +41,7 @@ namespace iGPS_Help_Desk.Views
             // txtSiteId
             // 
             this.txtSiteId.Location = new System.Drawing.Point(159, 96);
-            this.txtSiteId.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSiteId.Margin = new System.Windows.Forms.Padding(2);
             this.txtSiteId.Name = "txtSiteId";
             this.txtSiteId.Size = new System.Drawing.Size(165, 20);
             this.txtSiteId.TabIndex = 0;
@@ -58,7 +58,7 @@ namespace iGPS_Help_Desk.Views
             // btnEnter
             // 
             this.btnEnter.Location = new System.Drawing.Point(159, 233);
-            this.btnEnter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEnter.Margin = new System.Windows.Forms.Padding(2);
             this.btnEnter.Name = "btnEnter";
             this.btnEnter.Size = new System.Drawing.Size(163, 25);
             this.btnEnter.TabIndex = 2;
@@ -86,7 +86,7 @@ namespace iGPS_Help_Desk.Views
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtSiteId);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EnterSiteId";
             this.Text = "EnterSiteId";
             this.ResumeLayout(false);

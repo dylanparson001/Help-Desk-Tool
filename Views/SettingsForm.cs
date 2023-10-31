@@ -1,10 +1,11 @@
-﻿using System;
+﻿using iGPS_Help_Desk.Views;
+using System;
 using System.Configuration;
 using System.Windows.Forms;
 
 namespace iGPS_Help_Desk
 {
-    public partial class SettingsForm : Form
+    public partial class SettingsForm : BaseForm
     {
 
         public SettingsForm()

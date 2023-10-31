@@ -9,7 +9,7 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace iGPS_Help_Desk.Views
 {
-    public partial class LoginForm : Form
+    public partial class LoginForm : BaseForm
     {
         public LoginForm()
         {
@@ -24,7 +24,7 @@ namespace iGPS_Help_Desk.Views
 
             string pwHash = BC.EnhancedHashPassword(password, 13);
             
-            // If there is no password set, should only be ran if passsword gets deleted
+/*            // If there is no password set, should only be ran if passsword gets deleted
             if (settings["admin"].Value == "")
             {
                 settings["admin"].Value = pwHash;
@@ -32,13 +32,19 @@ namespace iGPS_Help_Desk.Views
                 configFile.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
             }
-
+*/
             try
             {
                 string pwFromConfig = settings["admin"].Value;
-                if (BC.EnhancedVerify(password, pwFromConfig));
+                if (BC.EnhancedVerify(password, pwFromConfig))
                 {
                     DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    txtPassword.Text = "";
+                    lblInvalidPassword.Text = "Invalid Password";
+
                 }
             }
             catch (NullReferenceException ex)
@@ -46,21 +52,7 @@ namespace iGPS_Help_Desk.Views
                 MessageBox.Show($"Message: {ex.Message}\n Check Config");
                 
             }
-        
-            
-            /*// Check for connection to sql
-            try
-            {
-                SqlConnection connection = new SqlConnection
-                    ($"Server={pcName}\\SQLEXPRESS;Database=epcdocmandb_igps; " +
-                     $"User ID={username}; password={password};");
-                connection.Open();
-                DialogResult = DialogResult.OK;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }*/
+
         }
         private static string generateSalt() {
             byte[] bytes = new byte[128 / 8];

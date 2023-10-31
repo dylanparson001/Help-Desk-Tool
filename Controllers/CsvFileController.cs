@@ -10,7 +10,7 @@ namespace iGPS_Help_Desk.Controllers
     public class CsvFileController : BaseController
     {
         private ClearContainerController _clearContainerController = new ClearContainerController();
-        public void SaveContainersFromList(string txtNumToBeDeleted, string ClearContainerFilePath,
+        public async void SaveContainersFromList(string txtNumToBeDeleted, string ClearContainerFilePath,
             List<string> txtContainersToClear, string siteId)
         {
             var rnd = new Random();
@@ -24,7 +24,7 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             // List from db
-            igpsDepotGln = _clearContainerController.GetContainersFromList(txtContainersToClear);
+            igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
 
             // check for null
             if (igpsDepotGln == null)
@@ -73,7 +73,7 @@ namespace iGPS_Help_Desk.Controllers
 
 
         }
-        public void SaveSnapShot(string txtNumToBeDeleted, string ClearContainerFilePath,
+        public async void SaveSnapShot(string txtNumToBeDeleted, string ClearContainerFilePath,
             List<string> txtContainersToClear, string siteId)
         {
             var rnd = new Random();
@@ -87,7 +87,7 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             // List from db
-            igpsDepotGln = _clearContainerController.GetContainersFromList(txtContainersToClear);
+            igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
 
             // check for null
             if (igpsDepotGln == null)
