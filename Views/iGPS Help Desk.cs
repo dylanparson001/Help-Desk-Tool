@@ -21,7 +21,7 @@ namespace iGPS_Help_Desk.Views
         public Igps()
         {
             InitializeComponent();
-            InitialLoad();
+            //InitialLoad();
         }
 
       
@@ -227,7 +227,7 @@ namespace iGPS_Help_Desk.Views
 
         private void LoadContainers(List<IGPS_DEPOT_LOCATION> listContainers)
         {
-            lvPlacards.Items.Clear();
+            /*lvPlacards.Items.Clear();
 
             // Outputs them to List View
             foreach (var container in listContainers)
@@ -238,7 +238,7 @@ namespace iGPS_Help_Desk.Views
                 item.SubItems.Add(container.SubStatus);
                 item.SubItems.Add(container.Count.ToString());
                 lvPlacards.Items.Add(item);
-            }
+            }*/
         }
 
         private async void InitialLoad()
@@ -255,24 +255,24 @@ namespace iGPS_Help_Desk.Views
 
         private void moveExisitngForm(object sender, EventArgs e)
         {
-            if (lvPlacards.SelectedItems.Count == 0) return;
+            /*if (lvPlacards.SelectedItems.Count == 0) return;
 
             var fromGln = txtFromGln.Text;
             var toGln = txtToGln.Text;
             MoveContainersForm moveContainerForm = new MoveContainersForm(fromGln, toGln);
-            moveContainerForm.ShowDialog();
+            moveContainerForm.ShowDialog();*/
         }
 
         private void clickSetFromGln(object sender, EventArgs e)
         {
-            if (lvPlacards.SelectedItems.Count == 0) return;
-            txtFromGln.Text = lvPlacards.SelectedItems[0].Text;
+            /*if (lvPlacards.SelectedItems.Count == 0) return;
+            txtFromGln.Text = lvPlacards.SelectedItems[0].Text;*/
         }
 
         private void clickSetToGln(object sender, MouseEventArgs e)
         {
-            if (lvPlacards.SelectedItems.Count == 0) return;
-            txtToGln.Text = lvPlacards.SelectedItems[0].Text;
+            /*if (lvPlacards.SelectedItems.Count == 0) return;
+            txtToGln.Text = lvPlacards.SelectedItems[0].Text;*/
 
         }
 
@@ -283,9 +283,9 @@ namespace iGPS_Help_Desk.Views
 
         private  async void searchContainersText(object sender, EventArgs e)
         {
-            var result = await _moveContainerController.ReadContainersFromSearch(tbSearchBar.Text);
+            /*var result = await _moveContainerController.ReadContainersFromSearch(tbSearchBar.Text);
 
-            LoadContainers(result);
+            LoadContainers(result);*/
         }
     }
 }

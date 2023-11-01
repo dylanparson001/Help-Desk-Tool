@@ -61,7 +61,7 @@
             // 
             this.txtSiteId.Location = new System.Drawing.Point(207, 98);
             this.txtSiteId.Name = "txtSiteId";
-            this.txtSiteId.Size = new System.Drawing.Size(258, 26);
+            this.txtSiteId.Size = new System.Drawing.Size(328, 26);
             this.txtSiteId.TabIndex = 2;
             // 
             // btnSaveSettings
@@ -87,7 +87,7 @@
             // 
             this.txtPath.Location = new System.Drawing.Point(207, 189);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(258, 26);
+            this.txtPath.Size = new System.Drawing.Size(328, 26);
             this.txtPath.TabIndex = 5;
             // 
             // btnCancel
