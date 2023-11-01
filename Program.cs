@@ -35,6 +35,7 @@ namespace iGPS_Help_Desk
                 fLogin.Close();
                 Application.Run(new Igps());
             }
+            
         }
     }
 }

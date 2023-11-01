@@ -14,6 +14,7 @@ namespace iGPS_Help_Desk.Views
         public LoginForm()
         {
             InitializeComponent();
+            this.AcceptButton = btnLogin;
         }
 
         private void ClickLoginButton(object sender, EventArgs e)
@@ -24,7 +25,7 @@ namespace iGPS_Help_Desk.Views
 
             string pwHash = BC.EnhancedHashPassword(password, 13);
             
-/*            // If there is no password set, should only be ran if passsword gets deleted
+            // If there is no password set, should only be ran if passsword gets deleted
             if (settings["admin"].Value == "")
             {
                 settings["admin"].Value = pwHash;
@@ -32,7 +33,6 @@ namespace iGPS_Help_Desk.Views
                 configFile.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
             }
-*/
             try
             {
                 string pwFromConfig = settings["admin"].Value;

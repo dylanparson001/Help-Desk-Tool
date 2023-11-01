@@ -19,6 +19,7 @@ namespace iGPS_Help_Desk.Models
         public object Visible { get; set; }
         public string SubStatus { get; set; }
         public string SkuType { get; set; }
+        public int Count { get; set; }
 
         public IGPS_DEPOT_LOCATION()
         {

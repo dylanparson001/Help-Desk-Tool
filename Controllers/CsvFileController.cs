@@ -59,10 +59,10 @@ namespace iGPS_Help_Desk.Controllers
                 // if the file exists insert a random number to differentiate it
                 if (File.Exists($"{csvFileName}.csv"))
                 {
-                    csvFileName = $"{csvFileName} ({rnd.Next(1, 100)}).csv";
+                    csvFileName = $"{csvFileName} ({rnd.Next(1, 100)})";
                 }
                 File.WriteAllText($"{csvFileName}.csv", csv.ToString());
-                MessageBox.Show($"File Saved Successfully to {csvFileName}.csv");
+                MessageBox.Show($"File Saved Successfully to {csvFileName}", "File Saved Successfully");
 
             }
             catch (Exception ex)
@@ -117,6 +117,7 @@ namespace iGPS_Help_Desk.Controllers
                 csv.AppendLine(newLine);
             }
 
+            Console.WriteLine("debug");
             try
             {
                 // if the file exists insert a random number to differentiate it
@@ -125,7 +126,7 @@ namespace iGPS_Help_Desk.Controllers
                     csvFileName = $"{csvFileName} ({rnd.Next(1, 100)}).csv";
                 }
                 File.WriteAllText($"{csvFileName}.csv", csv.ToString());
-                MessageBox.Show($"File Saved Successfully to {csvFileName}.csv");
+                MessageBox.Show($"File Saved Successfully to {csvFileName}", "File Saved Successfully");
 
             }
             catch (Exception ex)

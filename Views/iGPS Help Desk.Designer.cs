@@ -41,27 +41,13 @@
             this.txtNumToBeDeleted = new System.Windows.Forms.TextBox();
             this.btnShowGlnContent = new System.Windows.Forms.Button();
             this.lvGlnContent = new System.Windows.Forms.ListView();
-            this.colGln = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colGrai = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colDateTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colGln = new System.Windows.Forms.ColumnHeader();
+            this.colGrai = new System.Windows.Forms.ColumnHeader();
+            this.colDateTime = new System.Windows.Forms.ColumnHeader();
             this.txtContainersToClear = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnClearContainers = new System.Windows.Forms.Button();
             this.labelContainersToClear = new System.Windows.Forms.Label();
-            this.formChangeStatus = new System.Windows.Forms.TabPage();
-            this.cbNewSubStatus = new System.Windows.Forms.ComboBox();
-            this.cbNewStatus = new System.Windows.Forms.ComboBox();
-            this.lvGlnList = new System.Windows.Forms.ListView();
-            this.GLN = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SubStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnSubmitStatusChange = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtGlnList = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.tabMovePallets = new System.Windows.Forms.TabPage();
             this.tbSearchBar = new System.Windows.Forms.TextBox();
             this.txtToGln = new System.Windows.Forms.TextBox();
@@ -70,18 +56,17 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.lvPlacards = new System.Windows.Forms.ListView();
-            this.ContainerGLN = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ContainerDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ContainerStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ContainerSubStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.AssetCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ContainerGLN = new System.Windows.Forms.ColumnHeader();
+            this.ContainerDescription = new System.Windows.Forms.ColumnHeader();
+            this.ContainerStatus = new System.Windows.Forms.ColumnHeader();
+            this.ContainerSubStatus = new System.Windows.Forms.ColumnHeader();
+            this.AssetCount = new System.Windows.Forms.ColumnHeader();
             this.button2 = new System.Windows.Forms.Button();
             this.dataSet1 = new System.Data.DataSet();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.settingsBtn = new System.Windows.Forms.Button();
             this.StatusChange.SuspendLayout();
             this.tabClearContainers.SuspendLayout();
-            this.formChangeStatus.SuspendLayout();
             this.tabMovePallets.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.SuspendLayout();
@@ -99,7 +84,6 @@
             // StatusChange
             // 
             this.StatusChange.Controls.Add(this.tabClearContainers);
-            this.StatusChange.Controls.Add(this.formChangeStatus);
             this.StatusChange.Controls.Add(this.tabMovePallets);
             this.StatusChange.Location = new System.Drawing.Point(12, 40);
             this.StatusChange.Name = "StatusChange";
@@ -202,10 +186,8 @@
             // 
             // lvGlnContent
             // 
-            this.lvGlnContent.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colGln,
-            this.colGrai,
-            this.colDateTime});
+            this.lvGlnContent.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.colGln, this.colGrai, this.colDateTime });
+            this.lvGlnContent.FullRowSelect = true;
             this.lvGlnContent.HideSelection = false;
             this.lvGlnContent.HoverSelection = true;
             this.lvGlnContent.Location = new System.Drawing.Point(274, 39);
@@ -270,144 +252,9 @@
             this.labelContainersToClear.TabIndex = 0;
             this.labelContainersToClear.Text = "Containers To Be Cleared";
             // 
-            // formChangeStatus
-            // 
-            this.formChangeStatus.Controls.Add(this.cbNewSubStatus);
-            this.formChangeStatus.Controls.Add(this.cbNewStatus);
-            this.formChangeStatus.Controls.Add(this.lvGlnList);
-            this.formChangeStatus.Controls.Add(this.btnCancel);
-            this.formChangeStatus.Controls.Add(this.label5);
-            this.formChangeStatus.Controls.Add(this.btnSubmitStatusChange);
-            this.formChangeStatus.Controls.Add(this.label4);
-            this.formChangeStatus.Controls.Add(this.label3);
-            this.formChangeStatus.Controls.Add(this.txtGlnList);
-            this.formChangeStatus.Controls.Add(this.label2);
-            this.formChangeStatus.Location = new System.Drawing.Point(4, 29);
-            this.formChangeStatus.Name = "formChangeStatus";
-            this.formChangeStatus.Padding = new System.Windows.Forms.Padding(3);
-            this.formChangeStatus.Size = new System.Drawing.Size(811, 412);
-            this.formChangeStatus.TabIndex = 0;
-            this.formChangeStatus.Text = "Status Changes";
-            this.formChangeStatus.UseVisualStyleBackColor = true;
-            // 
-            // cbNewSubStatus
-            // 
-            this.cbNewSubStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbNewSubStatus.FormattingEnabled = true;
-            this.cbNewSubStatus.Location = new System.Drawing.Point(173, 131);
-            this.cbNewSubStatus.Margin = new System.Windows.Forms.Padding(2);
-            this.cbNewSubStatus.Name = "cbNewSubStatus";
-            this.cbNewSubStatus.Size = new System.Drawing.Size(173, 28);
-            this.cbNewSubStatus.TabIndex = 15;
-            // 
-            // cbNewStatus
-            // 
-            this.cbNewStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbNewStatus.FormattingEnabled = true;
-            this.cbNewStatus.Location = new System.Drawing.Point(176, 61);
-            this.cbNewStatus.Margin = new System.Windows.Forms.Padding(2);
-            this.cbNewStatus.Name = "cbNewStatus";
-            this.cbNewStatus.Size = new System.Drawing.Size(170, 28);
-            this.cbNewStatus.TabIndex = 14;
-            this.cbNewStatus.SelectedValueChanged += new System.EventHandler(this.statusSelected);
-            // 
-            // lvGlnList
-            // 
-            this.lvGlnList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvGlnList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.GLN,
-            this.Status,
-            this.SubStatus});
-            this.lvGlnList.HideSelection = false;
-            this.lvGlnList.Location = new System.Drawing.Point(448, 63);
-            this.lvGlnList.Name = "lvGlnList";
-            this.lvGlnList.Size = new System.Drawing.Size(350, 299);
-            this.lvGlnList.TabIndex = 13;
-            this.lvGlnList.UseCompatibleStateImageBehavior = false;
-            this.lvGlnList.View = System.Windows.Forms.View.Details;
-            // 
-            // GLN
-            // 
-            this.GLN.Text = "GLN";
-            this.GLN.Width = 121;
-            // 
-            // Status
-            // 
-            this.Status.Text = "Status";
-            this.Status.Width = 99;
-            // 
-            // SubStatus
-            // 
-            this.SubStatus.Text = "SubStatus";
-            this.SubStatus.Width = 101;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(298, 308);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(108, 36);
-            this.btnCancel.TabIndex = 12;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.ClickCancel);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(418, 21);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(208, 20);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "New Gln Status / SubStatus";
-            // 
-            // btnSubmitStatusChange
-            // 
-            this.btnSubmitStatusChange.Location = new System.Drawing.Point(173, 308);
-            this.btnSubmitStatusChange.Name = "btnSubmitStatusChange";
-            this.btnSubmitStatusChange.Size = new System.Drawing.Size(119, 36);
-            this.btnSubmitStatusChange.TabIndex = 6;
-            this.btnSubmitStatusChange.Text = "Submit";
-            this.btnSubmitStatusChange.UseVisualStyleBackColor = true;
-            this.btnSubmitStatusChange.Click += new System.EventHandler(this.ClickStatusChange);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(170, 116);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(120, 20);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "New SubStatus";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(173, 45);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 20);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "New Status";
-            // 
-            // txtGlnList
-            // 
-            this.txtGlnList.Location = new System.Drawing.Point(6, 45);
-            this.txtGlnList.Multiline = true;
-            this.txtGlnList.Name = "txtGlnList";
-            this.txtGlnList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtGlnList.Size = new System.Drawing.Size(158, 299);
-            this.txtGlnList.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 23);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 20);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "GLN List";
-            // 
             // tabMovePallets
             // 
+            this.tabMovePallets.Controls.Add(this.tbSearchBar);
             this.tabMovePallets.Controls.Add(this.txtToGln);
             this.tabMovePallets.Controls.Add(this.txtFromGln);
             this.tabMovePallets.Controls.Add(this.button5);
@@ -425,9 +272,8 @@
             // 
             // tbSearchBar
             // 
-            this.tbSearchBar.Location = new System.Drawing.Point(485, 486);
+            this.tbSearchBar.Location = new System.Drawing.Point(537, 17);
             this.tbSearchBar.Name = "tbSearchBar";
-            this.tbSearchBar.ReadOnly = true;
             this.tbSearchBar.Size = new System.Drawing.Size(241, 26);
             this.tbSearchBar.TabIndex = 9;
             this.tbSearchBar.TextChanged += new System.EventHandler(this.searchContainersText);
@@ -480,15 +326,11 @@
             // 
             // lvPlacards
             // 
-            this.lvPlacards.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ContainerGLN,
-            this.ContainerDescription,
-            this.ContainerStatus,
-            this.ContainerSubStatus,
-            this.AssetCount});
+            this.lvPlacards.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.ContainerGLN, this.ContainerDescription, this.ContainerStatus, this.ContainerSubStatus, this.AssetCount });
             this.lvPlacards.FullRowSelect = true;
             this.lvPlacards.HideSelection = false;
             this.lvPlacards.Location = new System.Drawing.Point(24, 61);
+            this.lvPlacards.MultiSelect = false;
             this.lvPlacards.Name = "lvPlacards";
             this.lvPlacards.Size = new System.Drawing.Size(754, 315);
             this.lvPlacards.TabIndex = 2;
@@ -551,7 +393,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(857, 514);
-            this.Controls.Add(this.tbSearchBar);
             this.Controls.Add(this.settingsBtn);
             this.Controls.Add(this.StatusChange);
             this.Controls.Add(this.label1);
@@ -561,14 +402,11 @@
             this.StatusChange.ResumeLayout(false);
             this.tabClearContainers.ResumeLayout(false);
             this.tabClearContainers.PerformLayout();
-            this.formChangeStatus.ResumeLayout(false);
-            this.formChangeStatus.PerformLayout();
             this.tabMovePallets.ResumeLayout(false);
             this.tabMovePallets.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         private System.Windows.Forms.Button button1;
@@ -577,21 +415,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl StatusChange;
-        private System.Windows.Forms.TabPage formChangeStatus;
         private System.Windows.Forms.TabPage tabClearContainers;
         private System.Data.DataSet dataSet1;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.ListView lvGlnList;
-        private System.Windows.Forms.ColumnHeader GLN;
-        private System.Windows.Forms.ColumnHeader Status;
-        private System.Windows.Forms.ColumnHeader SubStatus;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button btnSubmitStatusChange;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtGlnList;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtNumToBeDeleted;
         private System.Windows.Forms.Button btnShowGlnContent;
         private System.Windows.Forms.ListView lvGlnContent;
@@ -607,8 +433,6 @@
         private System.Windows.Forms.Button btnGetDnus;
         private System.Windows.Forms.Button settingsBtn;
         private System.Windows.Forms.TabPage tabMovePallets;
-        private System.Windows.Forms.ComboBox cbNewStatus;
-        private System.Windows.Forms.ComboBox cbNewSubStatus;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ListView lvPlacards;
         private System.Windows.Forms.ColumnHeader ContainerGLN;

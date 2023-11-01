@@ -1,6 +1,7 @@
 ﻿using iGPS_Help_Desk.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Views
@@ -26,12 +27,16 @@ namespace iGPS_Help_Desk.Views
 
             lblFromGln.Text += fromGln;
             lblToGln.Text += toGln;
-
-            LoadFromGrais();
-            LoadToGrais();
+            
+            LoadGrais();
         }
 
-        private async void LoadFromGrais()
+        private async Task LoadGrais()
+        {
+            await LoadFromGrais();
+            await LoadToGrais();
+        }
+        private async Task LoadFromGrais()
         {
 
             lvFromGrais.Items.Clear();
@@ -50,7 +55,7 @@ namespace iGPS_Help_Desk.Views
             }
             lblFromGraisCount.Text = $"Container Count: {listOfFromGrais.Count}";
         }
-        private async void LoadToGrais()
+        private async Task LoadToGrais()
         {
             lvToGln.Items.Clear();
             listOfToGrais.Clear();
@@ -70,9 +75,25 @@ namespace iGPS_Help_Desk.Views
 
         private void checkAllFromGln(object sender, EventArgs e)
         {
+            if (checkBox1.Checked)
+            {
+
+                for (int i = 0; i < listOfFromGrais.Count; i++)
+                {
+                    lvFromGrais.Items[i].Selected = true;
+                }
+            }
+            else
+            {
+                unCheckGrais();
+            }
+        }
+
+        private void unCheckGrais()
+        {
             for (int i = 0; i < listOfFromGrais.Count; i++)
             {
-                lvFromGrais.Items[i].Selected = true;
+                lvFromGrais.Items[i].Selected = false;
             }
         }
 
@@ -99,9 +120,9 @@ namespace iGPS_Help_Desk.Views
             }
         }
 
-        private void clickMoveAllGrais(object sender, EventArgs e)
+        private async void clickMoveAllGrais(object sender, EventArgs e)
         {
-            List<string> glnToDelete = new List<string>();
+            /*List<string> glnToDelete = new List<string>();
             glnToDelete.Add(_fromGln);
 
             _moveContainerController.MoveContainers(_fromGln, _toGln, listOfFromGrais.Count);
@@ -109,11 +130,11 @@ namespace iGPS_Help_Desk.Views
             {
                 _moveContainerController.DeleteContainer(_fromGln);
             }
-            LoadFromGrais();
-            LoadToGrais();
+            await LoadFromGrais();
+            await LoadToGrais();*/
         }
 
-        private void clickMoveSelectedGrais(object sender, EventArgs e)
+        private async void clickMoveSelectedGrais(object sender, EventArgs e)
         {
             var listOfGrais = new List<string>();
             var selectedGrais = lvFromGrais.SelectedItems;
@@ -128,8 +149,8 @@ namespace iGPS_Help_Desk.Views
             _moveContainerController.MoveSelectedGraisToContainer(listOfGrais, _toGln);
             
             }
-            LoadFromGrais();
-            LoadToGrais();
+            await LoadFromGrais();
+            await LoadToGrais();
         }
 
         private void clickCloseForm(object sender, EventArgs e)

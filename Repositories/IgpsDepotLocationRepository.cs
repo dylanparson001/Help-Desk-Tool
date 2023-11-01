@@ -9,9 +9,11 @@ namespace iGPS_Help_Desk.Models.Repositories
         public async Task<List<IGPS_DEPOT_LOCATION>> ReadAllContainers() { 
         
             List<IGPS_DEPOT_LOCATION> Glns = new List<IGPS_DEPOT_LOCATION>();
-
+            
             Connect();
-            await ExecuteQuery("SELECT GLN, Status, SubStatus, Description FROM IGPS_DEPOT_LOCATION ORDER BY GLN ");
+            await ExecuteQuery("SELECT GLN, Status, SubStatus, Description, " +
+                "(SELECT COUNT(GLN) FROM IGPS_DEPOT_GLN WHERE IGPS_DEPOT_GLN.GLN = IGPS_DEPOT_LOCATION.GLN )  AS COUNT " +
+                "FROM IGPS_DEPOT_LOCATION;");
 
             if (reader.HasRows)
             {
@@ -22,6 +24,7 @@ namespace iGPS_Help_Desk.Models.Repositories
                     var subStatus = reader["SubStatus"].ToString();
                     var description = reader["Description"].ToString();
                     var glnsFromDb = new IGPS_DEPOT_LOCATION(gln, status, subStatus, description);
+                    glnsFromDb.Count = (int) reader["COUNT"];
                     Glns.Add(glnsFromDb);
                 }
             }
@@ -84,16 +87,24 @@ namespace iGPS_Help_Desk.Models.Repositories
         {
             List<IGPS_DEPOT_LOCATION> containers = new List<IGPS_DEPOT_LOCATION>();
 
-            string query = $"SELECT * FROM IGPS_DEPOT_LOCATION WHERE DESCRIPTION LIKE ('{search}%') OR GLN LIKE ('{search}%')";
-
+            string query =
+                $"SELECT GLN, Status, SubStatus, Description," +
+                $"(SELECT COUNT(GLN) FROM IGPS_DEPOT_GLN WHERE IGPS_DEPOT_GLN.GLN = IGPS_DEPOT_LOCATION.GLN) AS COUNT " +
+                $"FROM IGPS_DEPOT_LOCATION WHERE Description LIKE '%{search}%' OR GLN LIKE '%{search}%';";
+                        
             Connect();
             await ExecuteQuery(query);
             if (reader.HasRows)
             {
                 while (reader.Read())
-                {;
-                    var container = new IGPS_DEPOT_LOCATION(reader);
-                    containers.Add(container);
+                {
+                    var gln = reader["GLN"].ToString();
+                    var status = reader["Status"].ToString();
+                    var subStatus = reader["SubStatus"].ToString();
+                    var description = reader["Description"].ToString();
+                    var glnsFromDb = new IGPS_DEPOT_LOCATION(gln, status, subStatus, description);
+                    glnsFromDb.Count = (int) reader["COUNT"];
+                    containers.Add(glnsFromDb);
                 }
             }
             Disconnect();

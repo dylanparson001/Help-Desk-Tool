@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
+using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Models.Repositories;
 
-namespace iGPS_Help_Desk.Models.Repositories
+namespace iGPS_Help_Desk.Repositories
 {
     public class IgpsDepotGlnRepository : BaseRepository
     {
-        public async Task<List<IGPS_DEPOT_GLN>> ReadAllContainers()
+        public async Task<(List<IGPS_DEPOT_GLN>, int)> ReadAllContainers()
         {
             List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
 
@@ -26,7 +27,7 @@ namespace iGPS_Help_Desk.Models.Repositories
             }
             Disconnect();
 
-            return Glns;
+            return (Glns, Glns.Count);
         }
 
         public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(string list)
@@ -64,7 +65,7 @@ namespace iGPS_Help_Desk.Models.Repositories
 
         public async void UpdateContainersToExistingContainer(string fromGln, string toGln)
         {
-            var grais =await ReadContainersFromList(fromGln);
+            var grais = await ReadContainersFromList(fromGln);
             List<string> tempList = new List<string>();
 
             foreach (var g in grais)
@@ -77,11 +78,26 @@ namespace iGPS_Help_Desk.Models.Repositories
             string updateQuery = $"UPDATE IGPS_DEPOT_GLN " +
                                  $"SET GLN = {toGln}" +
                                  $"WHERE GRAI IN ({concatenatedGrais})";
-            Connect();
-            await ExecuteQuery(updateQuery);
 
-            Disconnect();
+            using (SqlConnection conn = new SqlConnection(
+                       $"Data Source=localhost\\SqlExpress;Initial Catalog=epcdocmandb_igps;" +
+                       $" MultipleActiveResultSets=true;Uid=epcdocman;Pwd=just4us;"))
+            {
+                try
+                {
+                    connection.Open();
+                    // Perform database operations here
 
+                    SqlCommand command = new SqlCommand(updateQuery, connection);
+
+                    reader = await command.ExecuteReaderAsync();
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions here
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            }
         }
 
         public async void UpdateSelectedGrais(List<string> grais, string toGln)
@@ -91,10 +107,29 @@ namespace iGPS_Help_Desk.Models.Repositories
             string updateQuery = $"UPDATE IGPS_DEPOT_GLN " +
                                 $"SET GLN = {toGln}" +
                                 $"WHERE GRAI IN ({concatenatedGrais})";
-            Connect();
+            
+            using (SqlConnection conn = new SqlConnection($"Data Source=localhost\\SqlExpress;Initial Catalog=epcdocmandb_igps;" +
+                                                          $" MultipleActiveResultSets=true;Uid=epcdocman;Pwd=just4us;"))
+            {
+                try
+                {
+                    connection.Open();
+                    // Perform database operations here
+                    SqlCommand command = new SqlCommand(updateQuery, connection);
+
+                    reader = await command.ExecuteReaderAsync(); 
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions here
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            } 
+            
+            /*Connect();
             await ExecuteQuery(updateQuery);
 
-            Disconnect();
+            Disconnect();*/
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using iGPS_Help_Desk.Models;
+﻿using System;
+using iGPS_Help_Desk.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -70,7 +71,15 @@ namespace iGPS_Help_Desk.Controllers
         public async Task<List<IGPS_DEPOT_LOCATION>> ReadContainersFromSearch(string search)
         {
             var listResult = new List<IGPS_DEPOT_LOCATION>();
-            listResult = await _igpsDepotLocationRepository.ReadFromSearch(search);
+            try
+            {
+
+                listResult = await _igpsDepotLocationRepository.ReadFromSearch(search);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
             return listResult;
         }

@@ -50,11 +50,10 @@ namespace iGPS_Help_Desk.Controllers
             return result;
         }
 
-        public async  Task<List<IGPS_DEPOT_GLN>> GetAllContainers()
+        public async Task<(List<IGPS_DEPOT_GLN>, int)> GetAllContainers()
         {
-            var result = new List<IGPS_DEPOT_GLN>();
-            result = await _igpsDepotGlnRepository.ReadAllContainers();
-
+          
+            var result = await _igpsDepotGlnRepository.ReadAllContainers();
             return result;
         }
 
