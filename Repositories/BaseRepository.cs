@@ -1,4 +1,6 @@
-﻿using System;
+﻿using iGPS_Help_Desk.Views;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -9,21 +11,24 @@ namespace iGPS_Help_Desk.Models.Repositories
 {
     public class BaseRepository
     {
-        public SqlConnection connection;
-        protected string connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        public SqlConnection connection = new SqlConnection();
         public SqlCommand command;
         public SqlDataReader reader;
         public List<SqlParameter> parameters;
         private string _pcName = ConfigurationManager.AppSettings.Get("pcName");
-        private static Configuration  configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        private static Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         private static KeyValueConfigurationCollection settings = configFile.AppSettings.Settings;
+        public readonly ILogger _logger = Log.ForContext<Igps>();
         public BaseRepository()
         {
-            connection = new SqlConnection($"Data Source=localhost\\SqlExpress;Initial Catalog=epcdocmandb_igps;" +
-                                           $" MultipleActiveResultSets=true;Uid=epcdocman;Pwd=just4us;");
-
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
         }
-        protected string ConcatStringFromList(List<string> listOfString)
+
+        public string ConcatStringFromList(List<string> listOfString)
         {
             return string.Join(",", listOfString.Select(i => $"'{i}'"));
         }
@@ -41,7 +46,7 @@ namespace iGPS_Help_Desk.Models.Repositories
             }
         }
 
-        public  void Disconnect()
+        public void Disconnect()
         {
 
             if(connection.State == System.Data.ConnectionState.Open) 
@@ -51,9 +56,9 @@ namespace iGPS_Help_Desk.Models.Repositories
 
         }
 
-        public async Task ExecuteQuery(string query)
+        public async Task ExecuteQuery(string query, SqlConnection conn)
         {
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new SqlCommand(query, conn);
 
             reader = await command.ExecuteReaderAsync(); 
         }

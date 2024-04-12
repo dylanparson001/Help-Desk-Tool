@@ -5,26 +5,55 @@
  */
 
 
+using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Repositories;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using iGPS_Help_Desk.Models;
 
 namespace iGPS_Help_Desk.Views
 {
     public partial class Igps : BaseForm
     {
-
+        private Timer closeTimer;
+        private readonly ILogger _logger = Log.ForContext<Igps>();
+        private List<IGPS_DEPOT_GLN> igpsDepotGln = new List<IGPS_DEPOT_GLN>();
+        private bool showButtonClicked = false;
         public Igps()
         {
             InitializeComponent();
-            //InitialLoad();
+            InitialLoad();
+
+            try
+            {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+                var settings = configFile.AppSettings.Settings;
+
+                int timeout = Int32.Parse(settings["timeout"].Value);
+                // Initialize the timer
+                closeTimer = new Timer();
+                closeTimer.Interval = timeout; // 30 minutes in milliseconds
+                closeTimer.Tick += CloseTimer_Tick;
+                closeTimer.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.ToString());
+                closeTimer.Interval = 1800000; // if the config file value was not found, set to 30 minutes
+            }
         }
 
-      
+        private void CloseTimer_Tick(object sender, EventArgs e)
+        {
+            // Timer has elapsed, close the application
+            Application.Exit();
+        }
+
+
         // Parses GLNs from the list entered from form
         private List<string> ParseGln(string glnList)
         {
@@ -36,7 +65,6 @@ namespace iGPS_Help_Desk.Views
             tempList.AddRange(glnList.Split(delimiters, StringSplitOptions.RemoveEmptyEntries));
 
             return tempList;
-
         }
 
         // ------------------------ CLEAR CONTAINERS -------------------------------//
@@ -46,12 +74,18 @@ namespace iGPS_Help_Desk.Views
             txtNumToBeDeleted.Text = string.Empty;
             lvGlnContent.Items.Clear();
         }
-
+        // Deletes GLNS from IGPS_DEPOT_GLN and IGPS_DEPOT_LOCATION
         private void ClickClearContainers(object sender, EventArgs e)
         {
+            if (!showButtonClicked)
+            {
+                MessageBox.Show("Click 'Show Content'");
+                return;
+            }
             if (lvGlnContent.Items.Count == 0 && txtContainersToClear.Text == "")
             {
-                MessageBox.Show("Container list is empty");
+                lblErrorMessage.Text = "No containers entered";
+                lblErrorMessage.Visible = true;
                 return;
             }
 
@@ -60,20 +94,31 @@ namespace iGPS_Help_Desk.Views
 
             // Parsed list
             glnList = ParseGln(txtContainersToClear.Text);
+            DialogResult result = MessageBox.Show(
+                $"Are you sure you want to delete {lvGlnContent.Items.Count} Grais and " +
+                $"{glnList.Count} containers?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            _clearContainerController.ClearContainers(glnList);
-            lvGlnContent.Items.Clear();
+            // Check the user's response
+            if (result == DialogResult.Yes)
+            {
+                _clearContainerController.ClearContainers(glnList);
+                lvGlnContent.Items.Clear();
+                lblErrorMessage.Visible = false;
+            }
+
+            GC.Collect();
         }
 
         // Updates list in view
-        private void UpdateContainerClearList(List<IGPS_DEPOT_GLN> listGlns, List<IGPS_DEPOT_LOCATION> locationGlns)
+        private void UpdateContainerClearList(List<IGPS_DEPOT_GLN> listGlns, List<IGPS_DEPOT_LOCATION> locationGlns,
+            List<string> totalList)
         {
             ClearContainerFields();
             if (listGlns == null) return;
 
             // Update Text box of containers entered to only show distinct containers
             var newList = locationGlns.Select(x => x.Gln).Distinct();
-            foreach (string gln in newList)
+            foreach (string gln in totalList)
             {
                 txtContainersToClear.AppendText($"{gln}\r\n");
             }
@@ -87,44 +132,29 @@ namespace iGPS_Help_Desk.Views
 
                 lvGlnContent.Items.Add(item);
             }
-            txtNumToBeDeleted.Text = listGlns.Count.ToString();
-        }
-        private void UpdateDnuContainerClearList(List<IGPS_DEPOT_GLN> listGlns)
-        {
-            ClearContainerFields();
-            if (listGlns == null) return;
 
-            // Update Text box of containers entered to only show distinct containers
-            var newList = listGlns.Select(x => x.Gln).Distinct();
-            foreach (string gln in newList)
-            {
-                txtContainersToClear.AppendText($"{gln}\r\n");
-            }
-
-            // Outputs them to List View to show details for every GRAI
-            for (int i = 0; i < listGlns.Count; i++)
-            {
-                var item = new ListViewItem(listGlns.ElementAt(i).Gln);
-                item.SubItems.Add(listGlns.ElementAt(i).Grai);
-                item.SubItems.Add(listGlns.ElementAt(i).Date_Time.ToString());
-
-                lvGlnContent.Items.Add(item);
-            }
             txtNumToBeDeleted.Text = listGlns.Count.ToString();
         }
 
-        private async void ClickShowContent(object sender, EventArgs e)
+        private void ClickShowContent(object sender, EventArgs e)
         {
+            ShowContent();
+        }
+
+        private async void ShowContent()
+        {
+            showButtonClicked = true;
             if (txtContainersToClear.Text == string.Empty)
             {
-                MessageBox.Show("Container list is empty");
+                lblErrorMessage.Text = "No containers entered";
+                lblErrorMessage.Visible = true;
                 return;
             }
+
             // Initial List from user of glns (will be parsed to get rid of spaces, returns, quotes, etc)
             List<string> glnList = new List<string>();
 
             // Lists that will be returned from database
-            var igpsDepotGln = new List<IGPS_DEPOT_GLN>();
 
             // Parsed list
             glnList = ParseGln(txtContainersToClear.Text);
@@ -133,70 +163,123 @@ namespace iGPS_Help_Desk.Views
             try
             {
                 igpsDepotGln = await _clearContainerController.GetContainersFromList(glnList);
-                var igpsDepotLocation = _clearContainerController.GetLocationContainersFromList(glnList);
-                UpdateContainerClearList(igpsDepotGln, await igpsDepotLocation);
+                var igpsDepotLocation = await _clearContainerController.GetLocationContainersFromList(glnList);
 
+                var totalList = new List<string>();
+
+                foreach (var depotGln in igpsDepotGln)
+                {
+                    totalList.Add(depotGln.Gln);
+                }
+
+                foreach (var depotLocation in igpsDepotLocation)
+                {
+                    totalList.Add(depotLocation.Gln);
+                }
+
+                totalList = totalList.Distinct().ToList();
+                UpdateContainerClearList(igpsDepotGln, igpsDepotLocation, totalList);
+                lblErrorMessage.Visible = false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-
         }
-
 
         private async void BtnSaveContent(object sender, EventArgs e)
         {
-            if (lvGlnContent.Items.Count == 0)
+            bool saveSnapshot = false;
+
+            if (!showButtonClicked)
             {
-                MessageBox.Show("Container list is empty");
+                MessageBox.Show("Click 'Show Content'");
                 return;
             }
 
-            if (_clearContainerPath == null)
+            if (txtContainersToClear.Text == "")
+            {
+                lblErrorMessage.Visible = true;
+                lblErrorMessage.Text = "No containers entered";
+                return;
+            }
+
+            if (_clearContainerPath == "")
             {
                 MessageBox.Show("No file path shown");
                 return;
             }
 
             // Save current container clear request
-            var glnList = ParseGln(txtContainersToClear.Text);
-
-            _csvFileController.SaveContainersFromList(txtNumToBeDeleted.Text, _clearContainerPath, glnList, _siteId);
-
+            List<string> zoutGlnList = ParseGln(txtContainersToClear.Text);
+            string zoutCount = zoutGlnList.Count.ToString();
 
             // Get data for snapshot
             if (cbSaveSnapshot.Checked)
             {
+                saveSnapshot = true;
                 var allContainers = await _clearContainerController.GetAllContainers();
+
                 var allGlnList = new List<string>();
 
-                foreach (IGPS_DEPOT_GLN gln in  allContainers.Item1)
+                foreach (IGPS_DEPOT_GLN gln in allContainers.Item1)
                 {
                     allGlnList.Add(gln.Gln);
                 }
-                 _csvFileController.SaveSnapShot( allContainers.Item2.ToString(), _clearContainerPath, allGlnList, _siteId);
 
+                await _csvFileController.SaveCsvFilesAndZip(txtNumToBeDeleted.Text, zoutGlnList, allGlnList,
+                    allContainers.Item2.ToString(), saveSnapshot, igpsDepotGln);
+            }
+            else
+            {
+                List<string> emptyList = new List<string>();
+                await _csvFileController.SaveCsvFilesAndZip(txtNumToBeDeleted.Text, zoutGlnList, emptyList, "0",
+                    saveSnapshot, igpsDepotGln);
             }
 
-
+            _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
+            MessageBox.Show("Files have been saved to " + _clearContainerPath);
+            lblErrorMessage.Visible = false;
             // Gets rid of excess memory usage from snapshot
             GC.Collect();
-
         }
 
+        private async void BtnFindGhosts(object sender, EventArgs e)
+        {
+            var result = await _clearContainerController.GetGhostGrais();
+
+            if (result.Count == 0)
+            {
+                lblErrorMessage.Text = "No Ghosts found";
+                lblErrorMessage.Visible = true;
+                return;
+            }
+
+            foreach (var g in result)
+            {
+                txtContainersToClear.Text += $"{g}\r\n";
+            }
+
+            lblErrorMessage.Visible = false;
+        }
 
         private async void ClickGetDnus(object sender, EventArgs e)
         {
-            ClearContainerFields();
             try
             {
-                List<IGPS_DEPOT_GLN> glnList = await _clearContainerController.GetDnus();
-                UpdateDnuContainerClearList(glnList);
+                var glnList = await _clearContainerController.GetDnus();
+
+                foreach (var g in glnList.Item2)
+                {
+                    txtContainersToClear.Text += $"{g.Gln}\r\n";
+                }
+
+                lblErrorMessage.Visible = false;
             }
             catch
             {
-                MessageBox.Show("No DNUS found");
+                lblErrorMessage.Text = "No DNUs found";
+                lblErrorMessage.Visible = true;
             }
         }
 
@@ -210,6 +293,8 @@ namespace iGPS_Help_Desk.Views
 
         private void ClickContainerCancel(object sender, EventArgs e)
         {
+            lblErrorMessage.Visible = false;
+            showButtonClicked = false;
             ClearContainerFields();
         }
 
@@ -222,12 +307,12 @@ namespace iGPS_Help_Desk.Views
         }
 
 
-        // --------------------------- Move Containers ------------------------
+        // --------------------------- Search Containers ------------------------
 
 
         private void LoadContainers(List<IGPS_DEPOT_LOCATION> listContainers)
         {
-            /*lvPlacards.Items.Clear();
+            lvPlacards.Items.Clear();
 
             // Outputs them to List View
             foreach (var container in listContainers)
@@ -238,12 +323,23 @@ namespace iGPS_Help_Desk.Views
                 item.SubItems.Add(container.SubStatus);
                 item.SubItems.Add(container.Count.ToString());
                 lvPlacards.Items.Add(item);
-            }*/
+            }
         }
 
         private async void InitialLoad()
         {
-            var result = await _moveContainerController.ReadAllContainers();
+            var result = new List<IGPS_DEPOT_LOCATION>();
+
+            if (tbSearchBar.Text.Length > 0)
+            {
+                result = await _moveContainerController.ReadContainersFromSearch(tbSearchBar.Text);
+            }
+            else
+            {
+
+                result = await _moveContainerController.ReadAllContainers();
+            }
+
             LoadContainers(result);
         }
 
@@ -255,37 +351,32 @@ namespace iGPS_Help_Desk.Views
 
         private void moveExisitngForm(object sender, EventArgs e)
         {
-            /*if (lvPlacards.SelectedItems.Count == 0) return;
+            if (lvPlacards.SelectedItems.Count == 0) return;
 
-            var fromGln = txtFromGln.Text;
-            var toGln = txtToGln.Text;
-            MoveContainersForm moveContainerForm = new MoveContainersForm(fromGln, toGln);
-            moveContainerForm.ShowDialog();*/
+            var fromGln = lvPlacards.SelectedItems[0].Text;
+            var moveContainerForm = new ClearGraisForm(fromGln);
+            moveContainerForm.ShowDialog();
         }
 
-        private void clickSetFromGln(object sender, EventArgs e)
+
+        private async void searchContainersText(object sender, EventArgs e)
         {
-            /*if (lvPlacards.SelectedItems.Count == 0) return;
-            txtFromGln.Text = lvPlacards.SelectedItems[0].Text;*/
+            var result = await _moveContainerController.ReadContainersFromSearch(tbSearchBar.Text);
+
+            LoadContainers(result);
         }
 
-        private void clickSetToGln(object sender, MouseEventArgs e)
+        private void addToClearList(object sender, EventArgs e)
         {
-            /*if (lvPlacards.SelectedItems.Count == 0) return;
-            txtToGln.Text = lvPlacards.SelectedItems[0].Text;*/
+            if (lvPlacards.SelectedItems.Count == 0) return;
 
-        }
+            for (int i = 0; i < lvPlacards.SelectedItems.Count; i++)
+            {
+                txtContainersToClear.AppendText($"{lvPlacards.SelectedItems[i].Text}\r\n");
+            }
 
-        private  void searchContainers(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private  async void searchContainersText(object sender, EventArgs e)
-        {
-            /*var result = await _moveContainerController.ReadContainersFromSearch(tbSearchBar.Text);
-
-            LoadContainers(result);*/
+            ShowContent();
+            lblContainersAddSuccess.Visible = true;
         }
     }
 }

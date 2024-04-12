@@ -62,7 +62,7 @@ namespace iGPS_Help_Desk.Controllers
             };
             var temp = ConcatStringFromList(listResult);
 
-            var result = await _igpsDepotGlnRepository.ReadContainersFromList(temp);
+            var result = await _igpsDepotGlnRepository.ReadContainersFromListOrderByDate(temp);
 
             return result;
 
@@ -73,14 +73,29 @@ namespace iGPS_Help_Desk.Controllers
             var listResult = new List<IGPS_DEPOT_LOCATION>();
             try
             {
-
                 listResult = await _igpsDepotLocationRepository.ReadFromSearch(search);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.Error(ex.Message);
             }
 
+            return listResult;
+        }
+
+        public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln)
+        {
+            var listResult = new List<IGPS_DEPOT_GLN>();
+
+            try
+            {
+                listResult = await _igpsDepotGlnRepository.SearchGraiFromContainer(grai, gln);
+            } 
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+
+            }
             return listResult;
         }
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.IO;
-using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Views
@@ -16,19 +14,22 @@ namespace iGPS_Help_Desk.Views
         private void ClickSubmitId(object sender, EventArgs e)
         {
             string siteId = txtSiteId.Text;
+            var folderPath = txtFolderPath.Text;
             try
             {
                 var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 var settings = configFile.AppSettings.Settings;
+                
 
-
-                if (settings["siteId"] == null)
+                if (settings["siteId"] == null || settings["clearContainerPath"] == null)
                 {
                     settings.Add("siteId", siteId);
+                    settings.Add("clearContainerPath", folderPath);
                 }
                 else
                 {
                     settings["siteId"].Value = siteId;
+                    settings["clearContainerPath"].Value = folderPath;
                 }
  
                 configFile.Save(ConfigurationSaveMode.Modified);

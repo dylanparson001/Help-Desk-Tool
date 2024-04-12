@@ -46,8 +46,9 @@ namespace iGPS_Help_Desk
                 }
 
                 configFile.Save(ConfigurationSaveMode.Modified);
+
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
-                Application.Restart();
+                Close();
             }
             catch (ConfigurationErrorsException)
             {

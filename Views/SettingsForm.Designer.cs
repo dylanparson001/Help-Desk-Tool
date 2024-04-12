@@ -42,16 +42,16 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(328, 9);
+            this.label1.Location = new System.Drawing.Point(205, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 25);
+            this.label1.Size = new System.Drawing.Size(123, 36);
             this.label1.TabIndex = 0;
             this.label1.Text = "Settings";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(207, 75);
+            this.label2.Location = new System.Drawing.Point(135, 103);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 20);
             this.label2.TabIndex = 1;
@@ -59,14 +59,14 @@
             // 
             // txtSiteId
             // 
-            this.txtSiteId.Location = new System.Drawing.Point(207, 98);
+            this.txtSiteId.Location = new System.Drawing.Point(135, 126);
             this.txtSiteId.Name = "txtSiteId";
-            this.txtSiteId.Size = new System.Drawing.Size(328, 26);
+            this.txtSiteId.Size = new System.Drawing.Size(264, 26);
             this.txtSiteId.TabIndex = 2;
             // 
             // btnSaveSettings
             // 
-            this.btnSaveSettings.Location = new System.Drawing.Point(207, 276);
+            this.btnSaveSettings.Location = new System.Drawing.Point(103, 286);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(146, 43);
             this.btnSaveSettings.TabIndex = 3;
@@ -77,7 +77,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(207, 166);
+            this.label3.Location = new System.Drawing.Point(135, 194);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(153, 20);
             this.label3.TabIndex = 4;
@@ -85,14 +85,14 @@
             // 
             // txtPath
             // 
-            this.txtPath.Location = new System.Drawing.Point(207, 189);
+            this.txtPath.Location = new System.Drawing.Point(135, 217);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(328, 26);
+            this.txtPath.Size = new System.Drawing.Size(264, 26);
             this.txtPath.TabIndex = 5;
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(389, 276);
+            this.btnCancel.Location = new System.Drawing.Point(284, 286);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(146, 43);
             this.btnCancel.TabIndex = 6;
@@ -102,9 +102,10 @@
             // 
             // SettingsForm
             // 
+            this.AcceptButton = this.btnSaveSettings;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 449);
+            this.ClientSize = new System.Drawing.Size(582, 371);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.label3);
@@ -117,6 +118,7 @@
             this.Text = "SettingsForm";
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private System.Windows.Forms.Button btnCancel;

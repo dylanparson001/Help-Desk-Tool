@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using iGPS_Help_Desk.Models;
@@ -11,60 +12,407 @@ namespace iGPS_Help_Desk.Repositories
     {
         public async Task<(List<IGPS_DEPOT_GLN>, int)> ReadAllContainers()
         {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
             List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
 
-            Connect();
-            await ExecuteQuery("SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN ORDER BY GLN");
+            string query = "SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN ORDER BY GLN";
 
-            if (reader.HasRows)
+            using (var conn = connection)
             {
-                while (reader.Read())
+                try
                 {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
 
-                    IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
-                    Glns.Add(glnsFromDb);
+                SqlCommand command = new SqlCommand(query, conn);
+                command.CommandTimeout = 300;
+                reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                        Glns.Add(glnsFromDb);
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                return (Glns, Glns.Count);
+            }
+        }
+        public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
+
+            string query = $"SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN = {gln} AND GRAI LIKE '%{grai}%' ORDER BY GLN";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+                reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                        Glns.Add(glnsFromDb);
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                return Glns;
+            }
+        }
+
+        public async Task<(List<IGPS_DEPOT_GLN>, int)> ReadAllContainersBatch()
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (string.IsNullOrEmpty(test))
+            {
+                _logger.Error("Connection string is missing or empty.");
+                return (null, 0);
+            }
+
+            List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
+            int offset = 1;
+            int count = await GetCountOfTable();
+            int fetchNext = 10000;
+
+            using (connection = new SqlConnection(test))
+            {
+                try
+                {
+                    connection.Open();
+
+                    while (offset < count)
+                    {
+                        string query = $"SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN ORDER BY GLN" +
+                                       $" OFFSET {offset} ROWS FETCH NEXT {fetchNext} ROWS ONLY";
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.CommandTimeout = 500;
+                            using (reader = await command.ExecuteReaderAsync())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    while (reader.Read())
+                                    {
+                                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                                        Glns.Add(glnsFromDb);
+                                    }
+                                }
+                            }
+                        }
+
+                        offset += fetchNext;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+                finally
+                {
+                    if (connection.State == System.Data.ConnectionState.Open)
+                    {
+                        connection.Close();
+                    }
                 }
             }
-            Disconnect();
 
             return (Glns, Glns.Count);
         }
 
+
+        public async Task<int> GetCountOfTable()
+        {
+            int result = 0;
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            string query = "SELECT COUNT(*) AS COUNT FROM IGPS_DEPOT_GLN";
+            using (SqlConnection conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                    // Perform database operations here
+                    SqlCommand command = new SqlCommand(query, conn);
+
+                    reader = await command.ExecuteReaderAsync();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            result = Int32.Parse(reader["COUNT"].ToString());
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions here
+                    _logger.Error(ex.Message);
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<List<IGPS_DEPOT_GLN>> ReadFromGraiList(string list)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
+
+            string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GRAI IN ({list});";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                        Grais.Add(glnsFromDb);
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+
+            return Grais;
+        }
+
         public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(string list)
         {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
             List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
 
             string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN IN ({list}) ORDER BY GLN;";
 
-            Connect();
-            await ExecuteQuery(query);
-
-            if (reader.HasRows)
+            using (var conn = connection)
             {
-                while (reader.Read())
+                try
                 {
-                    IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
-                    Grais.Add(glnsFromDb);
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                        Grais.Add(glnsFromDb);
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
                 }
             }
-            Disconnect();
+
             return Grais;
         }
 
+        public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromListOrderByDate(string list)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
+
+            string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN IN ({list}) ORDER BY DATE_TIME;";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                        Grais.Add(glnsFromDb);
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                return Grais;
+            }
+        }
 
         public async void DeleteGlnsFromList(string list)
         {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
             string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GLN IN ({list})";
 
-            Connect();
-            await ExecuteQuery(deleteQuery);
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
 
-            Disconnect();
+                SqlCommand command = new SqlCommand(deleteQuery, conn);
 
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        public async void DeleteGraisFromList(string list)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GRAI IN ({list})";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(deleteQuery, conn);
+
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
         }
 
         public async void UpdateContainersToExistingContainer(string fromGln, string toGln)
         {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
             var grais = await ReadContainersFromList(fromGln);
             List<string> tempList = new List<string>();
 
@@ -79,58 +427,109 @@ namespace iGPS_Help_Desk.Repositories
                                  $"SET GLN = {toGln}" +
                                  $"WHERE GRAI IN ({concatenatedGrais})";
 
-            using (SqlConnection conn = new SqlConnection(
-                       $"Data Source=localhost\\SqlExpress;Initial Catalog=epcdocmandb_igps;" +
-                       $" MultipleActiveResultSets=true;Uid=epcdocman;Pwd=just4us;"))
+            using (SqlConnection conn = connection)
             {
                 try
                 {
-                    connection.Open();
+                    conn.Open();
                     // Perform database operations here
 
-                    SqlCommand command = new SqlCommand(updateQuery, connection);
+                    SqlCommand command = new SqlCommand(updateQuery, conn);
 
                     reader = await command.ExecuteReaderAsync();
                 }
                 catch (Exception ex)
                 {
                     // Handle exceptions here
-                    Console.WriteLine("An error occurred: " + ex.Message);
+                    _logger.Error(ex.Message);
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
                 }
             }
         }
 
         public async void UpdateSelectedGrais(List<string> grais, string toGln)
         {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
             var concatenatedGrais = ConcatStringFromList(grais);
 
             string updateQuery = $"UPDATE IGPS_DEPOT_GLN " +
-                                $"SET GLN = {toGln}" +
-                                $"WHERE GRAI IN ({concatenatedGrais})";
-            
-            using (SqlConnection conn = new SqlConnection($"Data Source=localhost\\SqlExpress;Initial Catalog=epcdocmandb_igps;" +
-                                                          $" MultipleActiveResultSets=true;Uid=epcdocman;Pwd=just4us;"))
+                                 $"SET GLN = {toGln}" +
+                                 $"WHERE GRAI IN ({concatenatedGrais})";
+
+            using (SqlConnection conn = connection)
             {
                 try
                 {
-                    connection.Open();
+                    conn.Open();
                     // Perform database operations here
-                    SqlCommand command = new SqlCommand(updateQuery, connection);
+                    SqlCommand command = new SqlCommand(updateQuery, conn);
 
-                    reader = await command.ExecuteReaderAsync(); 
+                    reader = await command.ExecuteReaderAsync();
                 }
                 catch (Exception ex)
                 {
                     // Handle exceptions here
-                    Console.WriteLine("An error occurred: " + ex.Message);
+                    _logger.Error(ex.Message);
                 }
-            } 
-            
-            /*Connect();
-            await ExecuteQuery(updateQuery);
 
-            Disconnect();*/
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
         }
 
+        public async Task<List<string>> GetGhostGrais()
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            List<string> Grais = new List<string>();
+
+            string query = "select GLN from IGPS_DEPOT_GLN except select GLN from IGPS_DEPOT_LOCATION;";
+            using (SqlConnection conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                    // Perform database operations here
+                    SqlCommand command = new SqlCommand(query, conn);
+
+                    reader = await command.ExecuteReaderAsync();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var glnsFromDb = reader["GLN"].ToString();
+                            Grais.Add(glnsFromDb);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions here
+                    _logger.Error(ex.Message);
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+
+            return Grais;
+        }
     }
 }

@@ -9,8 +9,7 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class ClearContainerController : BaseController
     {
-
-        public async Task<List<IGPS_DEPOT_GLN>> GetDnus()
+        public async Task<(List<IGPS_DEPOT_GLN>, List<IGPS_DEPOT_LOCATION>)> GetDnus()
         {
             // Get List of dnus
             List<string> dnuList = await _igpsDepotLocationRepository.ReadDnus();
@@ -20,14 +19,17 @@ namespace iGPS_Help_Desk.Controllers
             {
                 throw new Exception("No DNUs Found");
             }
+
             // concat '', to items in list
             string stringGlns = ConcatStringFromList(dnuList);
 
             //  Get the containers from IGPS_DEPOT_GLN table
             List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
+            List<IGPS_DEPOT_LOCATION> locationList =
+                await _igpsDepotLocationRepository.ReadContainersFromList(stringGlns);
 
-            return glnList.OrderBy(x => x.Gln).ToList();
 
+            return (glnList.OrderBy(x => x.Gln).ToList(), locationList.OrderBy(x => x.Gln).ToList());
         }
 
         public async Task<List<IGPS_DEPOT_GLN>> GetContainersFromList(List<string> containerList)
@@ -36,6 +38,7 @@ namespace iGPS_Help_Desk.Controllers
             string stringGlns = ConcatStringFromList(containerList);
 
             result = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
+
 
             return result;
         }
@@ -52,13 +55,17 @@ namespace iGPS_Help_Desk.Controllers
 
         public async Task<(List<IGPS_DEPOT_GLN>, int)> GetAllContainers()
         {
-          
-            var result = await _igpsDepotGlnRepository.ReadAllContainers();
+            //var result = await _igpsDepotGlnRepository.ReadAllContainers();
+            var result = await _igpsDepotGlnRepository.ReadAllContainersBatch();
             return result;
         }
 
         public async void ClearContainers(List<string> glnList)
         {
+            int count = await _igpsDepotGlnRepository.GetCountOfTable();
+
+            Console.WriteLine(count);
+
             List<string> listToDelete = new List<string>();
             List<string> listLocationToDelete = new List<string>();
             string stringToDelete;
@@ -85,6 +92,9 @@ namespace iGPS_Help_Desk.Controllers
             stringToDelete = ConcatStringFromList(listToDelete);
             stringLocationToDelete = ConcatStringFromList(listLocationToDelete);
 
+            _logger.Information(
+                $"{stringLocationToDelete} containers with {listFromDb.Count} Grai(s) have been cleared and deleted");
+
             if (stringToDelete.Length > 0)
             {
                 _igpsDepotGlnRepository.DeleteGlnsFromList(stringToDelete);
@@ -93,14 +103,26 @@ namespace iGPS_Help_Desk.Controllers
             if (stringLocationToDelete.Length > 0)
             {
                 _igpsDepotLocationRepository.DeleteContainersFromList(stringLocationToDelete);
-
             }
-
-
-
         }
 
+        public async Task<List<string>> GetGhostGrais()
+        {
+            var ghostGlns = await _igpsDepotGlnRepository.GetGhostGrais();
 
+            //var ghostGlnsString = ConcatStringFromList(ghostGlns);
+            //var ghostGrais = await _igpsDepotGlnRepository.ReadContainersFromList(ghostGlnsString);
 
+            return ghostGlns;
+        }
+
+        public void ClearGrais(List<string> listOfGrais)
+        {
+            if (listOfGrais == null) return;
+
+            var concatenatedList = ConcatStringFromList(listOfGrais);
+
+            _igpsDepotGlnRepository.DeleteGraisFromList(concatenatedList);
+        }
     }
 }
