@@ -43,9 +43,9 @@
             this.txtNumToBeDeleted = new System.Windows.Forms.TextBox();
             this.btnShowGlnContent = new System.Windows.Forms.Button();
             this.lvGlnContent = new System.Windows.Forms.ListView();
-            this.colGln = new System.Windows.Forms.ColumnHeader();
-            this.colGrai = new System.Windows.Forms.ColumnHeader();
-            this.colDateTime = new System.Windows.Forms.ColumnHeader();
+            this.colGln = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colGrai = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colDateTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtContainersToClear = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnClearContainers = new System.Windows.Forms.Button();
@@ -57,18 +57,34 @@
             this.button3 = new System.Windows.Forms.Button();
             this.tbSearchBar = new System.Windows.Forms.TextBox();
             this.lvPlacards = new System.Windows.Forms.ListView();
-            this.ContainerGLN = new System.Windows.Forms.ColumnHeader();
-            this.ContainerDescription = new System.Windows.Forms.ColumnHeader();
-            this.ContainerStatus = new System.Windows.Forms.ColumnHeader();
-            this.ContainerSubStatus = new System.Windows.Forms.ColumnHeader();
-            this.AssetCount = new System.Windows.Forms.ColumnHeader();
+            this.ContainerGLN = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ContainerDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ContainerStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ContainerSubStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.AssetCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button2 = new System.Windows.Forms.Button();
+            this.tabRemoveOrders = new System.Windows.Forms.TabPage();
+            this.cbCheckAllOrders = new System.Windows.Forms.CheckBox();
+            this.btnChangeQuantity = new System.Windows.Forms.Button();
+            this.lblError = new System.Windows.Forms.Label();
+            this.lvOrders = new System.Windows.Forms.ListView();
+            this.Orderid = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.BolId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ProcessingStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colSourceId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colStatusDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colRequestedQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnRemoveOrders = new System.Windows.Forms.Button();
+            this.btnShowOrder = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtBols = new System.Windows.Forms.TextBox();
             this.dataSet1 = new System.Data.DataSet();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.settingsBtn = new System.Windows.Forms.Button();
             this.StatusChange.SuspendLayout();
             this.tabClearContainers.SuspendLayout();
             this.tabMovePallets.SuspendLayout();
+            this.tabRemoveOrders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -86,6 +102,7 @@
             // 
             this.StatusChange.Controls.Add(this.tabClearContainers);
             this.StatusChange.Controls.Add(this.tabMovePallets);
+            this.StatusChange.Controls.Add(this.tabRemoveOrders);
             this.StatusChange.Location = new System.Drawing.Point(12, 40);
             this.StatusChange.Name = "StatusChange";
             this.StatusChange.SelectedIndex = 0;
@@ -108,9 +125,9 @@
             this.tabClearContainers.Controls.Add(this.label7);
             this.tabClearContainers.Controls.Add(this.btnClearContainers);
             this.tabClearContainers.Controls.Add(this.labelContainersToClear);
-            this.tabClearContainers.Location = new System.Drawing.Point(4, 29);
+            this.tabClearContainers.Location = new System.Drawing.Point(4, 22);
             this.tabClearContainers.Name = "tabClearContainers";
-            this.tabClearContainers.Size = new System.Drawing.Size(857, 420);
+            this.tabClearContainers.Size = new System.Drawing.Size(857, 427);
             this.tabClearContainers.TabIndex = 2;
             this.tabClearContainers.Text = "Clear Containers";
             this.tabClearContainers.UseVisualStyleBackColor = true;
@@ -144,7 +161,7 @@
             this.cbSaveSnapshot.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbSaveSnapshot.Location = new System.Drawing.Point(368, 342);
             this.cbSaveSnapshot.Name = "cbSaveSnapshot";
-            this.cbSaveSnapshot.Size = new System.Drawing.Size(137, 24);
+            this.cbSaveSnapshot.Size = new System.Drawing.Size(99, 17);
             this.cbSaveSnapshot.TabIndex = 21;
             this.cbSaveSnapshot.Text = "Save Snapshot";
             this.cbSaveSnapshot.UseVisualStyleBackColor = true;
@@ -185,7 +202,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(618, 347);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(71, 20);
+            this.label8.Size = new System.Drawing.Size(48, 13);
             this.label8.TabIndex = 17;
             this.label8.Text = "# GRAIs";
             // 
@@ -213,7 +230,10 @@
             // 
             // lvGlnContent
             // 
-            this.lvGlnContent.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.colGln, this.colGrai, this.colDateTime });
+            this.lvGlnContent.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colGln,
+            this.colGrai,
+            this.colDateTime});
             this.lvGlnContent.FullRowSelect = true;
             this.lvGlnContent.HideSelection = false;
             this.lvGlnContent.Location = new System.Drawing.Point(296, 39);
@@ -252,7 +272,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(296, 16);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(173, 20);
+            this.label7.Size = new System.Drawing.Size(114, 13);
             this.label7.TabIndex = 4;
             this.label7.Text = "Contents of Containers";
             // 
@@ -275,7 +295,7 @@
             this.labelContainersToClear.AutoSize = true;
             this.labelContainersToClear.Location = new System.Drawing.Point(15, 16);
             this.labelContainersToClear.Name = "labelContainersToClear";
-            this.labelContainersToClear.Size = new System.Drawing.Size(191, 20);
+            this.labelContainersToClear.Size = new System.Drawing.Size(128, 13);
             this.labelContainersToClear.TabIndex = 0;
             this.labelContainersToClear.Text = "Containers To Be Cleared";
             // 
@@ -288,10 +308,10 @@
             this.tabMovePallets.Controls.Add(this.tbSearchBar);
             this.tabMovePallets.Controls.Add(this.lvPlacards);
             this.tabMovePallets.Controls.Add(this.button2);
-            this.tabMovePallets.Location = new System.Drawing.Point(4, 29);
+            this.tabMovePallets.Location = new System.Drawing.Point(4, 22);
             this.tabMovePallets.Margin = new System.Windows.Forms.Padding(2);
             this.tabMovePallets.Name = "tabMovePallets";
-            this.tabMovePallets.Size = new System.Drawing.Size(857, 420);
+            this.tabMovePallets.Size = new System.Drawing.Size(857, 427);
             this.tabMovePallets.TabIndex = 3;
             this.tabMovePallets.Text = "Search Containers";
             this.tabMovePallets.UseVisualStyleBackColor = true;
@@ -302,7 +322,7 @@
             this.lblContainersAddSuccess.ForeColor = System.Drawing.Color.ForestGreen;
             this.lblContainersAddSuccess.Location = new System.Drawing.Point(193, 387);
             this.lblContainersAddSuccess.Name = "lblContainersAddSuccess";
-            this.lblContainersAddSuccess.Size = new System.Drawing.Size(213, 20);
+            this.lblContainersAddSuccess.Size = new System.Drawing.Size(144, 13);
             this.lblContainersAddSuccess.TabIndex = 13;
             this.lblContainersAddSuccess.Text = "Containers have been added";
             this.lblContainersAddSuccess.Visible = false;
@@ -322,7 +342,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(534, 11);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 20);
+            this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 11;
             this.label2.Text = "Search";
             // 
@@ -340,13 +360,18 @@
             // 
             this.tbSearchBar.Location = new System.Drawing.Point(537, 27);
             this.tbSearchBar.Name = "tbSearchBar";
-            this.tbSearchBar.Size = new System.Drawing.Size(241, 26);
+            this.tbSearchBar.Size = new System.Drawing.Size(241, 20);
             this.tbSearchBar.TabIndex = 9;
             this.tbSearchBar.TextChanged += new System.EventHandler(this.searchContainersText);
             // 
             // lvPlacards
             // 
-            this.lvPlacards.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.ContainerGLN, this.ContainerDescription, this.ContainerStatus, this.ContainerSubStatus, this.AssetCount });
+            this.lvPlacards.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ContainerGLN,
+            this.ContainerDescription,
+            this.ContainerStatus,
+            this.ContainerSubStatus,
+            this.AssetCount});
             this.lvPlacards.FullRowSelect = true;
             this.lvPlacards.HideSelection = false;
             this.lvPlacards.Location = new System.Drawing.Point(24, 61);
@@ -391,6 +416,139 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.ReloadContainers);
             // 
+            // tabRemoveOrders
+            // 
+            this.tabRemoveOrders.Controls.Add(this.cbCheckAllOrders);
+            this.tabRemoveOrders.Controls.Add(this.btnChangeQuantity);
+            this.tabRemoveOrders.Controls.Add(this.lblError);
+            this.tabRemoveOrders.Controls.Add(this.lvOrders);
+            this.tabRemoveOrders.Controls.Add(this.btnRemoveOrders);
+            this.tabRemoveOrders.Controls.Add(this.btnShowOrder);
+            this.tabRemoveOrders.Controls.Add(this.label3);
+            this.tabRemoveOrders.Controls.Add(this.txtBols);
+            this.tabRemoveOrders.Location = new System.Drawing.Point(4, 22);
+            this.tabRemoveOrders.Name = "tabRemoveOrders";
+            this.tabRemoveOrders.Size = new System.Drawing.Size(857, 427);
+            this.tabRemoveOrders.TabIndex = 4;
+            this.tabRemoveOrders.Text = "Order Removal";
+            this.tabRemoveOrders.UseVisualStyleBackColor = true;
+            // 
+            // cbCheckAllOrders
+            // 
+            this.cbCheckAllOrders.AutoSize = true;
+            this.cbCheckAllOrders.Location = new System.Drawing.Point(159, 23);
+            this.cbCheckAllOrders.Name = "cbCheckAllOrders";
+            this.cbCheckAllOrders.Size = new System.Drawing.Size(105, 17);
+            this.cbCheckAllOrders.TabIndex = 9;
+            this.cbCheckAllOrders.Text = "Check All Orders";
+            this.cbCheckAllOrders.UseVisualStyleBackColor = true;
+            this.cbCheckAllOrders.CheckedChanged += new System.EventHandler(this.clickCheckAll);
+            // 
+            // btnChangeQuantity
+            // 
+            this.btnChangeQuantity.Location = new System.Drawing.Point(269, 389);
+            this.btnChangeQuantity.Name = "btnChangeQuantity";
+            this.btnChangeQuantity.Size = new System.Drawing.Size(106, 34);
+            this.btnChangeQuantity.TabIndex = 8;
+            this.btnChangeQuantity.Text = "Change Quantity";
+            this.btnChangeQuantity.UseVisualStyleBackColor = true;
+            this.btnChangeQuantity.Click += new System.EventHandler(this.clickChangeQuantity);
+            // 
+            // lblError
+            // 
+            this.lblError.AutoSize = true;
+            this.lblError.ForeColor = System.Drawing.Color.Red;
+            this.lblError.Location = new System.Drawing.Point(657, 389);
+            this.lblError.Name = "lblError";
+            this.lblError.Size = new System.Drawing.Size(28, 13);
+            this.lblError.TabIndex = 7;
+            this.lblError.Text = "error";
+            this.lblError.Visible = false;
+            // 
+            // lvOrders
+            // 
+            this.lvOrders.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Orderid,
+            this.BolId,
+            this.ProcessingStatus,
+            this.colSourceId,
+            this.colStatusDate,
+            this.colRequestedQuantity});
+            this.lvOrders.HideSelection = false;
+            this.lvOrders.Location = new System.Drawing.Point(159, 46);
+            this.lvOrders.Name = "lvOrders";
+            this.lvOrders.Size = new System.Drawing.Size(670, 337);
+            this.lvOrders.TabIndex = 5;
+            this.lvOrders.UseCompatibleStateImageBehavior = false;
+            this.lvOrders.View = System.Windows.Forms.View.Details;
+            // 
+            // Orderid
+            // 
+            this.Orderid.Text = "Order Id";
+            this.Orderid.Width = 120;
+            // 
+            // BolId
+            // 
+            this.BolId.Text = "Bol Id";
+            this.BolId.Width = 95;
+            // 
+            // ProcessingStatus
+            // 
+            this.ProcessingStatus.Text = "Processing Status";
+            this.ProcessingStatus.Width = 115;
+            // 
+            // colSourceId
+            // 
+            this.colSourceId.Text = "Source Id";
+            this.colSourceId.Width = 85;
+            // 
+            // colStatusDate
+            // 
+            this.colStatusDate.Text = "Status Date";
+            this.colStatusDate.Width = 145;
+            // 
+            // colRequestedQuantity
+            // 
+            this.colRequestedQuantity.Text = "Quantity";
+            this.colRequestedQuantity.Width = 75;
+            // 
+            // btnRemoveOrders
+            // 
+            this.btnRemoveOrders.Location = new System.Drawing.Point(159, 390);
+            this.btnRemoveOrders.Name = "btnRemoveOrders";
+            this.btnRemoveOrders.Size = new System.Drawing.Size(104, 34);
+            this.btnRemoveOrders.TabIndex = 4;
+            this.btnRemoveOrders.Text = "Remove Selected Orders";
+            this.btnRemoveOrders.UseVisualStyleBackColor = true;
+            this.btnRemoveOrders.Click += new System.EventHandler(this.clickRemoveOrders);
+            // 
+            // btnShowOrder
+            // 
+            this.btnShowOrder.Location = new System.Drawing.Point(18, 389);
+            this.btnShowOrder.Name = "btnShowOrder";
+            this.btnShowOrder.Size = new System.Drawing.Size(110, 34);
+            this.btnShowOrder.TabIndex = 2;
+            this.btnShowOrder.Text = "Show Orders";
+            this.btnShowOrder.UseVisualStyleBackColor = true;
+            this.btnShowOrder.Click += new System.EventHandler(this.clickShowOrder);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(17, 30);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(67, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Enter BOL(s)";
+            // 
+            // txtBols
+            // 
+            this.txtBols.Location = new System.Drawing.Point(20, 46);
+            this.txtBols.Multiline = true;
+            this.txtBols.Name = "txtBols";
+            this.txtBols.Size = new System.Drawing.Size(108, 337);
+            this.txtBols.TabIndex = 0;
+            // 
             // dataSet1
             // 
             this.dataSet1.DataSetName = "NewDataSet";
@@ -423,9 +581,12 @@
             this.tabClearContainers.PerformLayout();
             this.tabMovePallets.ResumeLayout(false);
             this.tabMovePallets.PerformLayout();
+            this.tabRemoveOrders.ResumeLayout(false);
+            this.tabRemoveOrders.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private System.Windows.Forms.Button button1;
@@ -467,5 +628,20 @@
         private System.Windows.Forms.Label lblContainersAddSuccess;
         private System.Windows.Forms.Button findGhosts;
         private System.Windows.Forms.Label lblErrorMessage;
+        private System.Windows.Forms.TabPage tabRemoveOrders;
+        private System.Windows.Forms.Button btnShowOrder;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtBols;
+        private System.Windows.Forms.Button btnRemoveOrders;
+        private System.Windows.Forms.ListView lvOrders;
+        private System.Windows.Forms.ColumnHeader Orderid;
+        private System.Windows.Forms.ColumnHeader BolId;
+        private System.Windows.Forms.ColumnHeader ProcessingStatus;
+        private System.Windows.Forms.Label lblError;
+        private System.Windows.Forms.ColumnHeader colSourceId;
+        private System.Windows.Forms.ColumnHeader colStatusDate;
+        private System.Windows.Forms.ColumnHeader colRequestedQuantity;
+        private System.Windows.Forms.Button btnChangeQuantity;
+        private System.Windows.Forms.CheckBox cbCheckAllOrders;
     }
 }

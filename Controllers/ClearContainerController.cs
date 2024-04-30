@@ -21,12 +21,13 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             // concat '', to items in list
-            string stringGlns = ConcatStringFromList(dnuList);
+            //string stringGlns = ConcatStringFromList(dnuList);
 
             //  Get the containers from IGPS_DEPOT_GLN table
-            List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
+            List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(dnuList);
+
             List<IGPS_DEPOT_LOCATION> locationList =
-                await _igpsDepotLocationRepository.ReadContainersFromList(stringGlns);
+                await _igpsDepotLocationRepository.ReadContainersFromList(dnuList);
 
 
             return (glnList.OrderBy(x => x.Gln).ToList(), locationList.OrderBy(x => x.Gln).ToList());
@@ -35,10 +36,10 @@ namespace iGPS_Help_Desk.Controllers
         public async Task<List<IGPS_DEPOT_GLN>> GetContainersFromList(List<string> containerList)
         {
             List<IGPS_DEPOT_GLN> result = new List<IGPS_DEPOT_GLN>();
-            string stringGlns = ConcatStringFromList(containerList);
+            //string stringGlns = ConcatStringFromList(containerList);
 
-            result = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
-
+            //result = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
+            result = await _igpsDepotGlnRepository.ReadContainersFromList(containerList);
 
             return result;
         }
@@ -47,9 +48,9 @@ namespace iGPS_Help_Desk.Controllers
         {
             var result = new List<IGPS_DEPOT_LOCATION>();
 
-            string stringGlns = ConcatStringFromList(containerList);
+            //string stringGlns = ConcatStringFromList(containerList);
 
-            result = await _igpsDepotLocationRepository.ReadContainersFromList(stringGlns);
+            result = await _igpsDepotLocationRepository.ReadContainersFromList(containerList);
             return result;
         }
 
@@ -64,7 +65,6 @@ namespace iGPS_Help_Desk.Controllers
         {
             int count = await _igpsDepotGlnRepository.GetCountOfTable();
 
-            Console.WriteLine(count);
 
             List<string> listToDelete = new List<string>();
             List<string> listLocationToDelete = new List<string>();
@@ -74,9 +74,9 @@ namespace iGPS_Help_Desk.Controllers
             string stringGlns = ConcatStringFromList(glnList);
 
             // List from db
-            List<IGPS_DEPOT_GLN> listFromDb = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
+            List<IGPS_DEPOT_GLN> listFromDb = await _igpsDepotGlnRepository.ReadContainersFromList(glnList);
             List<IGPS_DEPOT_LOCATION> listLocationFromDb =
-                await _igpsDepotLocationRepository.ReadContainersFromList(stringGlns);
+                await _igpsDepotLocationRepository.ReadContainersFromList(glnList);
 
             foreach (IGPS_DEPOT_GLN container in listFromDb)
             {
@@ -88,8 +88,8 @@ namespace iGPS_Help_Desk.Controllers
                 listLocationToDelete.Add(container.Gln);
             }
 
-
-            stringToDelete = ConcatStringFromList(listToDelete);
+            listLocationToDelete = listLocationToDelete.Distinct().ToList();
+            stringToDelete = ConcatStringFromList(listLocationToDelete);
             stringLocationToDelete = ConcatStringFromList(listLocationToDelete);
 
             _logger.Information(
@@ -97,7 +97,7 @@ namespace iGPS_Help_Desk.Controllers
 
             if (stringToDelete.Length > 0)
             {
-                _igpsDepotGlnRepository.DeleteGlnsFromList(stringToDelete);
+                _igpsDepotGlnRepository.DeleteGraisFromList(stringToDelete);
             }
 
             if (stringLocationToDelete.Length > 0)
@@ -108,7 +108,7 @@ namespace iGPS_Help_Desk.Controllers
 
         public async Task<List<string>> GetGhostGrais()
         {
-            var ghostGlns = await _igpsDepotGlnRepository.GetGhostGrais();
+            List<string> ghostGlns = await _igpsDepotGlnRepository.GetGhostGrais();
 
             //var ghostGlnsString = ConcatStringFromList(ghostGlns);
             //var ghostGrais = await _igpsDepotGlnRepository.ReadContainersFromList(ghostGlnsString);

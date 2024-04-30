@@ -43,6 +43,8 @@
             this.lblSelectGraisError = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.graiSearchBar = new System.Windows.Forms.TextBox();
+            this.cbPalletGenerationChoice = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lvFromGrais
@@ -53,10 +55,10 @@
             this.colCount});
             this.lvFromGrais.FullRowSelect = true;
             this.lvFromGrais.HideSelection = false;
-            this.lvFromGrais.Location = new System.Drawing.Point(51, 73);
+            this.lvFromGrais.Location = new System.Drawing.Point(51, 87);
             this.lvFromGrais.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvFromGrais.Name = "lvFromGrais";
-            this.lvFromGrais.Size = new System.Drawing.Size(888, 432);
+            this.lvFromGrais.Size = new System.Drawing.Size(888, 418);
             this.lvFromGrais.TabIndex = 8;
             this.lvFromGrais.UseCompatibleStateImageBehavior = false;
             this.lvFromGrais.View = System.Windows.Forms.View.Details;
@@ -109,17 +111,18 @@
             // 
             // lblFromGln
             // 
-            this.lblFromGln.Location = new System.Drawing.Point(104, 19);
+            this.lblFromGln.Location = new System.Drawing.Point(51, 37);
             this.lblFromGln.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lblFromGln.Multiline = true;
             this.lblFromGln.Name = "lblFromGln";
             this.lblFromGln.ReadOnly = true;
-            this.lblFromGln.Size = new System.Drawing.Size(162, 26);
+            this.lblFromGln.Size = new System.Drawing.Size(164, 28);
             this.lblFromGln.TabIndex = 17;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(47, 24);
+            this.label1.Location = new System.Drawing.Point(47, 12);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 20);
@@ -138,9 +141,9 @@
             // 
             // reloadButton
             // 
-            this.reloadButton.Location = new System.Drawing.Point(742, 13);
+            this.reloadButton.Location = new System.Drawing.Point(823, 37);
             this.reloadButton.Name = "reloadButton";
-            this.reloadButton.Size = new System.Drawing.Size(112, 32);
+            this.reloadButton.Size = new System.Drawing.Size(116, 36);
             this.reloadButton.TabIndex = 20;
             this.reloadButton.Text = "Reload";
             this.reloadButton.UseVisualStyleBackColor = true;
@@ -158,7 +161,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(311, 3);
+            this.label2.Location = new System.Drawing.Point(467, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(105, 20);
             this.label2.TabIndex = 23;
@@ -166,11 +169,38 @@
             // 
             // graiSearchBar
             // 
-            this.graiSearchBar.Location = new System.Drawing.Point(314, 19);
+            this.graiSearchBar.Location = new System.Drawing.Point(471, 37);
+            this.graiSearchBar.Multiline = true;
             this.graiSearchBar.Name = "graiSearchBar";
-            this.graiSearchBar.Size = new System.Drawing.Size(241, 26);
+            this.graiSearchBar.Size = new System.Drawing.Size(242, 28);
             this.graiSearchBar.TabIndex = 22;
             this.graiSearchBar.TextChanged += new System.EventHandler(this.searchContainerForGrai);
+            // 
+            // cbPalletGenerationChoice
+            // 
+            this.cbPalletGenerationChoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPalletGenerationChoice.FormattingEnabled = true;
+            this.cbPalletGenerationChoice.Items.AddRange(new object[] {
+            "ALL",
+            "GEN1 (0)",
+            "GEN2/FEMSA (A)",
+            "GEN2/Rehrig (B)",
+            "GEN3 (C)",
+            "GEN6 (D)"});
+            this.cbPalletGenerationChoice.Location = new System.Drawing.Point(231, 37);
+            this.cbPalletGenerationChoice.Name = "cbPalletGenerationChoice";
+            this.cbPalletGenerationChoice.Size = new System.Drawing.Size(197, 28);
+            this.cbPalletGenerationChoice.TabIndex = 24;
+            this.cbPalletGenerationChoice.SelectedIndexChanged += new System.EventHandler(this.palletGenChoice);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(227, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(93, 20);
+            this.label3.TabIndex = 25;
+            this.label3.Text = "Generation:";
             // 
             // ClearGraisForm
             // 
@@ -178,6 +208,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1020, 640);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cbPalletGenerationChoice);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.graiSearchBar);
             this.Controls.Add(this.lblSelectGraisError);
@@ -212,5 +244,7 @@
         private System.Windows.Forms.Label lblSelectGraisError;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox graiSearchBar;
+        private System.Windows.Forms.ComboBox cbPalletGenerationChoice;
+        private System.Windows.Forms.Label label3;
     }
 }

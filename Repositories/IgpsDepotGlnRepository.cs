@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Models.Repositories;
@@ -54,8 +55,10 @@ namespace iGPS_Help_Desk.Repositories
                 return (Glns, Glns.Count);
             }
         }
-        public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln)
+        public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln, string generationPrefix)
         {
+            grai = $"%{generationPrefix}{grai}%";
+
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
             if (test != null)
             {
@@ -64,7 +67,7 @@ namespace iGPS_Help_Desk.Repositories
 
             List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
 
-            string query = $"SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN = {gln} AND GRAI LIKE '%{grai}%' ORDER BY GLN";
+            string query = $"SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN = @Gln AND GRAI LIKE @Grai ORDER BY GLN";
 
             using (var conn = connection)
             {
@@ -78,6 +81,13 @@ namespace iGPS_Help_Desk.Repositories
                 }
 
                 SqlCommand command = new SqlCommand(query, conn);
+
+                command.Parameters.Add("@Gln", System.Data.SqlDbType.VarChar);
+                command.Parameters["@Gln"].Value = gln;
+
+                command.Parameters.Add("@Grai", System.Data.SqlDbType.VarChar);
+                command.Parameters["@Grai"].Value = grai;
+
                 reader = await command.ExecuteReaderAsync();
 
                 if (reader.HasRows)
@@ -202,7 +212,7 @@ namespace iGPS_Help_Desk.Repositories
             return result;
         }
 
-        public async Task<List<IGPS_DEPOT_GLN>> ReadFromGraiList(string list)
+        public async Task<List<IGPS_DEPOT_GLN>> ReadFromGraiList(List<string> list)
         {
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
             if (test != null)
@@ -212,7 +222,8 @@ namespace iGPS_Help_Desk.Repositories
 
             List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
 
-            string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GRAI IN ({list});";
+            string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GRAI IN " +
+                $"({string.Join(",", list.Select((_, index) => $"@param{index}"))});";
 
             using (var conn = connection)
             {
@@ -226,6 +237,11 @@ namespace iGPS_Help_Desk.Repositories
                 }
 
                 SqlCommand command = new SqlCommand(query, conn);
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    command.Parameters.AddWithValue($"param{i}", list[i]);
+                }
                 reader = await command.ExecuteReaderAsync();
 
 
@@ -246,7 +262,60 @@ namespace iGPS_Help_Desk.Repositories
 
             return Grais;
         }
+        public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(List<string> list)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
 
+            List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
+
+            // Constructing the parameterized query string
+            string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN IN " +
+                $"({string.Join(",", list.Select((_, index) => $"@param{index}"))}) ORDER BY GLN;";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    // Adding parameters to the command
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        command.Parameters.AddWithValue($"@param{i}", list[i]);
+                    }
+
+                    reader = await command.ExecuteReaderAsync();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
+                            Grais.Add(glnsFromDb);
+                        }
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+
+            return Grais;
+        }
+        
         public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(string list)
         {
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
@@ -292,6 +361,8 @@ namespace iGPS_Help_Desk.Repositories
 
             return Grais;
         }
+
+
 
         public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromListOrderByDate(string list)
         {
@@ -339,7 +410,46 @@ namespace iGPS_Help_Desk.Repositories
             }
         }
 
-        public async void DeleteGlnsFromList(string list)
+        //public async void DeleteGlnsFromList(List<string> list)
+        //{
+        //    var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+        //    if (test != null)
+        //    {
+        //        connection = new SqlConnection(test);
+        //    }
+
+        //    string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GLN IN " +
+        //        $"({string.Join(",", list.Select((_, index) => $"@param{index}"))})";
+
+        //    using (var conn = connection)
+        //    {
+        //        try
+        //        {
+        //            conn.Open();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            _logger.Error(ex.Message);
+        //        }
+
+        //        SqlCommand command = new SqlCommand(deleteQuery, conn);
+
+        //        for (int i = 0; i < list.Count; i++)
+        //        {
+        //            command.Parameters.AddWithValue($"param{i}", list[i]);
+        //        }
+
+        //        reader = await command.ExecuteReaderAsync();
+
+
+        //        if (conn.State == System.Data.ConnectionState.Open)
+        //        {
+        //            conn.Close();
+        //        }
+        //    }
+        //}
+
+        public async void DeleteGraisFromList(string list)
         {
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
             if (test != null)
@@ -372,121 +482,8 @@ namespace iGPS_Help_Desk.Repositories
             }
         }
 
-        public async void DeleteGraisFromList(string list)
-        {
-            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
-            if (test != null)
-            {
-                connection = new SqlConnection(test);
-            }
+      
 
-            string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GRAI IN ({list})";
-
-            using (var conn = connection)
-            {
-                try
-                {
-                    conn.Open();
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                }
-
-                SqlCommand command = new SqlCommand(deleteQuery, conn);
-
-                reader = await command.ExecuteReaderAsync();
-
-
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-            }
-        }
-
-        public async void UpdateContainersToExistingContainer(string fromGln, string toGln)
-        {
-            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
-            if (test != null)
-            {
-                connection = new SqlConnection(test);
-            }
-
-            var grais = await ReadContainersFromList(fromGln);
-            List<string> tempList = new List<string>();
-
-            foreach (var g in grais)
-            {
-                tempList.Add(g.Grai.ToString());
-            }
-
-            var concatenatedGrais = ConcatStringFromList(tempList);
-
-            string updateQuery = $"UPDATE IGPS_DEPOT_GLN " +
-                                 $"SET GLN = {toGln}" +
-                                 $"WHERE GRAI IN ({concatenatedGrais})";
-
-            using (SqlConnection conn = connection)
-            {
-                try
-                {
-                    conn.Open();
-                    // Perform database operations here
-
-                    SqlCommand command = new SqlCommand(updateQuery, conn);
-
-                    reader = await command.ExecuteReaderAsync();
-                }
-                catch (Exception ex)
-                {
-                    // Handle exceptions here
-                    _logger.Error(ex.Message);
-                }
-
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-            }
-        }
-
-        public async void UpdateSelectedGrais(List<string> grais, string toGln)
-        {
-            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
-            if (test != null)
-            {
-                connection = new SqlConnection(test);
-            }
-
-            var concatenatedGrais = ConcatStringFromList(grais);
-
-            string updateQuery = $"UPDATE IGPS_DEPOT_GLN " +
-                                 $"SET GLN = {toGln}" +
-                                 $"WHERE GRAI IN ({concatenatedGrais})";
-
-            using (SqlConnection conn = connection)
-            {
-                try
-                {
-                    conn.Open();
-                    // Perform database operations here
-                    SqlCommand command = new SqlCommand(updateQuery, conn);
-
-                    reader = await command.ExecuteReaderAsync();
-                }
-                catch (Exception ex)
-                {
-                    // Handle exceptions here
-                    _logger.Error(ex.Message);
-                }
-
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-            }
-        }
 
         public async Task<List<string>> GetGhostGrais()
         {

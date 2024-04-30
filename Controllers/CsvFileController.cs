@@ -193,8 +193,10 @@ namespace iGPS_Help_Desk.Controllers
                 Directory.CreateDirectory(ClearContainerFilePath);
             }
 
+            var stringOfContainers = ConcatStringFromList(txtContainersToClear);
             // List from db
-            var igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
+            //var igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
+            var igpsDepotGln = await _igpsDepotGlnRepository.ReadContainersFromList(stringOfContainers);
             var igpsDepotLocation = await _igpsDepotLocationRepository.ReadAllContainers();
             int igpsDepotLocationCount = igpsDepotLocation.Count;
 
@@ -364,8 +366,8 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             // List from db
-            var stringListOfGrais = ConcatStringFromList(txtGraisToClear);
-            var igpsDepotGln = await _igpsDepotGlnRepository.ReadFromGraiList(stringListOfGrais);
+            var igpsDepotGln = await _igpsDepotGlnRepository.ReadFromGraiList(txtGraisToClear);
+
 
             // check for null 
             if (igpsDepotGln == null)

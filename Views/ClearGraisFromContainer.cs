@@ -3,6 +3,7 @@ using iGPS_Help_Desk.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,10 +15,10 @@ namespace iGPS_Help_Desk.Views
         private readonly ClearContainerController _clearContainerController = new ClearContainerController();
         private readonly CsvFileController _csvFileController = new CsvFileController();
         private readonly string _fromGln;
-        private readonly string _toGln;
         private readonly List<string> listOfFromGrais = new List<string>();
         List<string> listOfToGrais = new List<string>();
         private readonly ILogger _logger = Log.ForContext<Igps>();
+        private string generationPrefix;
 
         private ClearGraisForm()
         {
@@ -29,7 +30,7 @@ namespace iGPS_Help_Desk.Views
             _fromGln = fromGln;
 
             lblFromGln.Text += fromGln;
-
+            cbPalletGenerationChoice.SelectedIndex = 0;
             LoadGrais();
         }
 
@@ -45,7 +46,7 @@ namespace iGPS_Help_Desk.Views
             var listContainers = new List<IGPS_DEPOT_GLN>();
             if (graiSearchBar.Text.Length != 0)
             {
-                listContainers = await _moveContainerController.SearchGraiFromContainer(graiSearchBar.Text, _fromGln);
+                listContainers = await _moveContainerController.SearchGraiFromContainer(graiSearchBar.Text, _fromGln, generationPrefix);
             }
             else
             {
@@ -64,13 +65,12 @@ namespace iGPS_Help_Desk.Views
                 lvFromGrais.Items.Add(item);
 
             }
-            lblFromGraisCount.Text = $"Container Count: {listOfFromGrais.Count}";
+            lblFromGraisCount.Text = $"Container Count: {listContainers.Count}";
         }
 
 
         private async void clickDeleteSelectedGrais(object sender, EventArgs e)
         {
-
 
             var listOfGrais = new List<string>();
             var selectedGrais = lvFromGrais.SelectedItems;
@@ -129,7 +129,7 @@ namespace iGPS_Help_Desk.Views
                 }
                 var path = CsvFileController.GetCurrentFolderPath();
                 await _csvFileController.SaveCsvOfIndividualGrais(selectedGrais.Count.ToString(), listOfGrais, _fromGln, num);
-                MessageBox.Show($"Grais have been saved to {path}");
+                MessageBox.Show($"Grais have been saved to {path}", "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -143,11 +143,8 @@ namespace iGPS_Help_Desk.Views
             await LoadFromGrais();
         }
 
-        private async void searchContainerForGrai(object sender, EventArgs e)
+        private void updateGraiList(List<IGPS_DEPOT_GLN> listContainers)
         {
-
-            var listContainers = await _moveContainerController.SearchGraiFromContainer(graiSearchBar.Text, lblFromGln.Text);
-
             lvFromGrais.Items.Clear();
             listOfFromGrais.Clear();
             for (int i = 0; i < listContainers.Count; i++)
@@ -162,6 +159,47 @@ namespace iGPS_Help_Desk.Views
             }
             lblFromGraisCount.Text = $"Container Count: {listOfFromGrais.Count}";
         }
+
+        private async void searchContainerForGrai(object sender, EventArgs e)
+        {
+
+            var listContainers = await _moveContainerController.SearchGraiFromContainer(graiSearchBar.Text, lblFromGln.Text, generationPrefix);
+
+            updateGraiList(listContainers);
+        }
+
+        private async void palletGenChoice(object sender, EventArgs e)
+        {
+            switch (cbPalletGenerationChoice.SelectedIndex)
+            {
+                case 0:
+                    generationPrefix = string.Empty;
+                    break;
+                case 1:
+                    generationPrefix = "330835563C610000";
+                    break;
+                case 2:
+                    generationPrefix = "330835563C61000A";
+                    break;
+                case 3:
+                    generationPrefix = "330835563C61000B";
+                    break;
+                case 4:
+                    generationPrefix = "330835563C61000C";
+                    break;
+                case 5:
+                    generationPrefix = "330835563C61000D";
+                    break;
+                default:
+                    break;
+
+            }
+            var listContainers = await _moveContainerController.SearchGraiFromContainer(graiSearchBar.Text, lblFromGln.Text, generationPrefix);
+
+            updateGraiList(listContainers);
+
+        }
+
     }
 }
 

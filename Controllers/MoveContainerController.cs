@@ -15,44 +15,6 @@ namespace iGPS_Help_Desk.Controllers
         }
 
 
-        public async Task<int> GetCountOfContainer(string gln)
-        {
-            var listResult = new List<string>
-            {
-                gln
-            };
-
-            var temp = ConcatStringFromList(listResult);
-            var containers = await _igpsDepotGlnRepository.ReadContainersFromList(temp);
-
-            return  containers.Count;
-        }
-
-        public void MoveContainers(string fromGln, string toGln, int fromCount)
-        {
-            if (fromCount.Equals(0)) return;
-
-            fromGln = $"'{fromGln}'";
-            toGln = $"'{toGln}'";
-            
-            _igpsDepotGlnRepository.UpdateContainersToExistingContainer(fromGln, toGln);
-            
-        }
-
-        public void DeleteContainer(string glnToDelete)
-        {
-            glnToDelete = $"'{glnToDelete}'";
-            
-            _igpsDepotLocationRepository.DeleteContainersFromList(glnToDelete);
-        }
-
-        public void MoveSelectedGraisToContainer(List<string> grais, string toGln)
-        {
-            if (grais != null && toGln != null)
-            {
-                _igpsDepotGlnRepository.UpdateSelectedGrais(grais, toGln);
-            }
-        }
 
         public async Task<List<IGPS_DEPOT_GLN>> ReadGraisFromContainer(string gln)
         {
@@ -83,13 +45,13 @@ namespace iGPS_Help_Desk.Controllers
             return listResult;
         }
 
-        public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln)
+        public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln, string generationPrefix)
         {
             var listResult = new List<IGPS_DEPOT_GLN>();
 
             try
             {
-                listResult = await _igpsDepotGlnRepository.SearchGraiFromContainer(grai, gln);
+                listResult = await _igpsDepotGlnRepository.SearchGraiFromContainer(grai, gln, generationPrefix);
             } 
             catch (Exception ex)
             {

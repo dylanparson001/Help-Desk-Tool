@@ -11,8 +11,11 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace iGPS_Help_Desk.Views
 {
@@ -21,7 +24,9 @@ namespace iGPS_Help_Desk.Views
         private Timer closeTimer;
         private readonly ILogger _logger = Log.ForContext<Igps>();
         private List<IGPS_DEPOT_GLN> igpsDepotGln = new List<IGPS_DEPOT_GLN>();
+        private List<string> ordersEntered = new List<string>();
         private bool showButtonClicked = false;
+        private bool saveButtonClicked = false;
         public Igps()
         {
             InitializeComponent();
@@ -50,14 +55,13 @@ namespace iGPS_Help_Desk.Views
         private void CloseTimer_Tick(object sender, EventArgs e)
         {
             // Timer has elapsed, close the application
-            Application.Exit();
         }
 
 
         // Parses GLNs from the list entered from form
         private List<string> ParseGln(string glnList)
         {
-            string[] delimiters = { "\n", "\r\n", " ", "'" };
+            string[] delimiters = { "\n", "\r\n", " ", "'", "•", "\t" };
 
             List<string> tempList = new List<string>();
 
@@ -77,11 +81,12 @@ namespace iGPS_Help_Desk.Views
         // Deletes GLNS from IGPS_DEPOT_GLN and IGPS_DEPOT_LOCATION
         private void ClickClearContainers(object sender, EventArgs e)
         {
-            if (!showButtonClicked)
-            {
-                MessageBox.Show("Click 'Show Content'");
-                return;
-            }
+            if (!saveButtonClicked)
+                if (!saveButtonClicked)
+                {
+                    MessageBox.Show("Please save GRAIs before clearing containers", "GRAIs not Saved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             if (lvGlnContent.Items.Count == 0 && txtContainersToClear.Text == "")
             {
                 lblErrorMessage.Text = "No containers entered";
@@ -105,7 +110,7 @@ namespace iGPS_Help_Desk.Views
                 lvGlnContent.Items.Clear();
                 lblErrorMessage.Visible = false;
             }
-
+            saveButtonClicked = false;
             GC.Collect();
         }
 
@@ -238,8 +243,9 @@ namespace iGPS_Help_Desk.Views
             }
 
             _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
-            MessageBox.Show("Files have been saved to " + _clearContainerPath);
+            MessageBox.Show("Files have been saved to " + _clearContainerPath, "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             lblErrorMessage.Visible = false;
+            saveButtonClicked = true;
             // Gets rid of excess memory usage from snapshot
             GC.Collect();
         }
@@ -295,6 +301,7 @@ namespace iGPS_Help_Desk.Views
         {
             lblErrorMessage.Visible = false;
             showButtonClicked = false;
+            saveButtonClicked = false;
             ClearContainerFields();
         }
 
@@ -377,6 +384,210 @@ namespace iGPS_Help_Desk.Views
 
             ShowContent();
             lblContainersAddSuccess.Visible = true;
+        }
+
+        // Order Removal Tab -----------------------------------------------------------------
+        private async void clickShowOrder(object sender, EventArgs e)
+        {
+            await ReloadShowOrders();
+        }
+
+        private async void clickRemoveOrders(object sender, EventArgs e)
+        {
+            var orderIdList = new List<string>();
+
+            if (lvOrders.CheckedItems.Count == 0)
+            {
+                lblError.Text = "No orders selected";
+                lblError.Visible = true;
+                return;
+            }
+            lblError.Visible = false;
+            for (int i = 0; i < lvOrders.CheckedItems.Count; i++)
+            {
+                orderIdList.Add(lvOrders.CheckedItems[i].Text);
+            }
+
+            DialogResult userChoice = MessageBox.Show($"Are you sure you want to remove {orderIdList.Count}" +
+                $" orders from iSum?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (userChoice == DialogResult.Yes)
+            {
+                await _orderController.RemoveSelectedOrders(orderIdList);
+                await ReloadShowOrders();
+            }
+
+        }
+
+        private async Task ReloadShowOrders()
+        {
+            if (String.IsNullOrEmpty(txtBols.Text))
+            {
+                lblError.Text = "No Bols entered!";
+                lblError.ForeColor = Color.Red;
+                lblError.Visible = true;
+                lvOrders.Items.Clear();
+                return;
+            };
+
+            lblError.Visible = false;
+
+            lvOrders.CheckBoxes = true;
+            lvOrders.Items.Clear();
+            var parsedBol = ParseGln(txtBols.Text);
+
+            parsedBol = parsedBol.Select(x => x.ToString()).Distinct().ToList();
+
+            txtBols.Clear();
+            foreach (var bol in parsedBol)
+            {
+                txtBols.AppendText($"{bol} \r\n");
+
+            }
+            var bolResult = await _orderController.GetBolsFromList(parsedBol);
+
+
+
+            bolResult = bolResult
+                .OrderBy(x => x.BolId)
+                .OrderBy(x => x.STATUS_DATE)
+                .ToList();
+
+            for (int i = 0; i < bolResult.Count; i++)
+            {
+                string status = bolResult[i].PROCESSING_STATUS;
+
+                if (String.IsNullOrEmpty(status))
+                {
+                    status = "NULL";
+                }
+
+
+                var item = new ListViewItem(bolResult[i].OrderId);
+                item.SubItems.Add(bolResult[i].BolId);
+                item.SubItems.Add(status);
+                item.SubItems.Add(bolResult[i].FacilityId_Source);
+                item.SubItems.Add(bolResult[i].STATUS_DATE.ToString());
+                item.SubItems.Add(bolResult[i].RequestedQuantity.ToString());
+
+
+                // Alternate row colors
+                if (i % 2 == 0)
+                {
+                    item.BackColor = Color.LightBlue;
+                }
+
+                lvOrders.Items.Add(item);
+            }
+            cbCheckAllOrders.Checked = false;
+
+        }
+
+        private async void clickChangeQuantity(object sender, EventArgs e)
+        {
+            var orderIdList = new List<string>();
+
+            if (lvOrders.CheckedItems.Count == 0)
+            {
+                lblError.Text = "No orders selected";
+                lblError.Visible = true;
+                return;
+            }
+            lblError.Visible = false;
+
+
+            for (int i = 0; i < lvOrders.CheckedItems.Count; i++)
+            {
+                orderIdList.Add(lvOrders.CheckedItems[i].Text);
+            }
+            int newQuantity = Show("Enter a new quantity:", "New Quantity");
+
+            // value will be 0 on cancel
+            if (newQuantity != 0)
+            {
+                DialogResult result = MessageBox.Show(
+                    $"Are you sure you want to change the quantity to" +
+                    $"{newQuantity}?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    await _orderController.UpdateRequestedQuantity(newQuantity, orderIdList);
+                }
+            }
+
+            await ReloadShowOrders();
+        }
+
+        public static int Show(string prompt, string caption)
+        {
+            Form form = new Form();
+            Label label = new Label();
+            TextBox textBox = new TextBox();
+            Button buttonOk = new Button();
+            Button buttonCancel = new Button();
+
+            form.Text = caption;
+            label.Text = prompt;
+
+            buttonOk.Text = "OK";
+            buttonCancel.Text = "Cancel";
+            buttonOk.DialogResult = DialogResult.OK;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+
+            label.SetBounds(9, 20, 372, 13);
+            textBox.SetBounds(12, 36, 372, 20);
+            buttonOk.SetBounds(228, 72, 75, 23);
+            buttonCancel.SetBounds(309, 72, 75, 23);
+
+            label.AutoSize = true;
+            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+            buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+            form.ClientSize = new System.Drawing.Size(396, 107);
+            form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
+            form.ClientSize = new System.Drawing.Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.MinimizeBox = false;
+            form.MaximizeBox = false;
+            form.AcceptButton = buttonOk;
+            form.CancelButton = buttonCancel;
+
+            DialogResult dialogResult = form.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                int result;
+                if (int.TryParse(textBox.Text, out result))
+                {
+                    return result;
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid integer.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return Show(prompt, caption);
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private void clickCheckAll(object sender, EventArgs e)
+        {
+            if (cbCheckAllOrders.Checked)
+            {
+                for (int i = 0; i < lvOrders.Items.Count; i++)
+                {
+                    lvOrders.Items[i].Checked = true;
+                }
+                return;
+            }
+            for (int i = 0; i < lvOrders.Items.Count; i++)
+            {
+                lvOrders.Items[i].Checked = false;
+            }
         }
     }
 }

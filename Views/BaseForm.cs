@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Controllers;
+using iGPS_Help_Desk.Models;
 
 namespace iGPS_Help_Desk.Views
 {
@@ -11,6 +12,7 @@ namespace iGPS_Help_Desk.Views
         protected readonly ClearContainerController _clearContainerController = new ClearContainerController();
         protected readonly CsvFileController _csvFileController = new CsvFileController();
         protected readonly MoveContainerController _moveContainerController = new MoveContainerController();
+        protected readonly OrderController _orderController = new OrderController();
         
         public BaseForm()
         {

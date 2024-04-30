@@ -100,16 +100,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\ChangeStatusController.cs" />
     <Compile Include="Controllers\ClearContainerController.cs" />
     <Compile Include="Controllers\CsvFileController.cs" />
     <Compile Include="Controllers\MoveContainerController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Models\IGPS_DEPOT_GLN.cs" />
     <Compile Include="Models\IGPS_DEPOT_LOCATION.cs" />
     <Compile Include="Models\FacilityContainerStatus.cs" />
+    <Compile Include="Models\OrderRequestNewHeader.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\IgpsDepotGlnRepository.cs" />
     <Compile Include="Repositories\IgpsDepotLocationRepository.cs" />
+    <Compile Include="Repositories\OrderRequestNewHeaderRepository.cs" />
     <Compile Include="Views\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
