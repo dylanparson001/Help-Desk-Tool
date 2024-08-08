@@ -71,12 +71,15 @@ namespace iGPS_Help_Desk.Controllers
             string stringToDelete;
             string stringLocationToDelete;
             if (glnList == null) return;
-            string stringGlns = ConcatStringFromList(glnList);
 
             // List from db
             List<IGPS_DEPOT_GLN> listFromDb = await _igpsDepotGlnRepository.ReadContainersFromList(glnList);
+            listFromDb = listFromDb.Distinct().ToList();
+
             List<IGPS_DEPOT_LOCATION> listLocationFromDb =
                 await _igpsDepotLocationRepository.ReadContainersFromList(glnList);
+            listLocationFromDb = listLocationFromDb.Distinct().ToList();
+
 
             foreach (IGPS_DEPOT_GLN container in listFromDb)
             {
@@ -89,7 +92,7 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             listLocationToDelete = listLocationToDelete.Distinct().ToList();
-            stringToDelete = ConcatStringFromList(listLocationToDelete);
+            stringToDelete = ConcatStringFromList(listToDelete);
             stringLocationToDelete = ConcatStringFromList(listLocationToDelete);
 
             _logger.Information(
@@ -97,7 +100,7 @@ namespace iGPS_Help_Desk.Controllers
 
             if (stringToDelete.Length > 0)
             {
-                _igpsDepotGlnRepository.DeleteGraisFromList(stringToDelete);
+                _igpsDepotGlnRepository.DeleteGlnsFromList(stringToDelete);
             }
 
             if (stringLocationToDelete.Length > 0)

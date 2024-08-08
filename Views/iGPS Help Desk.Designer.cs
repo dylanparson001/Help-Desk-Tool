@@ -490,12 +490,12 @@
             // BolId
             // 
             this.BolId.Text = "Bol Id";
-            this.BolId.Width = 95;
+            this.BolId.Width = 75;
             // 
             // ProcessingStatus
             // 
             this.ProcessingStatus.Text = "Processing Status";
-            this.ProcessingStatus.Width = 115;
+            this.ProcessingStatus.Width = 100;
             // 
             // colSourceId
             // 

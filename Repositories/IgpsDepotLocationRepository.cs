@@ -68,7 +68,8 @@ namespace iGPS_Help_Desk.Models.Repositories
             }
             List<IGPS_DEPOT_LOCATION> Glns = new List<IGPS_DEPOT_LOCATION>();
 
-            string query = $"SELECT SITE_ID, GLN, GLN96, Status, CREATE_DATE, DESCRIPTION, Visible, SubStatus, SKUType" +
+            string query = $"SELECT SITE_ID, GLN, GLN96, Status, CREATE_DATE, DESCRIPTION, Visible, SubStatus, SKUType," +
+                $"(SELECT COUNT(GLN) FROM IGPS_DEPOT_GLN WHERE IGPS_DEPOT_GLN.GLN = IGPS_DEPOT_LOCATION.GLN )  AS COUNT" +
                 $" FROM IGPS_DEPOT_LOCATION WHERE GLN IN " +
                 $"({string.Join(",", list.Select((_, index) => $"@param{index}"))})";
 
@@ -93,6 +94,8 @@ namespace iGPS_Help_Desk.Models.Repositories
                         while (reader.Read())
                         {
                             var glnsFromDb = new IGPS_DEPOT_LOCATION(reader);
+                            glnsFromDb.Count = (int)reader["COUNT"];
+
                             Glns.Add(glnsFromDb);
                         }
                     }
@@ -158,6 +161,7 @@ namespace iGPS_Help_Desk.Models.Repositories
 
         public async Task<List<IGPS_DEPOT_LOCATION>> ReadFromSearch(string search)
         {
+            search = search.Trim();
             search = $"%{search}%";
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
 

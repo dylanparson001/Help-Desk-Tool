@@ -215,6 +215,11 @@ namespace iGPS_Help_Desk.Views
                 return;
             }
 
+            if (igpsDepotGln.Count == 0)
+            {
+                ShowContent();
+            }
+
             // Save current container clear request
             List<string> zoutGlnList = ParseGln(txtContainersToClear.Text);
             string zoutCount = zoutGlnList.Count.ToString();

@@ -410,44 +410,39 @@ namespace iGPS_Help_Desk.Repositories
             }
         }
 
-        //public async void DeleteGlnsFromList(List<string> list)
-        //{
-        //    var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
-        //    if (test != null)
-        //    {
-        //        connection = new SqlConnection(test);
-        //    }
+        public async void DeleteGlnsFromList(string list)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
 
-        //    string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GLN IN " +
-        //        $"({string.Join(",", list.Select((_, index) => $"@param{index}"))})";
+            string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GLN IN " +
+                $"({list})";
 
-        //    using (var conn = connection)
-        //    {
-        //        try
-        //        {
-        //            conn.Open();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            _logger.Error(ex.Message);
-        //        }
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
 
-        //        SqlCommand command = new SqlCommand(deleteQuery, conn);
+                SqlCommand command = new SqlCommand(deleteQuery, conn);
 
-        //        for (int i = 0; i < list.Count; i++)
-        //        {
-        //            command.Parameters.AddWithValue($"param{i}", list[i]);
-        //        }
-
-        //        reader = await command.ExecuteReaderAsync();
+                reader = await command.ExecuteReaderAsync();
 
 
-        //        if (conn.State == System.Data.ConnectionState.Open)
-        //        {
-        //            conn.Close();
-        //        }
-        //    }
-        //}
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+        }
 
         public async void DeleteGraisFromList(string list)
         {
@@ -457,7 +452,7 @@ namespace iGPS_Help_Desk.Repositories
                 connection = new SqlConnection(test);
             }
 
-            string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GLN IN ({list})";
+            string deleteQuery = $"DELETE FROM IGPS_DEPOT_GLN WHERE GRAI IN ({list})";
 
             using (var conn = connection)
             {

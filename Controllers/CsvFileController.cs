@@ -54,7 +54,7 @@ namespace iGPS_Help_Desk.Controllers
 
             var rnd = new Random();
 
-            int rand = rnd.Next(1, 100);
+            int rand = rnd.Next(1, 1000);
             await SaveContainersFromList(txtZoutCount, txtZoutContainersToClear, rand, listIgpsDepotGln);
             if (saveSnapshot)
             {
@@ -151,9 +151,9 @@ namespace iGPS_Help_Desk.Controllers
                 var seventh = gln.Visible;
                 var eith = gln.SubStatus;
                 var ninth = gln.SkuType;
-
+                var tenth = gln.Count;
                 var newLine =
-                    string.Format($"{first},{second}, {fourth}, {fifth}, {sixth}, {seventh}, {eith}, {ninth}");
+                    string.Format($"{first},{second}, {fourth}, {fifth}, {sixth}, {seventh}, {eith}, {ninth}, {tenth}");
                 csv2.AppendLine(newLine);
             }
 
@@ -262,9 +262,10 @@ namespace iGPS_Help_Desk.Controllers
                 var sixth = gln.Description;
                 var seventh = gln.Visible;
                 var eighth = gln.SubStatus;
+                var ninth = gln.Count;
 
                 var newLine =
-                    string.Format($"{first},{second}, {third}, {fourth}, {fifth}, {sixth}, {seventh}, {eighth}");
+                    string.Format($"{first},{second}, {third}, {fourth}, {fifth}, {sixth}, {seventh}, {eighth}, {ninth}");
                 csv2.AppendLine(newLine);
             }
 
