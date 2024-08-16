@@ -16,6 +16,11 @@ namespace iGPS_Help_Desk.Controllers
         protected ILogger _logger = Log.ForContext<Igps>();
         protected string ConcatStringFromList(List<string> listOfString)
         {
+            listOfString.ForEach(x =>
+            {
+                x.Trim();
+            });
+            
             return string.Join(",", listOfString.Select(i => $"'{i}'"));
         }
         protected string GetCurrentSiteid()

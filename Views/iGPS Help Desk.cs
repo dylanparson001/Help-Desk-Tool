@@ -195,6 +195,8 @@ namespace iGPS_Help_Desk.Views
         private async void BtnSaveContent(object sender, EventArgs e)
         {
             bool saveSnapshot = false;
+            bool savingSnapshot = true;
+            this.Cursor = Cursors.WaitCursor;
 
             if (!showButtonClicked)
             {
@@ -251,6 +253,7 @@ namespace iGPS_Help_Desk.Views
             MessageBox.Show("Files have been saved to " + _clearContainerPath, "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             lblErrorMessage.Visible = false;
             saveButtonClicked = true;
+            this.Cursor = Cursors.Default;
             // Gets rid of excess memory usage from snapshot
             GC.Collect();
         }

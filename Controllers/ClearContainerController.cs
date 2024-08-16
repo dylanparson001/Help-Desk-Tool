@@ -63,6 +63,15 @@ namespace iGPS_Help_Desk.Controllers
 
         public async void ClearContainers(List<string> glnList)
         {
+
+            if (glnList == null)
+            {
+                return;
+            }
+            if (glnList.Count == 0) {
+                return;
+            
+            }
             int count = await _igpsDepotGlnRepository.GetCountOfTable();
 
 
