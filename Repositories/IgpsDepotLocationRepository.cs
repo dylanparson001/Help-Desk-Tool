@@ -19,9 +19,8 @@ namespace iGPS_Help_Desk.Models.Repositories
                 connection = new SqlConnection(test);
             }
             List<IGPS_DEPOT_LOCATION> Glns = new List<IGPS_DEPOT_LOCATION>();
-            string query = "SELECT SITE_ID, GLN, GLN96, Status, CREATE_DATE, DESCRIPTION, Visible, SubStatus, SKUType, " +
-                "(SELECT COUNT(GLN) FROM IGPS_DEPOT_GLN WHERE IGPS_DEPOT_GLN.GLN = IGPS_DEPOT_LOCATION.GLN )  AS COUNT " +
-                "FROM IGPS_DEPOT_LOCATION;";
+
+            string query = "SELECT FacilityId, GLN, Description, Status, SubStatus, PalletCount FROM IGPS_DEPOT_INVENTORY_COUNT";
 
             using (var conn = connection)
             {
@@ -43,8 +42,16 @@ namespace iGPS_Help_Desk.Models.Repositories
                 {
                     while (reader.Read())
                     {
-                        var glnsFromDb = new IGPS_DEPOT_LOCATION(reader);
-                        glnsFromDb.Count = (int)reader["COUNT"];
+                        var gln = reader["GLN"].ToString();
+                        var status = reader["Status"].ToString();
+                        var subStatus = reader["SubStatus"].ToString();
+                        var description = reader["Description"].ToString();
+                        var siteId = reader["FacilityId"].ToString();
+                        var count = int.Parse( reader["PalletCount"].ToString());
+
+                        var glnsFromDb = new IGPS_DEPOT_LOCATION(gln, status, subStatus, description, siteId, count);
+
+                        //glnsFromDb.Count = (int)reader["COUNT"];
                         Glns.Add(glnsFromDb);
                     }
                 }

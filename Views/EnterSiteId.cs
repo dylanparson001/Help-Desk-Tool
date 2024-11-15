@@ -1,19 +1,26 @@
-﻿using System;
+﻿using iGPS_Help_Desk.Repositories;
+using System;
 using System.Configuration;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Views
 {
     public partial class EnterSiteId : Form
     {
+        private IgpsDepotGlnRepository igpsDepotGlnRepository;
+
         public EnterSiteId()
         {
             InitializeComponent();
+            igpsDepotGlnRepository = new IgpsDepotGlnRepository();
+
         }
 
-        private void ClickSubmitId(object sender, EventArgs e)
+        private async void ClickSubmitId(object sender, EventArgs e)
         {
-            string siteId = txtSiteId.Text;
+            //string siteId = txtSiteId.Text;
+            string siteId = await igpsDepotGlnRepository.GetSiteID();
             var folderPath = txtFolderPath.Text;
             try
             {

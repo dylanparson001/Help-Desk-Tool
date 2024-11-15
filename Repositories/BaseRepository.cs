@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -62,5 +63,52 @@ namespace iGPS_Help_Desk.Models.Repositories
 
             reader = await command.ExecuteReaderAsync(); 
         }
+
+        public string GetSiteID()
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            string result = "";
+            string query = "SELECT LOOKUP_VALUE FROM VALUE_LOOKUP WHERE LOOKUP_ID = 231";
+            try
+            {
+
+                using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+                {
+                     sqlConnection.OpenAsync();
+
+                    var command = new SqlCommand(query, sqlConnection);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+
+                        while (reader.Read())
+                        {
+                            var siteId = reader[0].ToString();
+
+                            if (string.IsNullOrEmpty(siteId))
+                            {
+                                break;
+                            }
+                            result = siteId;
+                        }
+
+                    }
+                    sqlConnection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+
+
+            return result;
+
+
+        }
     }
 }
+

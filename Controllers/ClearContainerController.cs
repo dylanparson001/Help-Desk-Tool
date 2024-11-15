@@ -21,10 +21,10 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             // concat '', to items in list
-            //string stringGlns = ConcatStringFromList(dnuList);
+            string stringGlns = ConcatStringFromList(dnuList);
 
             //  Get the containers from IGPS_DEPOT_GLN table
-            List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(dnuList);
+            List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
 
             List<IGPS_DEPOT_LOCATION> locationList =
                 await _igpsDepotLocationRepository.ReadContainersFromList(dnuList);
@@ -36,10 +36,9 @@ namespace iGPS_Help_Desk.Controllers
         public async Task<List<IGPS_DEPOT_GLN>> GetContainersFromList(List<string> containerList)
         {
             List<IGPS_DEPOT_GLN> result = new List<IGPS_DEPOT_GLN>();
-            //string stringGlns = ConcatStringFromList(containerList);
+            string stringGlns = ConcatStringFromList(containerList);
 
-            //result = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
-            result = await _igpsDepotGlnRepository.ReadContainersFromList(containerList);
+            result = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
 
             return result;
         }
@@ -81,8 +80,10 @@ namespace iGPS_Help_Desk.Controllers
             string stringLocationToDelete;
             if (glnList == null) return;
 
+            
+            string listToRead = ConcatStringFromList(glnList);
             // List from db
-            List<IGPS_DEPOT_GLN> listFromDb = await _igpsDepotGlnRepository.ReadContainersFromList(glnList);
+            List<IGPS_DEPOT_GLN> listFromDb = await _igpsDepotGlnRepository.ReadContainersFromList(listToRead);
             listFromDb = listFromDb.Distinct().ToList();
 
             List<IGPS_DEPOT_LOCATION> listLocationFromDb =

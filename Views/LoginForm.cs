@@ -15,6 +15,7 @@ namespace iGPS_Help_Desk.Views
             InitializeComponent();
             AcceptButton = btnLogin;
             txtPassword.Select();
+
         }
 
         private void ClickLoginButton(object sender, EventArgs e)

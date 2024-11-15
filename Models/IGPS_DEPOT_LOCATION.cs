@@ -32,8 +32,22 @@ namespace iGPS_Help_Desk.Models
             SubStatus = subStatus;
             Description = description;
         }
-        public IGPS_DEPOT_LOCATION(string gln, string status,
-            string subStatus)
+        public IGPS_DEPOT_LOCATION(string gln,
+            string status, 
+            string subStatus,
+            string description,
+            string siteId, 
+            int count
+            )
+        {
+            Gln = gln;
+            Status = status;
+            SubStatus = subStatus;
+            Description = description;
+            SiteId = siteId;
+            Count = count;
+        }
+        public IGPS_DEPOT_LOCATION(string gln, string status, string subStatus)
         {
             Gln = gln;
             Status = status;

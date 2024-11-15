@@ -1,4 +1,5 @@
 ﻿using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Views;
 using Serilog;
 using System;
@@ -50,7 +51,7 @@ namespace iGPS_Help_Desk.Controllers
             List<string> txtSnapshotContainers, string txtSnapshotCount, bool saveSnapshot,
             List<IGPS_DEPOT_GLN> listIgpsDepotGln)
         {
-            siteId = ConfigurationManager.AppSettings.Get("siteId");
+            siteId = await _igpsDepotGlnRepository.GetSiteID();
 
             var rnd = new Random();
 
@@ -195,8 +196,7 @@ namespace iGPS_Help_Desk.Controllers
 
             var stringOfContainers = ConcatStringFromList(txtContainersToClear);
             // List from db
-            //var igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
-            var igpsDepotGln = await _igpsDepotGlnRepository.ReadContainersFromList(stringOfContainers);
+            var igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
             var igpsDepotLocation = await _igpsDepotLocationRepository.ReadAllContainers();
             int igpsDepotLocationCount = igpsDepotLocation.Count;
 

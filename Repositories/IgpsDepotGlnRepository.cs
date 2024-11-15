@@ -262,7 +262,7 @@ namespace iGPS_Help_Desk.Repositories
 
             return Grais;
         }
-        public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(List<string> list)
+        public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(string list)
         {
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
             if (test != null)
@@ -274,7 +274,7 @@ namespace iGPS_Help_Desk.Repositories
 
             // Constructing the parameterized query string
             string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN IN " +
-                $"({string.Join(",", list.Select((_, index) => $"@param{index}"))}) ORDER BY GLN;";
+                $"({list}) ORDER BY GLN;";
 
             using (var conn = connection)
             {
@@ -289,11 +289,6 @@ namespace iGPS_Help_Desk.Repositories
 
                 using (SqlCommand command = new SqlCommand(query, conn))
                 {
-                    // Adding parameters to the command
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        command.Parameters.AddWithValue($"@param{i}", list[i]);
-                    }
 
                     reader = await command.ExecuteReaderAsync();
 
@@ -315,53 +310,52 @@ namespace iGPS_Help_Desk.Repositories
 
             return Grais;
         }
-        
-        public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromList(string list)
+
+        public async Task<string> GetSiteID()
         {
-            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
-            if (test != null)
+            string connectionString = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            string result = "";
+            string query = "SELECT LOOKUP_VALUE FROM VALUE_LOOKUP WHERE LOOKUP_ID = 231";
+            try
             {
-                connection = new SqlConnection(test);
-            }
 
-            List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
-
-            string query = $"SELECT GLN, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN WHERE GLN IN ({list}) ORDER BY GLN;";
-
-            using (var conn = connection)
-            {
-                try
+                using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
-                    conn.Open();
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                }
+                    await sqlConnection.OpenAsync();
 
-                SqlCommand command = new SqlCommand(query, conn);
+                    var command = new SqlCommand(query, sqlConnection);
 
-                reader = await command.ExecuteReaderAsync();
+                    reader = await command.ExecuteReaderAsync();
 
-
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
+                    if (reader.HasRows)
                     {
-                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
-                        Grais.Add(glnsFromDb);
-                    }
-                }
 
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
+                        while (await reader.ReadAsync())
+                        {
+                            var siteId = reader.GetString(0);
+
+                            if (string.IsNullOrEmpty(siteId))
+                            {
+                                break;
+                            }
+                            result = siteId;
+                        }
+
+                    }
+                    sqlConnection.Close();
                 }
             }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                throw;
+            }
 
-            return Grais;
+
+            return result;
+
+
         }
-
 
 
         public async Task<List<IGPS_DEPOT_GLN>> ReadContainersFromListOrderByDate(string list)
