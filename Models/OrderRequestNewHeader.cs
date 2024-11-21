@@ -48,7 +48,10 @@ namespace iGPS_Help_Desk.Models
         public string User10 { get; set; }
         public string PROCESSING_STATUS { get; set; }
         public DateTime? STATUS_DATE { get; set; }
-
+        public OrderRequestNewHeader()
+        {
+            
+        }
         public OrderRequestNewHeader(SqlDataReader reader)
         {
             OrderId = reader["OrderId"].ToString();

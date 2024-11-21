@@ -104,6 +104,7 @@
     <Compile Include="Controllers\CsvFileController.cs" />
     <Compile Include="Controllers\MoveContainerController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\RollbackController.cs" />
     <Compile Include="Models\IGPS_DEPOT_GLN.cs" />
     <Compile Include="Models\IGPS_DEPOT_LOCATION.cs" />
     <Compile Include="Models\FacilityContainerStatus.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Repositories\IgpsDepotGlnRepository.cs" />
     <Compile Include="Repositories\IgpsDepotLocationRepository.cs" />
     <Compile Include="Repositories\OrderRequestNewHeaderRepository.cs" />
+    <Compile Include="Repositories\RollbackRepository.cs" />
     <Compile Include="Views\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>

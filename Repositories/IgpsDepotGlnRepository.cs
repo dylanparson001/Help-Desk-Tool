@@ -403,6 +403,98 @@ namespace iGPS_Help_Desk.Repositories
                 return Grais;
             }
         }
+        
+        public async Task<string> ReadCountFromOrderId(string gln)
+        {
+            string result = string.Empty;
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
+
+            string query = $"SELECT COUNT(*) AS COUNT FROM OrderRequestProcessed_Detail WHERE OrderId = '{gln}';";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = reader["COUNT"].ToString();   
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                return result;
+            }
+        }
+        
+        public async Task<string> ReadCountFromGln(string gln)
+        {
+            string result = string.Empty;
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            List<IGPS_DEPOT_GLN> Grais = new List<IGPS_DEPOT_GLN>();
+
+            string query = $"SELECT COUNT(*) AS COUNT FROM IGPS_DEPOT_GLN WHERE GLN = '{gln}';";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+
+                reader = await command.ExecuteReaderAsync();
+
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = reader["COUNT"].ToString();   
+                    }
+                }
+
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                return result;
+            }
+        }
 
         public async void DeleteGlnsFromList(string list)
         {

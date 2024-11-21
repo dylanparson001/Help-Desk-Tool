@@ -13,7 +13,7 @@ namespace iGPS_Help_Desk.Views
         protected readonly CsvFileController _csvFileController = new CsvFileController();
         protected readonly MoveContainerController _moveContainerController = new MoveContainerController();
         protected readonly OrderController _orderController = new OrderController();
-        
+        protected readonly RollbackController _rollbackController = new RollbackController();
         public BaseForm()
         {
             InitializeComponent();

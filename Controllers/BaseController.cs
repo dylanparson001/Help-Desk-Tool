@@ -13,6 +13,7 @@ namespace iGPS_Help_Desk.Controllers
         protected IgpsDepotGlnRepository _igpsDepotGlnRepository = new IgpsDepotGlnRepository();
         protected IgpsDepotLocationRepository _igpsDepotLocationRepository = new IgpsDepotLocationRepository();
         protected OrderRequestNewHeaderRepository _orderRequestNewHeaderRepository = new OrderRequestNewHeaderRepository();
+        protected RollbackRepository _rollbackRepository = new RollbackRepository();
         protected ILogger _logger = Log.ForContext<Igps>();
         protected string ConcatStringFromList(List<string> listOfString)
         {

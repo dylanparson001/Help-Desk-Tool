@@ -339,6 +339,19 @@ namespace iGPS_Help_Desk.Views
                 item.SubItems.Add(container.Count.ToString());
                 lvPlacards.Items.Add(item);
             }
+            listViewRollbackContainers.Items.Clear();
+
+            // Outputs them to List View
+            foreach (var container in listContainers)
+            {
+                var item = new ListViewItem(container.Gln);
+                item.SubItems.Add(container.Description);
+                item.SubItems.Add(container.Status);
+                item.SubItems.Add(container.SubStatus);
+                item.SubItems.Add(container.Count.ToString());
+                listViewRollbackContainers.Items.Add(item);
+            }
+            listViewRollbackContainers.CheckBoxes = true;
         }
 
         private async void InitialLoad()
@@ -596,6 +609,216 @@ namespace iGPS_Help_Desk.Views
             {
                 lvOrders.Items[i].Checked = false;
             }
+        }
+        // ROLLBACK TAB
+        private async void clickLoadOrderId(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtBolToRollback.Text))
+            {
+                MessageBox.Show("No BOL has been entered");
+                return;
+            }
+            await ReloadOrderRollback();
+        }
+        private async Task ReloadOrderRollback()
+        {
+            //if (String.IsNullOrEmpty(txtBolToRollback.Text))
+            //{
+            //    lblError.Text = "No Bols entered!";
+            //    lblError.ForeColor = Color.Red;
+            //    lblError.Visible = true;
+            //    lvOrders.Items.Clear();
+            //    return;
+            //};
+
+            lblError.Visible = false;
+
+            listOrderId.CheckBoxes = true;
+            listOrderId.Items.Clear();
+            var parsedBol = ParseGln(txtBolToRollback.Text);
+
+            parsedBol = parsedBol.Select(x => x.ToString()).Distinct().ToList();
+
+            txtBols.Clear();
+            foreach (var bol in parsedBol)
+            {
+                txtBols.AppendText($"{bol} \r\n");
+
+            }
+            var bolResult = await _orderController.GetBolsFromList(parsedBol);
+
+
+
+            bolResult = bolResult
+                .OrderBy(x => x.BolId)
+                .OrderBy(x => x.STATUS_DATE)
+                .ToList();
+
+            for (int i = 0; i < bolResult.Count; i++)
+            {
+                string status = bolResult[i].PROCESSING_STATUS;
+
+                if (String.IsNullOrEmpty(status))
+                {
+                    status = "NULL";
+                }
+
+
+                var item = new ListViewItem(bolResult[i].OrderId);
+                item.SubItems.Add(bolResult[i].BolId);
+                item.SubItems.Add(status);
+                item.SubItems.Add(bolResult[i].FacilityId_Source);
+                item.SubItems.Add(bolResult[i].STATUS_DATE.ToString());
+                item.SubItems.Add(bolResult[i].RequestedQuantity.ToString());
+
+
+                // Alternate row colors
+                if (i % 2 == 0)
+                {
+                    item.BackColor = Color.LightBlue;
+                }
+
+                listOrderId.Items.Add(item);
+            }
+
+        }
+
+        private async void clickRollbackButton(object sender, EventArgs e)
+        {
+
+            if (string.IsNullOrEmpty(txtBolToRollback.Text))
+            {
+                MessageBox.Show("Please select a BOL", "No BOL Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            if (string.IsNullOrEmpty(txtGLNRollback.Text))
+            {
+                MessageBox.Show("Please select a GLN", "No GLN Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            string countOfSelectedContainer = await _clearContainerController.GetCountOfGln(txtGLNRollback.Text);
+
+            int parsedCount = int.Parse(countOfSelectedContainer);  
+
+            if (parsedCount != 0)
+            {
+                MessageBox.Show("Container chosen is not empty, cannot perform rollback", "Non-empty Container", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            string count =await _clearContainerController.GetCountOfOrderId(txtSelectedOrderId.Text);
+            var response = MessageBox.Show(
+                $"Do you want to perform rollback from {txtBolToRollback.Text} into container {txtGLNRollback.Text} ({count})",
+                "Confirm Rollback",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (response == DialogResult.No)
+            {
+                return;
+            }
+            string gln = txtGLNRollback.Text;
+            string orderId = txtSelectedOrderId.Text;
+            try
+            {
+                await _rollbackController.Rollback(orderId, gln);
+                reloadGlnRollbacks();
+                MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error rolling back", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void selectOrder(object sender, ItemCheckEventArgs e)
+        {
+
+            // Uncheck all other items if the current item is being checked
+            if (e.NewValue == CheckState.Checked)
+            {
+                foreach (ListViewItem item in listOrderId.Items)
+                {
+                    if (item.Index != e.Index)
+                    {
+                        item.Checked = false;
+                    }
+                }
+            }
+
+        }
+
+        private async void updateOrderIdSelect(object sender, ItemCheckedEventArgs e)
+        {
+
+        }
+
+        private async void searchRollbackContainersText(object sender, EventArgs e)
+        {
+            var result = await _moveContainerController.ReadContainersFromSearch(txtRollbackContainerSearch.Text);
+
+            LoadRollbackContainers(result);
+        }
+        private void LoadRollbackContainers(List<IGPS_DEPOT_LOCATION> listContainers)
+        {
+            listViewRollbackContainers.Items.Clear();
+
+            // Outputs them to List View
+            foreach (var container in listContainers)
+            {
+                var item = new ListViewItem(container.Gln);
+                item.SubItems.Add(container.Description);
+                item.SubItems.Add(container.Status);
+                item.SubItems.Add(container.SubStatus);
+                item.SubItems.Add(container.Count.ToString());
+                listViewRollbackContainers.Items.Add(item);
+            }
+            listViewRollbackContainers.CheckBoxes = true;
+        }
+
+        private void selectRollbackContainer(object sender, ItemCheckEventArgs e)
+        {
+            // Uncheck all other items if the current item is being checked
+            if (e.NewValue == CheckState.Checked)
+            {
+                foreach (ListViewItem item in listViewRollbackContainers.Items)
+                {
+                    if (item.Index != e.Index)
+                    {
+                        item.Checked = false;
+                    }
+                }
+            }
+        }
+
+        private void updateGlnSelect(object sender, ItemCheckedEventArgs e)
+        {
+            txtGLNRollback.Text = e.Item.Text;
+        }
+
+        private void updateSelectedGLNRollback(object sender, EventArgs e)
+        {
+            if (listViewRollbackContainers.CheckedItems.Count == 0)
+            {
+                MessageBox.Show("No container selected", "Select a Container", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            txtGLNRollback.Text = listViewRollbackContainers.CheckedItems[0].Text;
+        }
+
+        private async void clickSelectOrderId(object sender, EventArgs e)
+        {
+            txtSelectedOrderId.Text = listOrderId.CheckedItems[0].Text;
+            txtTrailer.Text = await _rollbackController.GetTrailerNumber(txtSelectedOrderId.Text);
+            txtSeal.Text = await _rollbackController.GetSealNumber(txtSelectedOrderId.Text);
+        }
+
+        private async void reloadRollbackContainers(object sender, EventArgs e)
+        {
+            reloadGlnRollbacks();
+        }
+        private async void reloadGlnRollbacks()
+        {
+            var result = await _moveContainerController.ReadContainersFromSearch(txtRollbackContainerSearch.Text);
+
+            LoadRollbackContainers(result);
         }
     }
 }

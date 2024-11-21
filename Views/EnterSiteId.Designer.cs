@@ -40,8 +40,8 @@ namespace iGPS_Help_Desk.Views
             // 
             // btnEnter
             // 
-            this.btnEnter.Location = new System.Drawing.Point(111, 146);
-            this.btnEnter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEnter.Location = new System.Drawing.Point(111, 118);
+            this.btnEnter.Margin = new System.Windows.Forms.Padding(2);
             this.btnEnter.Name = "btnEnter";
             this.btnEnter.Size = new System.Drawing.Size(163, 25);
             this.btnEnter.TabIndex = 2;
@@ -71,7 +71,7 @@ namespace iGPS_Help_Desk.Views
             // txtFolderPath
             // 
             this.txtFolderPath.Location = new System.Drawing.Point(111, 79);
-            this.txtFolderPath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtFolderPath.Margin = new System.Windows.Forms.Padding(2);
             this.txtFolderPath.Name = "txtFolderPath";
             this.txtFolderPath.Size = new System.Drawing.Size(165, 20);
             this.txtFolderPath.TabIndex = 9;
@@ -81,13 +81,13 @@ namespace iGPS_Help_Desk.Views
             this.AcceptButton = this.btnEnter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(383, 207);
+            this.ClientSize = new System.Drawing.Size(394, 168);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtFolderPath);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnEnter);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EnterSiteId";
             this.Text = "EnterSiteId";
             this.ResumeLayout(false);

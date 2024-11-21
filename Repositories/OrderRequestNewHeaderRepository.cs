@@ -145,5 +145,141 @@ namespace iGPS_Help_Desk.Repositories
             }
 
         }
+        public async Task<string> GetTrailerNumber(string orderId)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+            string result = string.Empty;
+
+            string query = $"SELECT User7 FROM OrderRequestNew_Header WHERE OrderId = '{orderId}'";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+                reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = reader["User7"].ToString();
+                    }
+                }
+                conn.Close();
+            }
+            return result;
+
+        }
+        public async Task<string> GetSealNumber(string orderId)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+            string result = string.Empty;
+
+            string query = $"SELECT User8 FROM OrderRequestNew_Header WHERE OrderId = '{orderId}'";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+
+                SqlCommand command = new SqlCommand(query, conn);
+                reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = reader["User8"].ToString();
+                    }
+                }
+                conn.Close();
+            }
+            return result;
+
+        }
+
+        public async Task Rollback(string orderId, string gln)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+            string insertQuery = "INSERT INTO IGPS_DEPOT_GLN ([GLN], [GRAI], [DATE_TIME]) " +
+                                 "SELECT @GLN, AssetId, GETUTCDATE() " +
+                                 "FROM dbo.orderrequestprocessed_detail WHERE OrderId = @OrderId;";
+
+            string updateQuery = "UPDATE orderrequestNew_Header " +
+                                 "SET Processing_Status = 'CANCELLED' " +
+                                 "WHERE OrderId = @OrderId;";
+
+            string deleteQuery = "DELETE FROM orderrequestprocessed_detail WHERE OrderId = @OrderId;";
+
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Insert
+                    using (var insertCommand = new SqlCommand(insertQuery, conn))
+                    {
+                        insertCommand.Parameters.AddWithValue("@OrderId", orderId);
+                        insertCommand.Parameters.AddWithValue("@GLN", gln);
+                        await insertCommand.ExecuteNonQueryAsync();
+                    }
+
+                    // Update
+                    using (var updateCommand = new SqlCommand(updateQuery, conn))
+                    {
+                        updateCommand.Parameters.AddWithValue("@OrderId", orderId);
+                        await updateCommand.ExecuteNonQueryAsync();
+                    }
+
+                    // Delete
+                    using (var deleteCommand = new SqlCommand(deleteQuery, conn))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@OrderId", orderId);
+                        await deleteCommand.ExecuteNonQueryAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    throw;
+                }
+                finally
+                {
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
     }
 }
