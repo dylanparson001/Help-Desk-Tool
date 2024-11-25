@@ -32,9 +32,9 @@ namespace iGPS_Help_Desk.Views
             InitializeComponent();
             InitialLoad();
 
+            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             try
             {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
                 var settings = configFile.AppSettings.Settings;
 
@@ -50,6 +50,25 @@ namespace iGPS_Help_Desk.Views
                 _logger.Error(ex.ToString());
                 closeTimer.Interval = 1800000; // if the config file value was not found, set to 30 minutes
             }
+
+            Task.Run(async () =>
+            {
+
+                try
+                {
+                    var settings = configFile.AppSettings.Settings;
+
+                    configFile.AppSettings.Settings["siteId"].Value = await _siteController.GetSiteIDAsync();
+                    configFile.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.ToString());
+                }
+            });
+
         }
 
         private void CloseTimer_Tick(object sender, EventArgs e)
@@ -585,7 +604,7 @@ namespace iGPS_Help_Desk.Views
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid integer.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please enter a valid integer.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return Show(prompt, caption);
                 }
             }
@@ -615,21 +634,16 @@ namespace iGPS_Help_Desk.Views
         {
             if (string.IsNullOrEmpty(txtBolToRollback.Text))
             {
-                MessageBox.Show("No BOL has been entered");
+                //MessageBox.Show("No BOL has been entered", "Enter BOL", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                listOrderId.Items.Clear();
                 return;
             }
-            await ReloadOrderRollback();
+            await reloadOrderRollback();
         }
-        private async Task ReloadOrderRollback()
+        private async Task reloadOrderRollback()
         {
-            //if (String.IsNullOrEmpty(txtBolToRollback.Text))
-            //{
-            //    lblError.Text = "No Bols entered!";
-            //    lblError.ForeColor = Color.Red;
-            //    lblError.Visible = true;
-            //    lvOrders.Items.Clear();
-            //    return;
-            //};
+
 
             lblError.Visible = false;
 
@@ -639,12 +653,12 @@ namespace iGPS_Help_Desk.Views
 
             parsedBol = parsedBol.Select(x => x.ToString()).Distinct().ToList();
 
-            txtBols.Clear();
-            foreach (var bol in parsedBol)
-            {
-                txtBols.AppendText($"{bol} \r\n");
+            //txtBols.Clear();
+            //foreach (var bol in parsedBol)
+            //{
+            //    txtBols.AppendText($"{bol} \r\n");
 
-            }
+            //}
             var bolResult = await _orderController.GetBolsFromList(parsedBol);
 
 
@@ -656,6 +670,7 @@ namespace iGPS_Help_Desk.Views
 
             for (int i = 0; i < bolResult.Count; i++)
             {
+                string completedCount = await _orderController.GetCountOfOrderId(bolResult[i].OrderId);
                 string status = bolResult[i].PROCESSING_STATUS;
 
                 if (String.IsNullOrEmpty(status))
@@ -669,7 +684,7 @@ namespace iGPS_Help_Desk.Views
                 item.SubItems.Add(status);
                 item.SubItems.Add(bolResult[i].FacilityId_Source);
                 item.SubItems.Add(bolResult[i].STATUS_DATE.ToString());
-                item.SubItems.Add(bolResult[i].RequestedQuantity.ToString());
+                item.SubItems.Add(completedCount);
 
 
                 // Alternate row colors
@@ -686,18 +701,30 @@ namespace iGPS_Help_Desk.Views
         private async void clickRollbackButton(object sender, EventArgs e)
         {
 
-            if (string.IsNullOrEmpty(txtBolToRollback.Text))
+            if (string.IsNullOrEmpty(txtSelectedOrderId.Text))
             {
-                MessageBox.Show("Please select a BOL", "No BOL Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select a BOL", "No BOL Selected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
             }
             if (string.IsNullOrEmpty(txtGLNRollback.Text))
             {
-                MessageBox.Show("Please select a GLN", "No GLN Selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select a GLN", "No GLN Selected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
             }
-
+            if (string.IsNullOrEmpty (txtBolTotal.Text))
+            {
+                return;
+            }
+            string stringCountCompleted = txtBolTotal.Text.Trim();
+            int integerCountCompleted = int.Parse(stringCountCompleted);
+            if (integerCountCompleted == 0)
+            {
+                MessageBox.Show("No GRAIs have been completed with this order ID", "No GRAIs Completed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             string countOfSelectedContainer = await _clearContainerController.GetCountOfGln(txtGLNRollback.Text);
 
-            int parsedCount = int.Parse(countOfSelectedContainer);  
+            int parsedCount = int.Parse(countOfSelectedContainer);
 
             if (parsedCount != 0)
             {
@@ -706,9 +733,10 @@ namespace iGPS_Help_Desk.Views
             }
 
 
-            string count =await _clearContainerController.GetCountOfOrderId(txtSelectedOrderId.Text);
+            string count = await _orderController.GetCountOfOrderId(txtSelectedOrderId.Text);
             var response = MessageBox.Show(
-                $"Do you want to perform rollback from {txtBolToRollback.Text} into container {txtGLNRollback.Text} ({count})",
+                $"Do you want to perform rollback from {txtBolToRollback.Text} ({count} GRAIs)" +
+                $" into container {txtGLNRollback.Text}?",
                 "Confirm Rollback",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (response == DialogResult.No)
@@ -721,6 +749,8 @@ namespace iGPS_Help_Desk.Views
             {
                 await _rollbackController.Rollback(orderId, gln);
                 reloadGlnRollbacks();
+                await reloadOrderRollback();
+                InitialLoad();
                 MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -805,9 +835,15 @@ namespace iGPS_Help_Desk.Views
 
         private async void clickSelectOrderId(object sender, EventArgs e)
         {
+            if (listOrderId.CheckedItems.Count == 0)
+            {
+                MessageBox.Show("No Order has been selected", "Select an order", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             txtSelectedOrderId.Text = listOrderId.CheckedItems[0].Text;
             txtTrailer.Text = await _rollbackController.GetTrailerNumber(txtSelectedOrderId.Text);
             txtSeal.Text = await _rollbackController.GetSealNumber(txtSelectedOrderId.Text);
+            txtBolTotal.Text = await _orderController.GetCountOfOrderId(txtSelectedOrderId.Text);
         }
 
         private async void reloadRollbackContainers(object sender, EventArgs e)

@@ -138,10 +138,7 @@ namespace iGPS_Help_Desk.Controllers
             _igpsDepotGlnRepository.DeleteGraisFromList(concatenatedList);
         }
 
-        public async Task<string> GetCountOfOrderId(string orderId)
-        {
-            return await _igpsDepotGlnRepository.ReadCountFromOrderId(orderId);
-        }
+
         public async Task<string> GetCountOfGln(string gln)
         {
             return await _igpsDepotGlnRepository.ReadCountFromGln(gln);

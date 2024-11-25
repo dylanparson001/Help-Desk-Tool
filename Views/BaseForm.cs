@@ -14,6 +14,7 @@ namespace iGPS_Help_Desk.Views
         protected readonly MoveContainerController _moveContainerController = new MoveContainerController();
         protected readonly OrderController _orderController = new OrderController();
         protected readonly RollbackController _rollbackController = new RollbackController();
+        protected readonly SiteController _siteController = new SiteController();
         public BaseForm()
         {
             InitializeComponent();

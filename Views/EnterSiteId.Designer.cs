@@ -89,6 +89,7 @@ namespace iGPS_Help_Desk.Views
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EnterSiteId";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EnterSiteId";
             this.ResumeLayout(false);
             this.PerformLayout();

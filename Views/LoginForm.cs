@@ -9,7 +9,7 @@ namespace iGPS_Help_Desk.Views
 {
     public partial class LoginForm : BaseForm
     {
-
+        public int ClickCount { get; set; } = 1;
         public LoginForm()
         {
             InitializeComponent();
@@ -20,6 +20,10 @@ namespace iGPS_Help_Desk.Views
 
         private void ClickLoginButton(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(txtPassword.Text))
+            {
+                return;
+            }
             string password = txtPassword.Text;
 
             string filePath = "./adminHash.txt";
@@ -49,11 +53,27 @@ namespace iGPS_Help_Desk.Views
         {
             if (txtPassword.PasswordChar != '\0')
             {
+                button1.Text = "Hide";
                 txtPassword.PasswordChar = '\0';
-            } 
+            }
             else
             {
+                button1.Text = "Show";
+
                 txtPassword.PasswordChar = '*';
+            }
+        }
+
+        private void clickPopupSecretMessage(object sender, EventArgs e)
+        {
+            ClickCount++;
+            switch (ClickCount)
+            {
+                case 5:
+                    MessageBox.Show($"You should probably do some work!", "(╯°□°）╯︵ ┻━┻", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+                    ClickCount = 1;
+                    break;
+
             }
         }
     }

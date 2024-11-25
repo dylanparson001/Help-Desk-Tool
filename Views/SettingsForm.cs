@@ -67,5 +67,10 @@ namespace iGPS_Help_Desk
         {
             Close();
         }
+
+        private void clickLogout(object sender, EventArgs e)
+        {
+
+        }
     }
 }

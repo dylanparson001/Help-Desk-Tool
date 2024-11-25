@@ -51,6 +51,9 @@
             this.btnClearContainers = new System.Windows.Forms.Button();
             this.labelContainersToClear = new System.Windows.Forms.Label();
             this.tabRollback = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
+            this.txtBolTotal = new System.Windows.Forms.TextBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.btnSelectRollbackContainer = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -112,7 +115,6 @@
             this.dataSet1 = new System.Data.DataSet();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.settingsBtn = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
             this.StatusChange.SuspendLayout();
             this.tabClearContainers.SuspendLayout();
             this.tabRollback.SuspendLayout();
@@ -140,7 +142,7 @@
             this.StatusChange.Location = new System.Drawing.Point(12, 40);
             this.StatusChange.Name = "StatusChange";
             this.StatusChange.SelectedIndex = 0;
-            this.StatusChange.Size = new System.Drawing.Size(1131, 576);
+            this.StatusChange.Size = new System.Drawing.Size(887, 576);
             this.StatusChange.TabIndex = 1;
             // 
             // tabClearContainers
@@ -161,7 +163,7 @@
             this.tabClearContainers.Controls.Add(this.labelContainersToClear);
             this.tabClearContainers.Location = new System.Drawing.Point(4, 22);
             this.tabClearContainers.Name = "tabClearContainers";
-            this.tabClearContainers.Size = new System.Drawing.Size(1123, 550);
+            this.tabClearContainers.Size = new System.Drawing.Size(879, 550);
             this.tabClearContainers.TabIndex = 2;
             this.tabClearContainers.Text = "Clear Containers";
             this.tabClearContainers.UseVisualStyleBackColor = true;
@@ -171,7 +173,7 @@
             this.lblErrorMessage.AutoSize = true;
             this.lblErrorMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.lblErrorMessage.Location = new System.Drawing.Point(17, 469);
+            this.lblErrorMessage.Location = new System.Drawing.Point(19, 462);
             this.lblErrorMessage.Name = "lblErrorMessage";
             this.lblErrorMessage.Size = new System.Drawing.Size(51, 20);
             this.lblErrorMessage.TabIndex = 23;
@@ -180,7 +182,7 @@
             // 
             // findGhosts
             // 
-            this.findGhosts.Location = new System.Drawing.Point(246, 493);
+            this.findGhosts.Location = new System.Drawing.Point(248, 486);
             this.findGhosts.Name = "findGhosts";
             this.findGhosts.Size = new System.Drawing.Size(115, 39);
             this.findGhosts.TabIndex = 22;
@@ -193,7 +195,7 @@
             this.cbSaveSnapshot.AutoSize = true;
             this.cbSaveSnapshot.Checked = true;
             this.cbSaveSnapshot.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbSaveSnapshot.Location = new System.Drawing.Point(367, 470);
+            this.cbSaveSnapshot.Location = new System.Drawing.Point(369, 463);
             this.cbSaveSnapshot.Name = "cbSaveSnapshot";
             this.cbSaveSnapshot.Size = new System.Drawing.Size(99, 17);
             this.cbSaveSnapshot.TabIndex = 21;
@@ -202,7 +204,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(477, 493);
+            this.button1.Location = new System.Drawing.Point(479, 486);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(115, 39);
@@ -213,7 +215,7 @@
             // 
             // btnGetDnus
             // 
-            this.btnGetDnus.Location = new System.Drawing.Point(125, 493);
+            this.btnGetDnus.Location = new System.Drawing.Point(127, 486);
             this.btnGetDnus.Name = "btnGetDnus";
             this.btnGetDnus.Size = new System.Drawing.Size(115, 39);
             this.btnGetDnus.TabIndex = 19;
@@ -223,7 +225,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(367, 493);
+            this.btnSave.Location = new System.Drawing.Point(369, 486);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(105, 39);
             this.btnSave.TabIndex = 18;
@@ -234,7 +236,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(617, 475);
+            this.label8.Location = new System.Drawing.Point(619, 468);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(48, 13);
             this.label8.TabIndex = 17;
@@ -243,7 +245,7 @@
             // txtNumToBeDeleted
             // 
             this.txtNumToBeDeleted.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNumToBeDeleted.Location = new System.Drawing.Point(620, 493);
+            this.txtNumToBeDeleted.Location = new System.Drawing.Point(622, 486);
             this.txtNumToBeDeleted.Multiline = true;
             this.txtNumToBeDeleted.Name = "txtNumToBeDeleted";
             this.txtNumToBeDeleted.ReadOnly = true;
@@ -254,7 +256,7 @@
             // 
             // btnShowGlnContent
             // 
-            this.btnShowGlnContent.Location = new System.Drawing.Point(14, 493);
+            this.btnShowGlnContent.Location = new System.Drawing.Point(16, 486);
             this.btnShowGlnContent.Name = "btnShowGlnContent";
             this.btnShowGlnContent.Size = new System.Drawing.Size(105, 39);
             this.btnShowGlnContent.TabIndex = 15;
@@ -272,7 +274,7 @@
             this.lvGlnContent.HideSelection = false;
             this.lvGlnContent.Location = new System.Drawing.Point(296, 39);
             this.lvGlnContent.Name = "lvGlnContent";
-            this.lvGlnContent.Size = new System.Drawing.Size(789, 416);
+            this.lvGlnContent.Size = new System.Drawing.Size(561, 407);
             this.lvGlnContent.TabIndex = 14;
             this.lvGlnContent.UseCompatibleStateImageBehavior = false;
             this.lvGlnContent.View = System.Windows.Forms.View.Details;
@@ -298,7 +300,7 @@
             this.txtContainersToClear.Multiline = true;
             this.txtContainersToClear.Name = "txtContainersToClear";
             this.txtContainersToClear.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtContainersToClear.Size = new System.Drawing.Size(235, 416);
+            this.txtContainersToClear.Size = new System.Drawing.Size(225, 407);
             this.txtContainersToClear.TabIndex = 1;
             // 
             // label7
@@ -316,7 +318,7 @@
             this.btnClearContainers.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnClearContainers.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.btnClearContainers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClearContainers.Location = new System.Drawing.Point(722, 493);
+            this.btnClearContainers.Location = new System.Drawing.Point(757, 486);
             this.btnClearContainers.Name = "btnClearContainers";
             this.btnClearContainers.Size = new System.Drawing.Size(100, 39);
             this.btnClearContainers.TabIndex = 2;
@@ -335,6 +337,8 @@
             // 
             // tabRollback
             // 
+            this.tabRollback.Controls.Add(this.label13);
+            this.tabRollback.Controls.Add(this.txtBolTotal);
             this.tabRollback.Controls.Add(this.button6);
             this.tabRollback.Controls.Add(this.btnSelectRollbackContainer);
             this.tabRollback.Controls.Add(this.button5);
@@ -357,16 +361,43 @@
             this.tabRollback.Controls.Add(this.txtBolToRollback);
             this.tabRollback.Location = new System.Drawing.Point(4, 22);
             this.tabRollback.Name = "tabRollback";
-            this.tabRollback.Size = new System.Drawing.Size(1123, 550);
+            this.tabRollback.Size = new System.Drawing.Size(879, 550);
             this.tabRollback.TabIndex = 5;
             this.tabRollback.Text = "Rollback";
             this.tabRollback.UseVisualStyleBackColor = true;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(506, 493);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(84, 13);
+            this.label13.TabIndex = 22;
+            this.label13.Text = "Total Completed";
+            // 
+            // txtBolTotal
+            // 
+            this.txtBolTotal.Location = new System.Drawing.Point(509, 509);
+            this.txtBolTotal.Name = "txtBolTotal";
+            this.txtBolTotal.ReadOnly = true;
+            this.txtBolTotal.Size = new System.Drawing.Size(117, 20);
+            this.txtBolTotal.TabIndex = 21;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(197, 248);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 20;
+            this.button6.Text = "Reload";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.reloadRollbackContainers);
+            // 
             // btnSelectRollbackContainer
             // 
-            this.btnSelectRollbackContainer.Location = new System.Drawing.Point(17, 500);
+            this.btnSelectRollbackContainer.Location = new System.Drawing.Point(712, 250);
             this.btnSelectRollbackContainer.Name = "btnSelectRollbackContainer";
-            this.btnSelectRollbackContainer.Size = new System.Drawing.Size(93, 34);
+            this.btnSelectRollbackContainer.Size = new System.Drawing.Size(145, 22);
             this.btnSelectRollbackContainer.TabIndex = 19;
             this.btnSelectRollbackContainer.Text = "Select Rollback Container";
             this.btnSelectRollbackContainer.UseVisualStyleBackColor = true;
@@ -374,9 +405,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(17, 216);
+            this.button5.Location = new System.Drawing.Point(757, 30);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(93, 34);
+            this.button5.Size = new System.Drawing.Size(100, 26);
             this.button5.TabIndex = 18;
             this.button5.Text = "Select Order Id";
             this.button5.UseVisualStyleBackColor = true;
@@ -385,15 +416,15 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(14, 261);
+            this.label12.Location = new System.Drawing.Point(14, 234);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(41, 13);
+            this.label12.Size = new System.Drawing.Size(94, 13);
             this.label12.TabIndex = 17;
-            this.label12.Text = "Search";
+            this.label12.Text = "Search Containers";
             // 
             // txtRollbackContainerSearch
             // 
-            this.txtRollbackContainerSearch.Location = new System.Drawing.Point(17, 277);
+            this.txtRollbackContainerSearch.Location = new System.Drawing.Point(17, 250);
             this.txtRollbackContainerSearch.Name = "txtRollbackContainerSearch";
             this.txtRollbackContainerSearch.Size = new System.Drawing.Size(174, 20);
             this.txtRollbackContainerSearch.TabIndex = 16;
@@ -409,9 +440,9 @@
             this.columnHeader11});
             this.listViewRollbackContainers.FullRowSelect = true;
             this.listViewRollbackContainers.HideSelection = false;
-            this.listViewRollbackContainers.Location = new System.Drawing.Point(17, 304);
+            this.listViewRollbackContainers.Location = new System.Drawing.Point(17, 277);
             this.listViewRollbackContainers.Name = "listViewRollbackContainers";
-            this.listViewRollbackContainers.Size = new System.Drawing.Size(605, 190);
+            this.listViewRollbackContainers.Size = new System.Drawing.Size(840, 190);
             this.listViewRollbackContainers.TabIndex = 15;
             this.listViewRollbackContainers.UseCompatibleStateImageBehavior = false;
             this.listViewRollbackContainers.View = System.Windows.Forms.View.Details;
@@ -425,7 +456,7 @@
             // columnHeader8
             // 
             this.columnHeader8.Text = "Description";
-            this.columnHeader8.Width = 126;
+            this.columnHeader8.Width = 211;
             // 
             // columnHeader9
             // 
@@ -445,7 +476,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(657, 28);
+            this.label11.Location = new System.Drawing.Point(14, 493);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(29, 13);
             this.label11.TabIndex = 14;
@@ -453,7 +484,7 @@
             // 
             // txtGLNRollback
             // 
-            this.txtGLNRollback.Location = new System.Drawing.Point(660, 44);
+            this.txtGLNRollback.Location = new System.Drawing.Point(17, 509);
             this.txtGLNRollback.Name = "txtGLNRollback";
             this.txtGLNRollback.ReadOnly = true;
             this.txtGLNRollback.Size = new System.Drawing.Size(117, 20);
@@ -462,7 +493,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(657, 190);
+            this.label10.Location = new System.Drawing.Point(383, 493);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(38, 13);
             this.label10.TabIndex = 12;
@@ -470,7 +501,7 @@
             // 
             // txtSeal
             // 
-            this.txtSeal.Location = new System.Drawing.Point(660, 206);
+            this.txtSeal.Location = new System.Drawing.Point(386, 509);
             this.txtSeal.Name = "txtSeal";
             this.txtSeal.ReadOnly = true;
             this.txtSeal.Size = new System.Drawing.Size(117, 20);
@@ -479,7 +510,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(657, 142);
+            this.label9.Location = new System.Drawing.Point(260, 493);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(46, 13);
             this.label9.TabIndex = 10;
@@ -487,7 +518,7 @@
             // 
             // txtTrailer
             // 
-            this.txtTrailer.Location = new System.Drawing.Point(660, 158);
+            this.txtTrailer.Location = new System.Drawing.Point(263, 509);
             this.txtTrailer.Name = "txtTrailer";
             this.txtTrailer.ReadOnly = true;
             this.txtTrailer.Size = new System.Drawing.Size(117, 20);
@@ -496,7 +527,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(657, 85);
+            this.label6.Location = new System.Drawing.Point(137, 493);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(92, 13);
             this.label6.TabIndex = 8;
@@ -504,7 +535,7 @@
             // 
             // txtSelectedOrderId
             // 
-            this.txtSelectedOrderId.Location = new System.Drawing.Point(660, 101);
+            this.txtSelectedOrderId.Location = new System.Drawing.Point(140, 509);
             this.txtSelectedOrderId.Name = "txtSelectedOrderId";
             this.txtSelectedOrderId.ReadOnly = true;
             this.txtSelectedOrderId.Size = new System.Drawing.Size(117, 20);
@@ -520,9 +551,9 @@
             this.columnHeader5,
             this.columnHeader6});
             this.listOrderId.HideSelection = false;
-            this.listOrderId.Location = new System.Drawing.Point(17, 44);
+            this.listOrderId.Location = new System.Drawing.Point(17, 61);
             this.listOrderId.Name = "listOrderId";
-            this.listOrderId.Size = new System.Drawing.Size(605, 166);
+            this.listOrderId.Size = new System.Drawing.Size(840, 166);
             this.listOrderId.TabIndex = 6;
             this.listOrderId.UseCompatibleStateImageBehavior = false;
             this.listOrderId.View = System.Windows.Forms.View.Details;
@@ -531,38 +562,38 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Order Id";
-            this.columnHeader1.Width = 120;
+            this.columnHeader1.Width = 156;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Bol Id";
-            this.columnHeader2.Width = 75;
+            this.columnHeader2.Width = 113;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "Processing Status";
-            this.columnHeader3.Width = 100;
+            this.columnHeader3.Width = 137;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "Source Id";
-            this.columnHeader4.Width = 85;
+            this.columnHeader4.Width = 109;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "Status Date";
-            this.columnHeader5.Width = 83;
+            this.columnHeader5.Width = 149;
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Quantity";
-            this.columnHeader6.Width = 75;
+            this.columnHeader6.Text = "Quantity Completed";
+            this.columnHeader6.Width = 118;
             // 
             // btnRollback
             // 
-            this.btnRollback.Location = new System.Drawing.Point(660, 247);
+            this.btnRollback.Location = new System.Drawing.Point(740, 502);
             this.btnRollback.Name = "btnRollback";
-            this.btnRollback.Size = new System.Drawing.Size(117, 40);
+            this.btnRollback.Size = new System.Drawing.Size(117, 27);
             this.btnRollback.TabIndex = 5;
             this.btnRollback.Text = "Rollback";
             this.btnRollback.UseVisualStyleBackColor = true;
@@ -571,7 +602,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(41, 79);
+            this.label5.Location = new System.Drawing.Point(41, 96);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(58, 13);
             this.label5.TabIndex = 4;
@@ -579,18 +610,18 @@
             // 
             // btnFindOrderId
             // 
-            this.btnFindOrderId.Location = new System.Drawing.Point(197, 14);
+            this.btnFindOrderId.Location = new System.Drawing.Point(197, 31);
             this.btnFindOrderId.Name = "btnFindOrderId";
             this.btnFindOrderId.Size = new System.Drawing.Size(105, 24);
             this.btnFindOrderId.TabIndex = 2;
-            this.btnFindOrderId.Text = "Load Order ID";
+            this.btnFindOrderId.Text = "Search BOL";
             this.btnFindOrderId.UseVisualStyleBackColor = true;
             this.btnFindOrderId.Click += new System.EventHandler(this.clickLoadOrderId);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 1);
+            this.label4.Location = new System.Drawing.Point(14, 18);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(28, 13);
             this.label4.TabIndex = 1;
@@ -598,7 +629,7 @@
             // 
             // txtBolToRollback
             // 
-            this.txtBolToRollback.Location = new System.Drawing.Point(17, 17);
+            this.txtBolToRollback.Location = new System.Drawing.Point(17, 34);
             this.txtBolToRollback.Name = "txtBolToRollback";
             this.txtBolToRollback.Size = new System.Drawing.Size(174, 20);
             this.txtBolToRollback.TabIndex = 0;
@@ -615,7 +646,7 @@
             this.tabMovePallets.Location = new System.Drawing.Point(4, 22);
             this.tabMovePallets.Margin = new System.Windows.Forms.Padding(2);
             this.tabMovePallets.Name = "tabMovePallets";
-            this.tabMovePallets.Size = new System.Drawing.Size(1123, 550);
+            this.tabMovePallets.Size = new System.Drawing.Size(879, 550);
             this.tabMovePallets.TabIndex = 3;
             this.tabMovePallets.Text = "Search Containers";
             this.tabMovePallets.UseVisualStyleBackColor = true;
@@ -623,19 +654,20 @@
             // lblContainersAddSuccess
             // 
             this.lblContainersAddSuccess.AutoSize = true;
+            this.lblContainersAddSuccess.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblContainersAddSuccess.ForeColor = System.Drawing.Color.ForestGreen;
-            this.lblContainersAddSuccess.Location = new System.Drawing.Point(28, 462);
+            this.lblContainersAddSuccess.Location = new System.Drawing.Point(30, 439);
             this.lblContainersAddSuccess.Name = "lblContainersAddSuccess";
-            this.lblContainersAddSuccess.Size = new System.Drawing.Size(144, 13);
+            this.lblContainersAddSuccess.Size = new System.Drawing.Size(213, 20);
             this.lblContainersAddSuccess.TabIndex = 13;
             this.lblContainersAddSuccess.Text = "Containers have been added";
             this.lblContainersAddSuccess.Visible = false;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(955, 485);
+            this.button4.Location = new System.Drawing.Point(715, 501);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(134, 45);
+            this.button4.Size = new System.Drawing.Size(142, 33);
             this.button4.TabIndex = 12;
             this.button4.Text = "Show Grais";
             this.button4.UseVisualStyleBackColor = true;
@@ -644,7 +676,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(845, 11);
+            this.label2.Location = new System.Drawing.Point(603, 11);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 11;
@@ -652,9 +684,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(24, 488);
+            this.button3.Location = new System.Drawing.Point(26, 501);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(148, 42);
+            this.button3.Size = new System.Drawing.Size(148, 33);
             this.button3.TabIndex = 10;
             this.button3.Text = "Add To Containers List";
             this.button3.UseVisualStyleBackColor = true;
@@ -662,7 +694,7 @@
             // 
             // tbSearchBar
             // 
-            this.tbSearchBar.Location = new System.Drawing.Point(848, 27);
+            this.tbSearchBar.Location = new System.Drawing.Point(606, 27);
             this.tbSearchBar.Name = "tbSearchBar";
             this.tbSearchBar.Size = new System.Drawing.Size(241, 20);
             this.tbSearchBar.TabIndex = 9;
@@ -680,7 +712,7 @@
             this.lvPlacards.HideSelection = false;
             this.lvPlacards.Location = new System.Drawing.Point(24, 61);
             this.lvPlacards.Name = "lvPlacards";
-            this.lvPlacards.Size = new System.Drawing.Size(1065, 319);
+            this.lvPlacards.Size = new System.Drawing.Size(823, 375);
             this.lvPlacards.TabIndex = 2;
             this.lvPlacards.UseCompatibleStateImageBehavior = false;
             this.lvPlacards.View = System.Windows.Forms.View.Details;
@@ -693,7 +725,7 @@
             // ContainerDescription
             // 
             this.ContainerDescription.Text = "Description";
-            this.ContainerDescription.Width = 241;
+            this.ContainerDescription.Width = 216;
             // 
             // ContainerStatus
             // 
@@ -732,7 +764,7 @@
             this.tabRemoveOrders.Controls.Add(this.txtBols);
             this.tabRemoveOrders.Location = new System.Drawing.Point(4, 22);
             this.tabRemoveOrders.Name = "tabRemoveOrders";
-            this.tabRemoveOrders.Size = new System.Drawing.Size(1123, 550);
+            this.tabRemoveOrders.Size = new System.Drawing.Size(879, 550);
             this.tabRemoveOrders.TabIndex = 4;
             this.tabRemoveOrders.Text = "Order Removal";
             this.tabRemoveOrders.UseVisualStyleBackColor = true;
@@ -750,7 +782,7 @@
             // 
             // btnChangeQuantity
             // 
-            this.btnChangeQuantity.Location = new System.Drawing.Point(269, 488);
+            this.btnChangeQuantity.Location = new System.Drawing.Point(241, 492);
             this.btnChangeQuantity.Name = "btnChangeQuantity";
             this.btnChangeQuantity.Size = new System.Drawing.Size(106, 34);
             this.btnChangeQuantity.TabIndex = 8;
@@ -762,7 +794,7 @@
             // 
             this.lblError.AutoSize = true;
             this.lblError.ForeColor = System.Drawing.Color.Red;
-            this.lblError.Location = new System.Drawing.Point(395, 488);
+            this.lblError.Location = new System.Drawing.Point(373, 492);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(28, 13);
             this.lblError.TabIndex = 7;
@@ -781,7 +813,7 @@
             this.lvOrders.HideSelection = false;
             this.lvOrders.Location = new System.Drawing.Point(159, 46);
             this.lvOrders.Name = "lvOrders";
-            this.lvOrders.Size = new System.Drawing.Size(933, 395);
+            this.lvOrders.Size = new System.Drawing.Size(698, 411);
             this.lvOrders.TabIndex = 5;
             this.lvOrders.UseCompatibleStateImageBehavior = false;
             this.lvOrders.View = System.Windows.Forms.View.Details;
@@ -813,12 +845,12 @@
             // 
             // colRequestedQuantity
             // 
-            this.colRequestedQuantity.Text = "Quantity";
-            this.colRequestedQuantity.Width = 75;
+            this.colRequestedQuantity.Text = "Requested Quantity";
+            this.colRequestedQuantity.Width = 142;
             // 
             // btnRemoveOrders
             // 
-            this.btnRemoveOrders.Location = new System.Drawing.Point(159, 489);
+            this.btnRemoveOrders.Location = new System.Drawing.Point(131, 492);
             this.btnRemoveOrders.Name = "btnRemoveOrders";
             this.btnRemoveOrders.Size = new System.Drawing.Size(104, 34);
             this.btnRemoveOrders.TabIndex = 4;
@@ -828,7 +860,7 @@
             // 
             // btnShowOrder
             // 
-            this.btnShowOrder.Location = new System.Drawing.Point(18, 488);
+            this.btnShowOrder.Location = new System.Drawing.Point(15, 492);
             this.btnShowOrder.Name = "btnShowOrder";
             this.btnShowOrder.Size = new System.Drawing.Size(110, 34);
             this.btnShowOrder.TabIndex = 2;
@@ -850,7 +882,7 @@
             this.txtBols.Location = new System.Drawing.Point(20, 46);
             this.txtBols.Multiline = true;
             this.txtBols.Name = "txtBols";
-            this.txtBols.Size = new System.Drawing.Size(133, 395);
+            this.txtBols.Size = new System.Drawing.Size(133, 411);
             this.txtBols.TabIndex = 0;
             // 
             // dataSet1
@@ -859,7 +891,7 @@
             // 
             // settingsBtn
             // 
-            this.settingsBtn.Location = new System.Drawing.Point(806, 9);
+            this.settingsBtn.Location = new System.Drawing.Point(828, 30);
             this.settingsBtn.Margin = new System.Windows.Forms.Padding(2);
             this.settingsBtn.Name = "settingsBtn";
             this.settingsBtn.Size = new System.Drawing.Size(67, 27);
@@ -868,27 +900,18 @@
             this.settingsBtn.UseVisualStyleBackColor = true;
             this.settingsBtn.Click += new System.EventHandler(this.ClickSettings);
             // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(215, 273);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 20;
-            this.button6.Text = "Reload";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.reloadRollbackContainers);
-            // 
             // Igps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1155, 628);
+            this.ClientSize = new System.Drawing.Size(906, 628);
             this.Controls.Add(this.settingsBtn);
             this.Controls.Add(this.StatusChange);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Igps";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "iGPS Help Desk";
             this.StatusChange.ResumeLayout(false);
             this.tabClearContainers.ResumeLayout(false);
@@ -991,5 +1014,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox txtBolTotal;
     }
 }

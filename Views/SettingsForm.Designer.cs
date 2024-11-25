@@ -52,7 +52,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(90, 67);
+            this.label2.Location = new System.Drawing.Point(66, 67);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 13);
@@ -61,11 +61,11 @@
             // 
             // txtSiteId
             // 
-            this.txtSiteId.Location = new System.Drawing.Point(90, 82);
+            this.txtSiteId.Location = new System.Drawing.Point(69, 82);
             this.txtSiteId.Margin = new System.Windows.Forms.Padding(2);
             this.txtSiteId.Name = "txtSiteId";
             this.txtSiteId.ReadOnly = true;
-            this.txtSiteId.Size = new System.Drawing.Size(177, 20);
+            this.txtSiteId.Size = new System.Drawing.Size(198, 20);
             this.txtSiteId.TabIndex = 2;
             // 
             // btnSaveSettings
@@ -82,7 +82,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(90, 126);
+            this.label3.Location = new System.Drawing.Point(66, 126);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(105, 13);
@@ -91,15 +91,15 @@
             // 
             // txtPath
             // 
-            this.txtPath.Location = new System.Drawing.Point(90, 141);
+            this.txtPath.Location = new System.Drawing.Point(69, 141);
             this.txtPath.Margin = new System.Windows.Forms.Padding(2);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(177, 20);
+            this.txtPath.Size = new System.Drawing.Size(198, 20);
             this.txtPath.TabIndex = 5;
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(189, 186);
+            this.btnCancel.Location = new System.Drawing.Point(170, 186);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(97, 28);
@@ -124,6 +124,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SettingsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SettingsForm";
             this.ResumeLayout(false);
             this.PerformLayout();
