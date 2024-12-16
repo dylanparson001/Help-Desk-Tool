@@ -40,7 +40,7 @@ namespace iGPS_Help_Desk.Controllers
 
         private static string ClearContainerFilePath = "";
         private static string siteId = ConfigurationManager.AppSettings.Get("siteId");
-
+        private static string TicketNum = "";
 
         public static string GetCurrentFolderPath()
         {
@@ -49,8 +49,9 @@ namespace iGPS_Help_Desk.Controllers
 
         public async Task SaveCsvFilesAndZip(string txtZoutCount, List<string> txtZoutContainersToClear,
             List<string> txtSnapshotContainers, string txtSnapshotCount, bool saveSnapshot,
-            List<IGPS_DEPOT_GLN> listIgpsDepotGln)
+            List<IGPS_DEPOT_GLN> listIgpsDepotGln, string ticketNum)
         {
+            TicketNum = ticketNum;
             siteId = await _igpsDepotGlnRepository.GetSiteID();
 
             var rnd = new Random();
@@ -96,12 +97,12 @@ namespace iGPS_Help_Desk.Controllers
             // Date will be part of file name
             currentDateString = currentDate.Date.ToLongDateString();
 
-            zoutFileNameOnly = $"{siteId} IGPS_DEPOT_GLN ZOUT {currentDateString} {grais} GRAIs";
+            zoutFileNameOnly = $"{siteId} IGPS_DEPOT_GLN ZOUT {currentDateString} {grais} GRAIs Ticket #{TicketNum}";
             zoutCsvFileName = $"{ClearContainerFilePath}/{zoutFileNameOnly}";
 
 
             zoutLocationCsvFileNameOnly =
-                $"{siteId} IGPS_DEPOT_LOCATION ZOUT {currentDateString} {igpsDepotLocation.Count} CONTAINERS";
+                $"{siteId} IGPS_DEPOT_LOCATION ZOUT {currentDateString} {igpsDepotLocation.Count} CONTAINERS Ticket #{TicketNum}";
             zoutLocationCsvFileName = $"{ClearContainerFilePath}/{zoutLocationCsvFileNameOnly}";
 
 
@@ -210,11 +211,11 @@ namespace iGPS_Help_Desk.Controllers
             var csv = new StringBuilder();
             var csv2 = new StringBuilder();
 
-            snapshotFileNameOnly = $"{siteId} IGPS_DEPOT_GLN SNAPSHOT {currentDateString} {grais} GRAIs";
+            snapshotFileNameOnly = $"{siteId} IGPS_DEPOT_GLN SNAPSHOT {currentDateString} {grais} GRAIs Ticket #{TicketNum}";
             snapshotCsvFileName = $"{ClearContainerFilePath}/{snapshotFileNameOnly}";
 
             snapshotLocationCsvFileNameOnly =
-                $"{siteId} IGPS_DEPOT_LOCATION SNAPSHOT {currentDateString} {igpsDepotLocationCount} CONTAINERS";
+                $"{siteId} IGPS_DEPOT_LOCATION SNAPSHOT {currentDateString} {igpsDepotLocationCount} CONTAINERS Ticket #{TicketNum}";
             snapshotLocationCsvFileName = $"{ClearContainerFilePath}/{snapshotLocationCsvFileNameOnly}";
 
             sourceFilePaths.Add(snapshotCsvFileName);
@@ -296,6 +297,7 @@ namespace iGPS_Help_Desk.Controllers
 
         private static void SaveToArchive(bool snapshot, int rand)
         {
+
             ClearContainerFilePath = GetCurrentFolderPath();
 
             if (snapshot)

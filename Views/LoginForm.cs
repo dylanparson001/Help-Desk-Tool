@@ -15,6 +15,7 @@ namespace iGPS_Help_Desk.Views
             InitializeComponent();
             AcceptButton = btnLogin;
             txtPassword.Select();
+            txtPassword.PasswordChar = '\u2022';
 
         }
 
@@ -60,7 +61,7 @@ namespace iGPS_Help_Desk.Views
             {
                 button1.Text = "Show";
 
-                txtPassword.PasswordChar = '*';
+                txtPassword.PasswordChar = '\u2022';
             }
         }
 

@@ -1,12 +1,4 @@
-﻿/* Dylan Parson
- * Desktop Application For iGPS Help Desk team to clear containers, change statuses and other
- * common tasks more efficiently and reduce errors.
- *
- */
-
-
-using iGPS_Help_Desk.Models;
-using iGPS_Help_Desk.Repositories;
+﻿using iGPS_Help_Desk.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -15,7 +7,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace iGPS_Help_Desk.Views
 {
@@ -27,11 +18,12 @@ namespace iGPS_Help_Desk.Views
         private List<string> ordersEntered = new List<string>();
         private bool showButtonClicked = false;
         private bool saveButtonClicked = false;
+        private static string TicketNum = string.Empty;
         public Igps()
         {
             InitializeComponent();
             InitialLoad();
-
+            lblVersionNumber.Text = "v1.1.0";
             var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             try
             {
@@ -129,8 +121,12 @@ namespace iGPS_Help_Desk.Views
                 lvGlnContent.Items.Clear();
                 lblErrorMessage.Visible = false;
             }
+            MessageBox.Show($"{txtNumToBeDeleted.Text} Grais have been deleted from {glnList.Count} Containers have been cleared", "Containers Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
             saveButtonClicked = false;
             GC.Collect();
+            txtTicketNumber.Text = string.Empty;
+            txtNumToBeDeleted.Text = "0";
+            txtContainersToClear.Text = "";
         }
 
         // Updates list in view
@@ -213,13 +209,19 @@ namespace iGPS_Help_Desk.Views
 
         private async void BtnSaveContent(object sender, EventArgs e)
         {
+            TicketNum = txtTicketNumber.Text;
             bool saveSnapshot = false;
             bool savingSnapshot = true;
-            this.Cursor = Cursors.WaitCursor;
+            string ticketNumber = "";
+            if (!string.IsNullOrEmpty(txtTicketNumber.Text))
+            {
+                ticketNumber = txtTicketNumber.Text;
+            }
 
             if (!showButtonClicked)
             {
-                MessageBox.Show("Click 'Show Content'");
+                lblErrorMessage.Visible = true;
+                lblErrorMessage.Text = "No GRAIs have been retreived";
                 return;
             }
 
@@ -245,36 +247,48 @@ namespace iGPS_Help_Desk.Views
             List<string> zoutGlnList = ParseGln(txtContainersToClear.Text);
             string zoutCount = zoutGlnList.Count.ToString();
 
-            // Get data for snapshot
-            if (cbSaveSnapshot.Checked)
+            try
             {
-                saveSnapshot = true;
-                var allContainers = await _clearContainerController.GetAllContainers();
+                this.Cursor = Cursors.WaitCursor;
 
-                var allGlnList = new List<string>();
-
-                foreach (IGPS_DEPOT_GLN gln in allContainers.Item1)
+                // Get data for snapshot
+                if (cbSaveSnapshot.Checked)
                 {
-                    allGlnList.Add(gln.Gln);
+                    saveSnapshot = true;
+                    var allContainers = await _clearContainerController.GetAllContainers();
+
+                    var allGlnList = new List<string>();
+
+                    foreach (IGPS_DEPOT_GLN gln in allContainers.Item1)
+                    {
+                        allGlnList.Add(gln.Gln);
+                    }
+
+                    await _csvFileController.SaveCsvFilesAndZip(txtNumToBeDeleted.Text, zoutGlnList, allGlnList,
+                        allContainers.Item2.ToString(), saveSnapshot, igpsDepotGln, TicketNum);
+                }
+                else
+                {
+                    List<string> emptyList = new List<string>();
+                    await _csvFileController.SaveCsvFilesAndZip(txtNumToBeDeleted.Text, zoutGlnList, emptyList, "0",
+                        saveSnapshot, igpsDepotGln, TicketNum);
                 }
 
-                await _csvFileController.SaveCsvFilesAndZip(txtNumToBeDeleted.Text, zoutGlnList, allGlnList,
-                    allContainers.Item2.ToString(), saveSnapshot, igpsDepotGln);
-            }
-            else
-            {
-                List<string> emptyList = new List<string>();
-                await _csvFileController.SaveCsvFilesAndZip(txtNumToBeDeleted.Text, zoutGlnList, emptyList, "0",
-                    saveSnapshot, igpsDepotGln);
+                _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
+                MessageBox.Show("Files have been saved to " + _clearContainerPath, "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
-            MessageBox.Show("Files have been saved to " + _clearContainerPath, "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+
+            }
             lblErrorMessage.Visible = false;
             saveButtonClicked = true;
-            this.Cursor = Cursors.Default;
-            // Gets rid of excess memory usage from snapshot
-            GC.Collect();
         }
 
         private async void BtnFindGhosts(object sender, EventArgs e)
@@ -711,7 +725,7 @@ namespace iGPS_Help_Desk.Views
                 MessageBox.Show("Please select a GLN", "No GLN Selected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            if (string.IsNullOrEmpty (txtBolTotal.Text))
+            if (string.IsNullOrEmpty(txtBolTotal.Text))
             {
                 return;
             }

@@ -33,6 +33,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.StatusChange = new System.Windows.Forms.TabControl();
             this.tabClearContainers = new System.Windows.Forms.TabPage();
+            this.txtTicketNumber = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.lblErrorMessage = new System.Windows.Forms.Label();
             this.findGhosts = new System.Windows.Forms.Button();
             this.cbSaveSnapshot = new System.Windows.Forms.CheckBox();
@@ -115,6 +117,7 @@
             this.dataSet1 = new System.Data.DataSet();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.settingsBtn = new System.Windows.Forms.Button();
+            this.lblVersionNumber = new System.Windows.Forms.Label();
             this.StatusChange.SuspendLayout();
             this.tabClearContainers.SuspendLayout();
             this.tabRollback.SuspendLayout();
@@ -147,6 +150,8 @@
             // 
             // tabClearContainers
             // 
+            this.tabClearContainers.Controls.Add(this.txtTicketNumber);
+            this.tabClearContainers.Controls.Add(this.label14);
             this.tabClearContainers.Controls.Add(this.lblErrorMessage);
             this.tabClearContainers.Controls.Add(this.findGhosts);
             this.tabClearContainers.Controls.Add(this.cbSaveSnapshot);
@@ -168,12 +173,28 @@
             this.tabClearContainers.Text = "Clear Containers";
             this.tabClearContainers.UseVisualStyleBackColor = true;
             // 
+            // txtTicketNumber
+            // 
+            this.txtTicketNumber.Location = new System.Drawing.Point(16, 485);
+            this.txtTicketNumber.Name = "txtTicketNumber";
+            this.txtTicketNumber.Size = new System.Drawing.Size(98, 20);
+            this.txtTicketNumber.TabIndex = 25;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(13, 469);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(47, 13);
+            this.label14.TabIndex = 24;
+            this.label14.Text = "Ticket #";
+            // 
             // lblErrorMessage
             // 
             this.lblErrorMessage.AutoSize = true;
             this.lblErrorMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.lblErrorMessage.Location = new System.Drawing.Point(19, 462);
+            this.lblErrorMessage.Location = new System.Drawing.Point(14, 449);
             this.lblErrorMessage.Name = "lblErrorMessage";
             this.lblErrorMessage.Size = new System.Drawing.Size(51, 20);
             this.lblErrorMessage.TabIndex = 23;
@@ -182,9 +203,9 @@
             // 
             // findGhosts
             // 
-            this.findGhosts.Location = new System.Drawing.Point(248, 486);
+            this.findGhosts.Location = new System.Drawing.Point(248, 508);
             this.findGhosts.Name = "findGhosts";
-            this.findGhosts.Size = new System.Drawing.Size(115, 39);
+            this.findGhosts.Size = new System.Drawing.Size(115, 29);
             this.findGhosts.TabIndex = 22;
             this.findGhosts.Text = "Find Ghost Grais";
             this.findGhosts.UseVisualStyleBackColor = true;
@@ -195,7 +216,7 @@
             this.cbSaveSnapshot.AutoSize = true;
             this.cbSaveSnapshot.Checked = true;
             this.cbSaveSnapshot.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbSaveSnapshot.Location = new System.Drawing.Point(369, 463);
+            this.cbSaveSnapshot.Location = new System.Drawing.Point(369, 485);
             this.cbSaveSnapshot.Name = "cbSaveSnapshot";
             this.cbSaveSnapshot.Size = new System.Drawing.Size(99, 17);
             this.cbSaveSnapshot.TabIndex = 21;
@@ -204,10 +225,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(479, 486);
+            this.button1.Location = new System.Drawing.Point(479, 508);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 39);
+            this.button1.Size = new System.Drawing.Size(116, 29);
             this.button1.TabIndex = 20;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
@@ -215,9 +236,9 @@
             // 
             // btnGetDnus
             // 
-            this.btnGetDnus.Location = new System.Drawing.Point(127, 486);
+            this.btnGetDnus.Location = new System.Drawing.Point(127, 508);
             this.btnGetDnus.Name = "btnGetDnus";
-            this.btnGetDnus.Size = new System.Drawing.Size(115, 39);
+            this.btnGetDnus.Size = new System.Drawing.Size(115, 29);
             this.btnGetDnus.TabIndex = 19;
             this.btnGetDnus.Text = "Get DNUs";
             this.btnGetDnus.UseVisualStyleBackColor = true;
@@ -225,9 +246,9 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(369, 486);
+            this.btnSave.Location = new System.Drawing.Point(369, 508);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(105, 39);
+            this.btnSave.Size = new System.Drawing.Size(105, 29);
             this.btnSave.TabIndex = 18;
             this.btnSave.Text = "Save Content";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -236,7 +257,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(619, 468);
+            this.label8.Location = new System.Drawing.Point(619, 492);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(48, 13);
             this.label8.TabIndex = 17;
@@ -245,20 +266,20 @@
             // txtNumToBeDeleted
             // 
             this.txtNumToBeDeleted.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNumToBeDeleted.Location = new System.Drawing.Point(622, 486);
+            this.txtNumToBeDeleted.Location = new System.Drawing.Point(622, 508);
             this.txtNumToBeDeleted.Multiline = true;
             this.txtNumToBeDeleted.Name = "txtNumToBeDeleted";
             this.txtNumToBeDeleted.ReadOnly = true;
-            this.txtNumToBeDeleted.Size = new System.Drawing.Size(75, 39);
+            this.txtNumToBeDeleted.Size = new System.Drawing.Size(82, 29);
             this.txtNumToBeDeleted.TabIndex = 16;
             this.txtNumToBeDeleted.Text = "0";
             this.txtNumToBeDeleted.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnShowGlnContent
             // 
-            this.btnShowGlnContent.Location = new System.Drawing.Point(16, 486);
+            this.btnShowGlnContent.Location = new System.Drawing.Point(16, 508);
             this.btnShowGlnContent.Name = "btnShowGlnContent";
-            this.btnShowGlnContent.Size = new System.Drawing.Size(105, 39);
+            this.btnShowGlnContent.Size = new System.Drawing.Size(105, 29);
             this.btnShowGlnContent.TabIndex = 15;
             this.btnShowGlnContent.Text = "Show Content";
             this.btnShowGlnContent.UseVisualStyleBackColor = true;
@@ -318,9 +339,9 @@
             this.btnClearContainers.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnClearContainers.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.btnClearContainers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClearContainers.Location = new System.Drawing.Point(757, 486);
+            this.btnClearContainers.Location = new System.Drawing.Point(756, 508);
             this.btnClearContainers.Name = "btnClearContainers";
-            this.btnClearContainers.Size = new System.Drawing.Size(100, 39);
+            this.btnClearContainers.Size = new System.Drawing.Size(101, 29);
             this.btnClearContainers.TabIndex = 2;
             this.btnClearContainers.Text = "Clear Containers";
             this.btnClearContainers.UseVisualStyleBackColor = false;
@@ -371,9 +392,9 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(506, 493);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(84, 13);
+            this.label13.Size = new System.Drawing.Size(124, 13);
             this.label13.TabIndex = 22;
-            this.label13.Text = "Total Completed";
+            this.label13.Text = "Total To Be Rolled Back";
             // 
             // txtBolTotal
             // 
@@ -665,9 +686,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(715, 501);
+            this.button4.Location = new System.Drawing.Point(721, 501);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(142, 33);
+            this.button4.Size = new System.Drawing.Size(136, 33);
             this.button4.TabIndex = 12;
             this.button4.Text = "Show Grais";
             this.button4.UseVisualStyleBackColor = true;
@@ -720,27 +741,27 @@
             // ContainerGLN
             // 
             this.ContainerGLN.Text = "GLN";
-            this.ContainerGLN.Width = 172;
+            this.ContainerGLN.Width = 125;
             // 
             // ContainerDescription
             // 
             this.ContainerDescription.Text = "Description";
-            this.ContainerDescription.Width = 216;
+            this.ContainerDescription.Width = 195;
             // 
             // ContainerStatus
             // 
             this.ContainerStatus.Text = "Status";
-            this.ContainerStatus.Width = 166;
+            this.ContainerStatus.Width = 110;
             // 
             // ContainerSubStatus
             // 
             this.ContainerSubStatus.Text = "SubStatus";
-            this.ContainerSubStatus.Width = 153;
+            this.ContainerSubStatus.Width = 110;
             // 
             // AssetCount
             // 
             this.AssetCount.Text = "Count";
-            this.AssetCount.Width = 73;
+            this.AssetCount.Width = 45;
             // 
             // button2
             // 
@@ -900,12 +921,23 @@
             this.settingsBtn.UseVisualStyleBackColor = true;
             this.settingsBtn.Click += new System.EventHandler(this.ClickSettings);
             // 
+            // lblVersionNumber
+            // 
+            this.lblVersionNumber.AutoSize = true;
+            this.lblVersionNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersionNumber.Location = new System.Drawing.Point(236, 16);
+            this.lblVersionNumber.Name = "lblVersionNumber";
+            this.lblVersionNumber.Size = new System.Drawing.Size(37, 13);
+            this.lblVersionNumber.TabIndex = 3;
+            this.lblVersionNumber.Text = "v1.1.0";
+            // 
             // Igps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(906, 628);
+            this.Controls.Add(this.lblVersionNumber);
             this.Controls.Add(this.settingsBtn);
             this.Controls.Add(this.StatusChange);
             this.Controls.Add(this.label1);
@@ -1016,5 +1048,8 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox txtBolTotal;
+        private System.Windows.Forms.TextBox txtTicketNumber;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblVersionNumber;
     }
 }
