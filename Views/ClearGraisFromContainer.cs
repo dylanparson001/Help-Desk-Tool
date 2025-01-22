@@ -52,19 +52,8 @@ namespace iGPS_Help_Desk.Views
             {
 
                 listContainers = await _moveContainerController.ReadGraisFromContainer(_fromGln);
-
             }
 
-            for (int i = 0; i < listContainers.Count; i++)
-            {
-                listOfFromGrais.Add(listContainers[i].Grai);
-
-                var item = new ListViewItem(listContainers[i].Grai);
-                item.SubItems.Add($"{listContainers[i].Date_Time}");
-                item.SubItems.Add($"{i + 1}");
-                lvFromGrais.Items.Add(item);
-
-            }
             lblFromGraisCount.Text = $"Container Count: {listContainers.Count}";
         }
 
@@ -128,7 +117,7 @@ namespace iGPS_Help_Desk.Views
                     listOfGrais.Add(selectedGrais[i].Text);
                 }
                 var path = CsvFileController.GetCurrentFolderPath();
-                await _csvFileController.SaveCsvOfIndividualGrais(selectedGrais.Count.ToString(), listOfGrais, _fromGln, num);
+                await _csvFileController.SaveCsvOfIndividualGrais(selectedGrais.Count.ToString(), listOfGrais, num, _fromGln);
                 MessageBox.Show($"Grais have been saved to {path}", "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else

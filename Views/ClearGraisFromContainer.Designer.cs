@@ -100,7 +100,7 @@
             // lblFromGraisCount
             // 
             this.lblFromGraisCount.AutoSize = true;
-            this.lblFromGraisCount.Location = new System.Drawing.Point(22, 332);
+            this.lblFromGraisCount.Location = new System.Drawing.Point(31, 333);
             this.lblFromGraisCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFromGraisCount.Name = "lblFromGraisCount";
             this.lblFromGraisCount.Size = new System.Drawing.Size(41, 13);
@@ -127,8 +127,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(217, 350);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(167, 350);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(127, 27);
             this.button1.TabIndex = 19;
@@ -139,7 +139,7 @@
             // reloadButton
             // 
             this.reloadButton.Location = new System.Drawing.Point(549, 24);
-            this.reloadButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.reloadButton.Margin = new System.Windows.Forms.Padding(2);
             this.reloadButton.Name = "reloadButton";
             this.reloadButton.Size = new System.Drawing.Size(77, 23);
             this.reloadButton.TabIndex = 20;
@@ -170,7 +170,7 @@
             // graiSearchBar
             // 
             this.graiSearchBar.Location = new System.Drawing.Point(314, 24);
-            this.graiSearchBar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.graiSearchBar.Margin = new System.Windows.Forms.Padding(2);
             this.graiSearchBar.Multiline = true;
             this.graiSearchBar.Name = "graiSearchBar";
             this.graiSearchBar.Size = new System.Drawing.Size(163, 20);
@@ -189,7 +189,7 @@
             "GEN3 (C)",
             "GEN6 (D)"});
             this.cbPalletGenerationChoice.Location = new System.Drawing.Point(154, 24);
-            this.cbPalletGenerationChoice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbPalletGenerationChoice.Margin = new System.Windows.Forms.Padding(2);
             this.cbPalletGenerationChoice.Name = "cbPalletGenerationChoice";
             this.cbPalletGenerationChoice.Size = new System.Drawing.Size(133, 21);
             this.cbPalletGenerationChoice.TabIndex = 24;
@@ -210,7 +210,7 @@
             this.AcceptButton = this.btnDeleteSelectedGrais;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 416);
+            this.ClientSize = new System.Drawing.Size(654, 388);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cbPalletGenerationChoice);
             this.Controls.Add(this.label2);
@@ -225,7 +225,7 @@
             this.Controls.Add(this.btnDeleteSelectedGrais);
             this.Controls.Add(this.lvFromGrais);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ClearGraisForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Grai List of Container";

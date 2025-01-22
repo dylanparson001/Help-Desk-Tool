@@ -5,10 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Repositories
 {
@@ -56,9 +53,12 @@ namespace iGPS_Help_Desk.Repositories
                 catch (Exception ex)
                 {
                     _logger.Error(ex.Message);
-                    MessageBox.Show(ex.ToString());
                 }
-                conn.Close();
+                finally
+                {
+
+                    conn.Close();
+                }
             }
             return result;
 
@@ -230,13 +230,13 @@ namespace iGPS_Help_Desk.Repositories
             }
             string insertQuery = "INSERT INTO IGPS_DEPOT_GLN ([GLN], [GRAI], [DATE_TIME]) " +
                                  "SELECT @GLN, AssetId, GETUTCDATE() " +
-                                 "FROM dbo.orderrequestprocessed_detail WHERE OrderId = @OrderId;";
+                                 "FROM dbo.OrderRequestProcessed_Detail WHERE OrderId = @OrderId;";
 
-            string updateQuery = "UPDATE orderrequestNew_Header " +
+            string updateQuery = "UPDATE OrderRequestNew_Header " +
                                  "SET Processing_Status = 'CANCELLED' " +
                                  "WHERE OrderId = @OrderId;";
 
-            string deleteQuery = "DELETE FROM orderrequestprocessed_detail WHERE OrderId = @OrderId;";
+            string deleteQuery = "DELETE FROM OrderRequestProcessed_Detail WHERE OrderId = @OrderId;";
 
 
             using (var conn = connection)
@@ -265,6 +265,87 @@ namespace iGPS_Help_Desk.Repositories
                     {
                         deleteCommand.Parameters.AddWithValue("@OrderId", orderId);
                         await deleteCommand.ExecuteNonQueryAsync();
+                    }
+                }
+                catch (SqlException ex) when (ex.Number == 2627)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    throw;
+                }
+                finally
+                {
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
+        public async Task<List<string>> GetGraisFromOrderId(string orderId)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+            string query = $"SELECT GRAI FROM IGPS_DEPOT_GLN WHERE GRAI IN (SELECT AssetId FROM orderrequestprocessed_detail WHERE OrderId = '{orderId}')";
+            List<string> grais = new List<string>();
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                    using (var command = new SqlCommand(query, conn))
+                    {
+                        reader = await command.ExecuteReaderAsync();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var grai = reader["GRAI"].ToString();
+                                grais.Add(grai);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    throw;
+                }
+                finally
+                {
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                }
+                return grais;
+            }
+        }
+
+        public async Task ClearExistingGrais(string grais)
+        {
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+            string query = $"DELETE FROM IGPS_DEPOT_GLN WHERE GRAI IN ({grais})";
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+
+                    using (var command = new SqlCommand(query, conn))
+                    {
+                        await command.ExecuteNonQueryAsync();
                     }
                 }
                 catch (Exception ex)

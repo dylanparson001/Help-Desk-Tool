@@ -180,9 +180,8 @@ namespace iGPS_Help_Desk.Models.Repositories
             List<IGPS_DEPOT_LOCATION> containers = new List<IGPS_DEPOT_LOCATION>();
 
             string query =
-                $"SELECT GLN, Status, SubStatus, Description," +
-                $"(SELECT COUNT(GLN) FROM IGPS_DEPOT_GLN WHERE IGPS_DEPOT_GLN.GLN = IGPS_DEPOT_LOCATION.GLN) AS COUNT " +
-                $"FROM IGPS_DEPOT_LOCATION WHERE Description LIKE @ContainerSearch OR GLN LIKE @ContainerSearch;";
+                $"SELECT GLN, Status, SubStatus, Description, PalletCount " +
+                $"FROM IGPS_DEPOT_INVENTORY_COUNT WHERE Description LIKE @ContainerSearch OR GLN LIKE @ContainerSearch;";
 
             using (var conn = connection)
             {
@@ -205,7 +204,7 @@ namespace iGPS_Help_Desk.Models.Repositories
                             var subStatus = reader["SubStatus"].ToString();
                             var description = reader["Description"].ToString();
                             var glnsFromDb = new IGPS_DEPOT_LOCATION(gln, status, subStatus, description);
-                            glnsFromDb.Count = (int)reader["COUNT"];
+                            glnsFromDb.Count = (int)reader["PalletCount"];
                             containers.Add(glnsFromDb);
                         }
                     }

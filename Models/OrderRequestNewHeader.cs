@@ -54,7 +54,7 @@ namespace iGPS_Help_Desk.Models
         }
         public OrderRequestNewHeader(SqlDataReader reader)
         {
-            OrderId = reader["OrderId"].ToString();
+            OrderId = reader["OrderId"].ToString().Trim();
             CodeProductType = (short)reader["CodeProductType"];
             OriginatorDate = (DateTime)reader["OriginatorDate"];
             FacilityId_Source = reader["FacilityId_Source"].ToString();

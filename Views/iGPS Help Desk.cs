@@ -1,8 +1,11 @@
-﻿using iGPS_Help_Desk.Models;
+﻿using iGPS_Help_Desk.Controllers;
+using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Repositories;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,13 +26,13 @@ namespace iGPS_Help_Desk.Views
         {
             InitializeComponent();
             InitialLoad();
-            lblVersionNumber.Text = "v1.1.0";
             var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             try
             {
 
                 var settings = configFile.AppSettings.Settings;
-
+                
+                lblVersionNumber.Text = settings["version"].Value;
                 int timeout = Int32.Parse(settings["timeout"].Value);
                 // Initialize the timer
                 closeTimer = new Timer();
@@ -459,7 +462,7 @@ namespace iGPS_Help_Desk.Views
             lblError.Visible = false;
             for (int i = 0; i < lvOrders.CheckedItems.Count; i++)
             {
-                orderIdList.Add(lvOrders.CheckedItems[i].Text);
+                orderIdList.Add(lvOrders.CheckedItems[i].Text.Trim());
             }
 
             DialogResult userChoice = MessageBox.Show($"Are you sure you want to remove {orderIdList.Count}" +
@@ -667,12 +670,6 @@ namespace iGPS_Help_Desk.Views
 
             parsedBol = parsedBol.Select(x => x.ToString()).Distinct().ToList();
 
-            //txtBols.Clear();
-            //foreach (var bol in parsedBol)
-            //{
-            //    txtBols.AppendText($"{bol} \r\n");
-
-            //}
             var bolResult = await _orderController.GetBolsFromList(parsedBol);
 
 
@@ -714,7 +711,7 @@ namespace iGPS_Help_Desk.Views
 
         private async void clickRollbackButton(object sender, EventArgs e)
         {
-
+            string ticketNumber = rollbackTicket.Text;
             if (string.IsNullOrEmpty(txtSelectedOrderId.Text))
             {
                 MessageBox.Show("Please select a BOL", "No BOL Selected", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -761,15 +758,62 @@ namespace iGPS_Help_Desk.Views
             string orderId = txtSelectedOrderId.Text;
             try
             {
+                Cursor = Cursors.WaitCursor;
                 await _rollbackController.Rollback(orderId, gln);
                 reloadGlnRollbacks();
                 await reloadOrderRollback();
                 InitialLoad();
-                MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            // Primary Key Violation, need to remove GRAIs from IGPS_DEPOT_GLN Table
+            catch (SqlException ex) when (ex.Number == 2627)
+            {
+                MessageBox.Show("Primary Key Violation: GRAIs exist in the IGPS_DEPOT_GLN table. \nSaving and clearing now...", "GRAIs found",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                _logger.Error("Primary key violation: " + ex.Message);
+                var grais = await _csvFileController._orderRequestNewHeaderRepository.GetGraisFromOrderId(orderId);
+                var graiString = _csvFileController.ConcatStringFromList(grais);
+
+                var rnd = new Random();
+                int random = rnd.Next(1, 1000);
+                await _csvFileController.SaveCsvOfIndividualGrais(
+                    txtZoutCount: grais.Count.ToString(),
+                    txtGraisToClear: grais, 
+                    rand: random, 
+                    ticketNum: ticketNumber
+                    );
+
+                await _csvFileController._orderRequestNewHeaderRepository.ClearExistingGrais(graiString);
+
+                // Attempt Rollback again
+                try
+                {
+                    await _csvFileController._orderRequestNewHeaderRepository.Rollback(orderId, gln);
+                    reloadGlnRollbacks();
+                    await reloadOrderRollback();
+                    InitialLoad();
+                    MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception innerEx)
+                {
+                    _logger.Error(innerEx.Message);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error rolling back", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _logger.Error(ex.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+
             }
         }
         private void selectOrder(object sender, ItemCheckEventArgs e)

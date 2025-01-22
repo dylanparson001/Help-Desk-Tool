@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iGPS Help Desk", "iGPS Help Desk.csproj", "{49F54E60-1E92-4719-9BAE-419BDC8E4DF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpDeskToolTests", "..\HelpDeskToolTests\HelpDeskToolTests.csproj", "{BC750560-A597-4FC3-BF94-CE3EEAD7BA4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iGPS Help Desk.Tests", "iGPS Help Desk.Tests\iGPS Help Desk.Tests.csproj", "{1773BE66-70E4-4F66-9AA9-A3E5E0F3500E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{49F54E60-1E92-4719-9BAE-419BDC8E4DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49F54E60-1E92-4719-9BAE-419BDC8E4DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49F54E60-1E92-4719-9BAE-419BDC8E4DF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC750560-A597-4FC3-BF94-CE3EEAD7BA4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC750560-A597-4FC3-BF94-CE3EEAD7BA4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC750560-A597-4FC3-BF94-CE3EEAD7BA4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC750560-A597-4FC3-BF94-CE3EEAD7BA4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1773BE66-70E4-4F66-9AA9-A3E5E0F3500E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1773BE66-70E4-4F66-9AA9-A3E5E0F3500E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1773BE66-70E4-4F66-9AA9-A3E5E0F3500E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1773BE66-70E4-4F66-9AA9-A3E5E0F3500E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -53,6 +53,8 @@
             this.btnClearContainers = new System.Windows.Forms.Button();
             this.labelContainersToClear = new System.Windows.Forms.Label();
             this.tabRollback = new System.Windows.Forms.TabPage();
+            this.rollbackTicket = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.txtBolTotal = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
@@ -86,7 +88,7 @@
             this.btnFindOrderId = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.txtBolToRollback = new System.Windows.Forms.TextBox();
-            this.tabMovePallets = new System.Windows.Forms.TabPage();
+            this.tabClearGraisFromContainer = new System.Windows.Forms.TabPage();
             this.lblContainersAddSuccess = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -121,7 +123,7 @@
             this.StatusChange.SuspendLayout();
             this.tabClearContainers.SuspendLayout();
             this.tabRollback.SuspendLayout();
-            this.tabMovePallets.SuspendLayout();
+            this.tabClearGraisFromContainer.SuspendLayout();
             this.tabRemoveOrders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.SuspendLayout();
@@ -129,10 +131,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(218, 27);
+            this.label1.Size = new System.Drawing.Size(203, 28);
             this.label1.TabIndex = 0;
             this.label1.Text = "iGPS Help Desk Tool";
             // 
@@ -140,12 +142,13 @@
             // 
             this.StatusChange.Controls.Add(this.tabClearContainers);
             this.StatusChange.Controls.Add(this.tabRollback);
-            this.StatusChange.Controls.Add(this.tabMovePallets);
+            this.StatusChange.Controls.Add(this.tabClearGraisFromContainer);
             this.StatusChange.Controls.Add(this.tabRemoveOrders);
+            this.StatusChange.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StatusChange.Location = new System.Drawing.Point(12, 40);
             this.StatusChange.Name = "StatusChange";
             this.StatusChange.SelectedIndex = 0;
-            this.StatusChange.Size = new System.Drawing.Size(887, 576);
+            this.StatusChange.Size = new System.Drawing.Size(883, 586);
             this.StatusChange.TabIndex = 1;
             // 
             // tabClearContainers
@@ -166,26 +169,28 @@
             this.tabClearContainers.Controls.Add(this.label7);
             this.tabClearContainers.Controls.Add(this.btnClearContainers);
             this.tabClearContainers.Controls.Add(this.labelContainersToClear);
-            this.tabClearContainers.Location = new System.Drawing.Point(4, 22);
+            this.tabClearContainers.Location = new System.Drawing.Point(4, 26);
             this.tabClearContainers.Name = "tabClearContainers";
-            this.tabClearContainers.Size = new System.Drawing.Size(879, 550);
+            this.tabClearContainers.Size = new System.Drawing.Size(875, 556);
             this.tabClearContainers.TabIndex = 2;
             this.tabClearContainers.Text = "Clear Containers";
             this.tabClearContainers.UseVisualStyleBackColor = true;
             // 
             // txtTicketNumber
             // 
+            this.txtTicketNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTicketNumber.Location = new System.Drawing.Point(16, 485);
             this.txtTicketNumber.Name = "txtTicketNumber";
-            this.txtTicketNumber.Size = new System.Drawing.Size(98, 20);
+            this.txtTicketNumber.Size = new System.Drawing.Size(98, 22);
             this.txtTicketNumber.TabIndex = 25;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(13, 469);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(47, 13);
+            this.label14.Size = new System.Drawing.Size(54, 16);
             this.label14.TabIndex = 24;
             this.label14.Text = "Ticket #";
             // 
@@ -194,7 +199,7 @@
             this.lblErrorMessage.AutoSize = true;
             this.lblErrorMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.lblErrorMessage.Location = new System.Drawing.Point(14, 449);
+            this.lblErrorMessage.Location = new System.Drawing.Point(15, 449);
             this.lblErrorMessage.Name = "lblErrorMessage";
             this.lblErrorMessage.Size = new System.Drawing.Size(51, 20);
             this.lblErrorMessage.TabIndex = 23;
@@ -203,9 +208,10 @@
             // 
             // findGhosts
             // 
-            this.findGhosts.Location = new System.Drawing.Point(248, 508);
+            this.findGhosts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.findGhosts.Location = new System.Drawing.Point(248, 512);
             this.findGhosts.Name = "findGhosts";
-            this.findGhosts.Size = new System.Drawing.Size(115, 29);
+            this.findGhosts.Size = new System.Drawing.Size(115, 31);
             this.findGhosts.TabIndex = 22;
             this.findGhosts.Text = "Find Ghost Grais";
             this.findGhosts.UseVisualStyleBackColor = true;
@@ -216,19 +222,21 @@
             this.cbSaveSnapshot.AutoSize = true;
             this.cbSaveSnapshot.Checked = true;
             this.cbSaveSnapshot.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSaveSnapshot.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSaveSnapshot.Location = new System.Drawing.Point(369, 485);
             this.cbSaveSnapshot.Name = "cbSaveSnapshot";
-            this.cbSaveSnapshot.Size = new System.Drawing.Size(99, 17);
+            this.cbSaveSnapshot.Size = new System.Drawing.Size(118, 20);
             this.cbSaveSnapshot.TabIndex = 21;
             this.cbSaveSnapshot.Text = "Save Snapshot";
             this.cbSaveSnapshot.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(479, 508);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(479, 512);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(116, 29);
+            this.button1.Size = new System.Drawing.Size(116, 31);
             this.button1.TabIndex = 20;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
@@ -236,9 +244,10 @@
             // 
             // btnGetDnus
             // 
-            this.btnGetDnus.Location = new System.Drawing.Point(127, 508);
+            this.btnGetDnus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGetDnus.Location = new System.Drawing.Point(127, 513);
             this.btnGetDnus.Name = "btnGetDnus";
-            this.btnGetDnus.Size = new System.Drawing.Size(115, 29);
+            this.btnGetDnus.Size = new System.Drawing.Size(115, 30);
             this.btnGetDnus.TabIndex = 19;
             this.btnGetDnus.Text = "Get DNUs";
             this.btnGetDnus.UseVisualStyleBackColor = true;
@@ -246,9 +255,10 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(369, 508);
+            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSave.Location = new System.Drawing.Point(369, 511);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(105, 29);
+            this.btnSave.Size = new System.Drawing.Size(105, 32);
             this.btnSave.TabIndex = 18;
             this.btnSave.Text = "Save Content";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -257,29 +267,31 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(619, 492);
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(597, 491);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(48, 13);
+            this.label8.Size = new System.Drawing.Size(56, 16);
             this.label8.TabIndex = 17;
             this.label8.Text = "# GRAIs";
             // 
             // txtNumToBeDeleted
             // 
             this.txtNumToBeDeleted.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNumToBeDeleted.Location = new System.Drawing.Point(622, 508);
+            this.txtNumToBeDeleted.Location = new System.Drawing.Point(600, 513);
             this.txtNumToBeDeleted.Multiline = true;
             this.txtNumToBeDeleted.Name = "txtNumToBeDeleted";
             this.txtNumToBeDeleted.ReadOnly = true;
-            this.txtNumToBeDeleted.Size = new System.Drawing.Size(82, 29);
+            this.txtNumToBeDeleted.Size = new System.Drawing.Size(80, 30);
             this.txtNumToBeDeleted.TabIndex = 16;
             this.txtNumToBeDeleted.Text = "0";
             this.txtNumToBeDeleted.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnShowGlnContent
             // 
-            this.btnShowGlnContent.Location = new System.Drawing.Point(16, 508);
+            this.btnShowGlnContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnShowGlnContent.Location = new System.Drawing.Point(16, 513);
             this.btnShowGlnContent.Name = "btnShowGlnContent";
-            this.btnShowGlnContent.Size = new System.Drawing.Size(105, 29);
+            this.btnShowGlnContent.Size = new System.Drawing.Size(105, 30);
             this.btnShowGlnContent.TabIndex = 15;
             this.btnShowGlnContent.Text = "Show Content";
             this.btnShowGlnContent.UseVisualStyleBackColor = true;
@@ -291,6 +303,7 @@
             this.colGln,
             this.colGrai,
             this.colDateTime});
+            this.lvGlnContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvGlnContent.FullRowSelect = true;
             this.lvGlnContent.HideSelection = false;
             this.lvGlnContent.Location = new System.Drawing.Point(296, 39);
@@ -317,6 +330,7 @@
             // 
             // txtContainersToClear
             // 
+            this.txtContainersToClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtContainersToClear.Location = new System.Drawing.Point(15, 39);
             this.txtContainersToClear.Multiline = true;
             this.txtContainersToClear.Name = "txtContainersToClear";
@@ -327,9 +341,10 @@
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(296, 16);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(114, 13);
+            this.label7.Size = new System.Drawing.Size(173, 20);
             this.label7.TabIndex = 4;
             this.label7.Text = "Contents of Containers";
             // 
@@ -338,10 +353,11 @@
             this.btnClearContainers.BackColor = System.Drawing.Color.Red;
             this.btnClearContainers.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnClearContainers.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.btnClearContainers.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClearContainers.Location = new System.Drawing.Point(756, 508);
+            this.btnClearContainers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearContainers.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnClearContainers.Location = new System.Drawing.Point(737, 504);
             this.btnClearContainers.Name = "btnClearContainers";
-            this.btnClearContainers.Size = new System.Drawing.Size(101, 29);
+            this.btnClearContainers.Size = new System.Drawing.Size(120, 39);
             this.btnClearContainers.TabIndex = 2;
             this.btnClearContainers.Text = "Clear Containers";
             this.btnClearContainers.UseVisualStyleBackColor = false;
@@ -350,14 +366,17 @@
             // labelContainersToClear
             // 
             this.labelContainersToClear.AutoSize = true;
+            this.labelContainersToClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelContainersToClear.Location = new System.Drawing.Point(15, 16);
             this.labelContainersToClear.Name = "labelContainersToClear";
-            this.labelContainersToClear.Size = new System.Drawing.Size(128, 13);
+            this.labelContainersToClear.Size = new System.Drawing.Size(191, 20);
             this.labelContainersToClear.TabIndex = 0;
             this.labelContainersToClear.Text = "Containers To Be Cleared";
             // 
             // tabRollback
             // 
+            this.tabRollback.Controls.Add(this.rollbackTicket);
+            this.tabRollback.Controls.Add(this.label15);
             this.tabRollback.Controls.Add(this.label13);
             this.tabRollback.Controls.Add(this.txtBolTotal);
             this.tabRollback.Controls.Add(this.button6);
@@ -380,35 +399,51 @@
             this.tabRollback.Controls.Add(this.btnFindOrderId);
             this.tabRollback.Controls.Add(this.label4);
             this.tabRollback.Controls.Add(this.txtBolToRollback);
-            this.tabRollback.Location = new System.Drawing.Point(4, 22);
+            this.tabRollback.Location = new System.Drawing.Point(4, 26);
             this.tabRollback.Name = "tabRollback";
-            this.tabRollback.Size = new System.Drawing.Size(879, 550);
+            this.tabRollback.Size = new System.Drawing.Size(875, 556);
             this.tabRollback.TabIndex = 5;
             this.tabRollback.Text = "Rollback";
             this.tabRollback.UseVisualStyleBackColor = true;
             // 
+            // rollbackTicket
+            // 
+            this.rollbackTicket.Location = new System.Drawing.Point(632, 509);
+            this.rollbackTicket.Name = "rollbackTicket";
+            this.rollbackTicket.Size = new System.Drawing.Size(98, 25);
+            this.rollbackTicket.TabIndex = 27;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(629, 493);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(53, 17);
+            this.label15.TabIndex = 26;
+            this.label15.Text = "Ticket #";
+            // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(506, 493);
+            this.label13.Location = new System.Drawing.Point(506, 489);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(124, 13);
+            this.label13.Size = new System.Drawing.Size(102, 17);
             this.label13.TabIndex = 22;
-            this.label13.Text = "Total To Be Rolled Back";
+            this.label13.Text = "Total completed";
             // 
             // txtBolTotal
             // 
             this.txtBolTotal.Location = new System.Drawing.Point(509, 509);
             this.txtBolTotal.Name = "txtBolTotal";
             this.txtBolTotal.ReadOnly = true;
-            this.txtBolTotal.Size = new System.Drawing.Size(117, 20);
+            this.txtBolTotal.Size = new System.Drawing.Size(117, 25);
             this.txtBolTotal.TabIndex = 21;
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(197, 248);
+            this.button6.Location = new System.Drawing.Point(275, 256);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.Size = new System.Drawing.Size(105, 25);
             this.button6.TabIndex = 20;
             this.button6.Text = "Reload";
             this.button6.UseVisualStyleBackColor = true;
@@ -416,9 +451,9 @@
             // 
             // btnSelectRollbackContainer
             // 
-            this.btnSelectRollbackContainer.Location = new System.Drawing.Point(712, 250);
+            this.btnSelectRollbackContainer.Location = new System.Drawing.Point(663, 255);
             this.btnSelectRollbackContainer.Name = "btnSelectRollbackContainer";
-            this.btnSelectRollbackContainer.Size = new System.Drawing.Size(145, 22);
+            this.btnSelectRollbackContainer.Size = new System.Drawing.Size(145, 25);
             this.btnSelectRollbackContainer.TabIndex = 19;
             this.btnSelectRollbackContainer.Text = "Select Rollback Container";
             this.btnSelectRollbackContainer.UseVisualStyleBackColor = true;
@@ -426,7 +461,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(757, 30);
+            this.button5.Location = new System.Drawing.Point(708, 28);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(100, 26);
             this.button5.TabIndex = 18;
@@ -437,17 +472,17 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(14, 234);
+            this.label12.Location = new System.Drawing.Point(14, 230);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(94, 13);
+            this.label12.Size = new System.Drawing.Size(113, 17);
             this.label12.TabIndex = 17;
             this.label12.Text = "Search Containers";
             // 
             // txtRollbackContainerSearch
             // 
-            this.txtRollbackContainerSearch.Location = new System.Drawing.Point(17, 250);
+            this.txtRollbackContainerSearch.Location = new System.Drawing.Point(17, 256);
             this.txtRollbackContainerSearch.Name = "txtRollbackContainerSearch";
-            this.txtRollbackContainerSearch.Size = new System.Drawing.Size(174, 20);
+            this.txtRollbackContainerSearch.Size = new System.Drawing.Size(240, 25);
             this.txtRollbackContainerSearch.TabIndex = 16;
             this.txtRollbackContainerSearch.TextChanged += new System.EventHandler(this.searchRollbackContainersText);
             // 
@@ -461,9 +496,9 @@
             this.columnHeader11});
             this.listViewRollbackContainers.FullRowSelect = true;
             this.listViewRollbackContainers.HideSelection = false;
-            this.listViewRollbackContainers.Location = new System.Drawing.Point(17, 277);
+            this.listViewRollbackContainers.Location = new System.Drawing.Point(17, 287);
             this.listViewRollbackContainers.Name = "listViewRollbackContainers";
-            this.listViewRollbackContainers.Size = new System.Drawing.Size(840, 190);
+            this.listViewRollbackContainers.Size = new System.Drawing.Size(791, 190);
             this.listViewRollbackContainers.TabIndex = 15;
             this.listViewRollbackContainers.UseCompatibleStateImageBehavior = false;
             this.listViewRollbackContainers.View = System.Windows.Forms.View.Details;
@@ -497,9 +532,9 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(14, 493);
+            this.label11.Location = new System.Drawing.Point(14, 489);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(29, 13);
+            this.label11.Size = new System.Drawing.Size(33, 17);
             this.label11.TabIndex = 14;
             this.label11.Text = "GLN";
             // 
@@ -508,15 +543,15 @@
             this.txtGLNRollback.Location = new System.Drawing.Point(17, 509);
             this.txtGLNRollback.Name = "txtGLNRollback";
             this.txtGLNRollback.ReadOnly = true;
-            this.txtGLNRollback.Size = new System.Drawing.Size(117, 20);
+            this.txtGLNRollback.Size = new System.Drawing.Size(117, 25);
             this.txtGLNRollback.TabIndex = 13;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(383, 493);
+            this.label10.Location = new System.Drawing.Point(383, 489);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(38, 13);
+            this.label10.Size = new System.Drawing.Size(44, 17);
             this.label10.TabIndex = 12;
             this.label10.Text = "Seal #";
             // 
@@ -525,15 +560,15 @@
             this.txtSeal.Location = new System.Drawing.Point(386, 509);
             this.txtSeal.Name = "txtSeal";
             this.txtSeal.ReadOnly = true;
-            this.txtSeal.Size = new System.Drawing.Size(117, 20);
+            this.txtSeal.Size = new System.Drawing.Size(117, 25);
             this.txtSeal.TabIndex = 11;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(260, 493);
+            this.label9.Location = new System.Drawing.Point(260, 489);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(46, 13);
+            this.label9.Size = new System.Drawing.Size(56, 17);
             this.label9.TabIndex = 10;
             this.label9.Text = "Trailer #";
             // 
@@ -542,15 +577,15 @@
             this.txtTrailer.Location = new System.Drawing.Point(263, 509);
             this.txtTrailer.Name = "txtTrailer";
             this.txtTrailer.ReadOnly = true;
-            this.txtTrailer.Size = new System.Drawing.Size(117, 20);
+            this.txtTrailer.Size = new System.Drawing.Size(117, 25);
             this.txtTrailer.TabIndex = 9;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(137, 493);
+            this.label6.Location = new System.Drawing.Point(137, 489);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(92, 13);
+            this.label6.Size = new System.Drawing.Size(112, 17);
             this.label6.TabIndex = 8;
             this.label6.Text = "Selected Order ID";
             // 
@@ -559,7 +594,7 @@
             this.txtSelectedOrderId.Location = new System.Drawing.Point(140, 509);
             this.txtSelectedOrderId.Name = "txtSelectedOrderId";
             this.txtSelectedOrderId.ReadOnly = true;
-            this.txtSelectedOrderId.Size = new System.Drawing.Size(117, 20);
+            this.txtSelectedOrderId.Size = new System.Drawing.Size(117, 25);
             this.txtSelectedOrderId.TabIndex = 7;
             // 
             // listOrderId
@@ -574,7 +609,7 @@
             this.listOrderId.HideSelection = false;
             this.listOrderId.Location = new System.Drawing.Point(17, 61);
             this.listOrderId.Name = "listOrderId";
-            this.listOrderId.Size = new System.Drawing.Size(840, 166);
+            this.listOrderId.Size = new System.Drawing.Size(791, 166);
             this.listOrderId.TabIndex = 6;
             this.listOrderId.UseCompatibleStateImageBehavior = false;
             this.listOrderId.View = System.Windows.Forms.View.Details;
@@ -607,12 +642,12 @@
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Quantity Completed";
+            this.columnHeader6.Text = "Total";
             this.columnHeader6.Width = 118;
             // 
             // btnRollback
             // 
-            this.btnRollback.Location = new System.Drawing.Point(740, 502);
+            this.btnRollback.Location = new System.Drawing.Point(740, 509);
             this.btnRollback.Name = "btnRollback";
             this.btnRollback.Size = new System.Drawing.Size(117, 27);
             this.btnRollback.TabIndex = 5;
@@ -625,13 +660,13 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(41, 96);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 13);
+            this.label5.Size = new System.Drawing.Size(73, 17);
             this.label5.TabIndex = 4;
             this.label5.Text = "Order ID(s)";
             // 
             // btnFindOrderId
             // 
-            this.btnFindOrderId.Location = new System.Drawing.Point(197, 31);
+            this.btnFindOrderId.Location = new System.Drawing.Point(275, 30);
             this.btnFindOrderId.Name = "btnFindOrderId";
             this.btnFindOrderId.Size = new System.Drawing.Size(105, 24);
             this.btnFindOrderId.TabIndex = 2;
@@ -642,42 +677,42 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 18);
+            this.label4.Location = new System.Drawing.Point(14, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.Size = new System.Drawing.Size(31, 17);
             this.label4.TabIndex = 1;
             this.label4.Text = "BOL";
             // 
             // txtBolToRollback
             // 
-            this.txtBolToRollback.Location = new System.Drawing.Point(17, 34);
+            this.txtBolToRollback.Location = new System.Drawing.Point(17, 28);
             this.txtBolToRollback.Name = "txtBolToRollback";
-            this.txtBolToRollback.Size = new System.Drawing.Size(174, 20);
+            this.txtBolToRollback.Size = new System.Drawing.Size(240, 25);
             this.txtBolToRollback.TabIndex = 0;
             // 
-            // tabMovePallets
+            // tabClearGraisFromContainer
             // 
-            this.tabMovePallets.Controls.Add(this.lblContainersAddSuccess);
-            this.tabMovePallets.Controls.Add(this.button4);
-            this.tabMovePallets.Controls.Add(this.label2);
-            this.tabMovePallets.Controls.Add(this.button3);
-            this.tabMovePallets.Controls.Add(this.tbSearchBar);
-            this.tabMovePallets.Controls.Add(this.lvPlacards);
-            this.tabMovePallets.Controls.Add(this.button2);
-            this.tabMovePallets.Location = new System.Drawing.Point(4, 22);
-            this.tabMovePallets.Margin = new System.Windows.Forms.Padding(2);
-            this.tabMovePallets.Name = "tabMovePallets";
-            this.tabMovePallets.Size = new System.Drawing.Size(879, 550);
-            this.tabMovePallets.TabIndex = 3;
-            this.tabMovePallets.Text = "Search Containers";
-            this.tabMovePallets.UseVisualStyleBackColor = true;
+            this.tabClearGraisFromContainer.Controls.Add(this.lblContainersAddSuccess);
+            this.tabClearGraisFromContainer.Controls.Add(this.button4);
+            this.tabClearGraisFromContainer.Controls.Add(this.label2);
+            this.tabClearGraisFromContainer.Controls.Add(this.button3);
+            this.tabClearGraisFromContainer.Controls.Add(this.tbSearchBar);
+            this.tabClearGraisFromContainer.Controls.Add(this.lvPlacards);
+            this.tabClearGraisFromContainer.Controls.Add(this.button2);
+            this.tabClearGraisFromContainer.Location = new System.Drawing.Point(4, 26);
+            this.tabClearGraisFromContainer.Margin = new System.Windows.Forms.Padding(2);
+            this.tabClearGraisFromContainer.Name = "tabClearGraisFromContainer";
+            this.tabClearGraisFromContainer.Size = new System.Drawing.Size(875, 556);
+            this.tabClearGraisFromContainer.TabIndex = 3;
+            this.tabClearGraisFromContainer.Text = "Clear Grais From Container";
+            this.tabClearGraisFromContainer.UseVisualStyleBackColor = true;
             // 
             // lblContainersAddSuccess
             // 
             this.lblContainersAddSuccess.AutoSize = true;
             this.lblContainersAddSuccess.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblContainersAddSuccess.ForeColor = System.Drawing.Color.ForestGreen;
-            this.lblContainersAddSuccess.Location = new System.Drawing.Point(30, 439);
+            this.lblContainersAddSuccess.Location = new System.Drawing.Point(22, 478);
             this.lblContainersAddSuccess.Name = "lblContainersAddSuccess";
             this.lblContainersAddSuccess.Size = new System.Drawing.Size(213, 20);
             this.lblContainersAddSuccess.TabIndex = 13;
@@ -686,7 +721,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(721, 501);
+            this.button4.Location = new System.Drawing.Point(24, 517);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(136, 33);
             this.button4.TabIndex = 12;
@@ -697,15 +732,15 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(603, 11);
+            this.label2.Location = new System.Drawing.Point(603, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
+            this.label2.Size = new System.Drawing.Size(47, 17);
             this.label2.TabIndex = 11;
             this.label2.Text = "Search";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(26, 501);
+            this.button3.Location = new System.Drawing.Point(699, 517);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(148, 33);
             this.button3.TabIndex = 10;
@@ -717,7 +752,7 @@
             // 
             this.tbSearchBar.Location = new System.Drawing.Point(606, 27);
             this.tbSearchBar.Name = "tbSearchBar";
-            this.tbSearchBar.Size = new System.Drawing.Size(241, 20);
+            this.tbSearchBar.Size = new System.Drawing.Size(241, 25);
             this.tbSearchBar.TabIndex = 9;
             this.tbSearchBar.TextChanged += new System.EventHandler(this.searchContainersText);
             // 
@@ -733,7 +768,7 @@
             this.lvPlacards.HideSelection = false;
             this.lvPlacards.Location = new System.Drawing.Point(24, 61);
             this.lvPlacards.Name = "lvPlacards";
-            this.lvPlacards.Size = new System.Drawing.Size(823, 375);
+            this.lvPlacards.Size = new System.Drawing.Size(823, 414);
             this.lvPlacards.TabIndex = 2;
             this.lvPlacards.UseCompatibleStateImageBehavior = false;
             this.lvPlacards.View = System.Windows.Forms.View.Details;
@@ -765,7 +800,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(21, 17);
+            this.button2.Location = new System.Drawing.Point(24, 27);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(108, 30);
             this.button2.TabIndex = 1;
@@ -783,9 +818,9 @@
             this.tabRemoveOrders.Controls.Add(this.btnShowOrder);
             this.tabRemoveOrders.Controls.Add(this.label3);
             this.tabRemoveOrders.Controls.Add(this.txtBols);
-            this.tabRemoveOrders.Location = new System.Drawing.Point(4, 22);
+            this.tabRemoveOrders.Location = new System.Drawing.Point(4, 26);
             this.tabRemoveOrders.Name = "tabRemoveOrders";
-            this.tabRemoveOrders.Size = new System.Drawing.Size(879, 550);
+            this.tabRemoveOrders.Size = new System.Drawing.Size(875, 556);
             this.tabRemoveOrders.TabIndex = 4;
             this.tabRemoveOrders.Text = "Order Removal";
             this.tabRemoveOrders.UseVisualStyleBackColor = true;
@@ -795,7 +830,7 @@
             this.cbCheckAllOrders.AutoSize = true;
             this.cbCheckAllOrders.Location = new System.Drawing.Point(159, 23);
             this.cbCheckAllOrders.Name = "cbCheckAllOrders";
-            this.cbCheckAllOrders.Size = new System.Drawing.Size(105, 17);
+            this.cbCheckAllOrders.Size = new System.Drawing.Size(124, 21);
             this.cbCheckAllOrders.TabIndex = 9;
             this.cbCheckAllOrders.Text = "Check All Orders";
             this.cbCheckAllOrders.UseVisualStyleBackColor = true;
@@ -803,9 +838,9 @@
             // 
             // btnChangeQuantity
             // 
-            this.btnChangeQuantity.Location = new System.Drawing.Point(241, 492);
+            this.btnChangeQuantity.Location = new System.Drawing.Point(246, 492);
             this.btnChangeQuantity.Name = "btnChangeQuantity";
-            this.btnChangeQuantity.Size = new System.Drawing.Size(106, 34);
+            this.btnChangeQuantity.Size = new System.Drawing.Size(106, 44);
             this.btnChangeQuantity.TabIndex = 8;
             this.btnChangeQuantity.Text = "Change Quantity";
             this.btnChangeQuantity.UseVisualStyleBackColor = true;
@@ -814,10 +849,11 @@
             // lblError
             // 
             this.lblError.AutoSize = true;
+            this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblError.ForeColor = System.Drawing.Color.Red;
-            this.lblError.Location = new System.Drawing.Point(373, 492);
+            this.lblError.Location = new System.Drawing.Point(370, 516);
             this.lblError.Name = "lblError";
-            this.lblError.Size = new System.Drawing.Size(28, 13);
+            this.lblError.Size = new System.Drawing.Size(42, 20);
             this.lblError.TabIndex = 7;
             this.lblError.Text = "error";
             this.lblError.Visible = false;
@@ -871,9 +907,9 @@
             // 
             // btnRemoveOrders
             // 
-            this.btnRemoveOrders.Location = new System.Drawing.Point(131, 492);
+            this.btnRemoveOrders.Location = new System.Drawing.Point(136, 492);
             this.btnRemoveOrders.Name = "btnRemoveOrders";
-            this.btnRemoveOrders.Size = new System.Drawing.Size(104, 34);
+            this.btnRemoveOrders.Size = new System.Drawing.Size(104, 44);
             this.btnRemoveOrders.TabIndex = 4;
             this.btnRemoveOrders.Text = "Remove Selected Orders";
             this.btnRemoveOrders.UseVisualStyleBackColor = true;
@@ -881,9 +917,9 @@
             // 
             // btnShowOrder
             // 
-            this.btnShowOrder.Location = new System.Drawing.Point(15, 492);
+            this.btnShowOrder.Location = new System.Drawing.Point(20, 492);
             this.btnShowOrder.Name = "btnShowOrder";
-            this.btnShowOrder.Size = new System.Drawing.Size(110, 34);
+            this.btnShowOrder.Size = new System.Drawing.Size(110, 44);
             this.btnShowOrder.TabIndex = 2;
             this.btnShowOrder.Text = "Show Orders";
             this.btnShowOrder.UseVisualStyleBackColor = true;
@@ -892,9 +928,9 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 30);
+            this.label3.Location = new System.Drawing.Point(17, 27);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 13);
+            this.label3.Size = new System.Drawing.Size(79, 17);
             this.label3.TabIndex = 1;
             this.label3.Text = "Enter BOL(s)";
             // 
@@ -912,7 +948,8 @@
             // 
             // settingsBtn
             // 
-            this.settingsBtn.Location = new System.Drawing.Point(828, 30);
+            this.settingsBtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.settingsBtn.Location = new System.Drawing.Point(824, 11);
             this.settingsBtn.Margin = new System.Windows.Forms.Padding(2);
             this.settingsBtn.Name = "settingsBtn";
             this.settingsBtn.Size = new System.Drawing.Size(67, 27);
@@ -924,10 +961,10 @@
             // lblVersionNumber
             // 
             this.lblVersionNumber.AutoSize = true;
-            this.lblVersionNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersionNumber.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersionNumber.Location = new System.Drawing.Point(236, 16);
             this.lblVersionNumber.Name = "lblVersionNumber";
-            this.lblVersionNumber.Size = new System.Drawing.Size(37, 13);
+            this.lblVersionNumber.Size = new System.Drawing.Size(41, 17);
             this.lblVersionNumber.TabIndex = 3;
             this.lblVersionNumber.Text = "v1.1.0";
             // 
@@ -941,6 +978,7 @@
             this.Controls.Add(this.settingsBtn);
             this.Controls.Add(this.StatusChange);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Wingdings", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Igps";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -950,8 +988,8 @@
             this.tabClearContainers.PerformLayout();
             this.tabRollback.ResumeLayout(false);
             this.tabRollback.PerformLayout();
-            this.tabMovePallets.ResumeLayout(false);
-            this.tabMovePallets.PerformLayout();
+            this.tabClearGraisFromContainer.ResumeLayout(false);
+            this.tabClearGraisFromContainer.PerformLayout();
             this.tabRemoveOrders.ResumeLayout(false);
             this.tabRemoveOrders.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
@@ -983,7 +1021,7 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnGetDnus;
         private System.Windows.Forms.Button settingsBtn;
-        private System.Windows.Forms.TabPage tabMovePallets;
+        private System.Windows.Forms.TabPage tabClearGraisFromContainer;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ListView lvPlacards;
         private System.Windows.Forms.ColumnHeader ContainerGLN;
@@ -1051,5 +1089,7 @@
         private System.Windows.Forms.TextBox txtTicketNumber;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblVersionNumber;
+        private System.Windows.Forms.TextBox rollbackTicket;
+        private System.Windows.Forms.Label label15;
     }
 }

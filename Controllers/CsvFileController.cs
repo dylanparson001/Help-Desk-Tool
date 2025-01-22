@@ -1,9 +1,7 @@
 ﻿using iGPS_Help_Desk.Models;
-using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Views;
 using Serilog;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -49,7 +47,7 @@ namespace iGPS_Help_Desk.Controllers
 
         public async Task SaveCsvFilesAndZip(string txtZoutCount, List<string> txtZoutContainersToClear,
             List<string> txtSnapshotContainers, string txtSnapshotCount, bool saveSnapshot,
-            List<IGPS_DEPOT_GLN> listIgpsDepotGln, string ticketNum)
+            List<IGPS_DEPOT_GLN> listIgpsDepotGln, string ticketNum = "")
         {
             TicketNum = ticketNum;
             siteId = await _igpsDepotGlnRepository.GetSiteID();
@@ -66,7 +64,6 @@ namespace iGPS_Help_Desk.Controllers
             SaveToArchive(saveSnapshot, rand);
         }
 
-
         public async Task SaveContainersFromList(string txtNumToBeDeleted,
             List<string> txtContainersToClear, int rand, List<IGPS_DEPOT_GLN> listIgpsDepotGln)
         {
@@ -79,7 +76,6 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             // List from db
-            //var igpsDepotGln = await _clearContainerController.GetContainersFromList(txtContainersToClear);
             var igpsDepotLocation = await _clearContainerController.GetLocationContainersFromList(txtContainersToClear);
             // check for null 
             if (listIgpsDepotGln == null)
@@ -94,15 +90,31 @@ namespace iGPS_Help_Desk.Controllers
 
             DateTime currentDate = DateTime.Now;
 
-            // Date will be part of file name
             currentDateString = currentDate.Date.ToLongDateString();
+            if (!string.IsNullOrEmpty(TicketNum))
+            {
 
-            zoutFileNameOnly = $"{siteId} IGPS_DEPOT_GLN ZOUT {currentDateString} {grais} GRAIs Ticket #{TicketNum}";
+                zoutFileNameOnly = $"{siteId} IGPS_DEPOT_GLN ZOUT {currentDateString} {grais} GRAIs Ticket #{TicketNum}";
+            }
+            else
+            {
+
+                zoutFileNameOnly = $"{siteId} IGPS_DEPOT_GLN ZOUT {currentDateString} {grais} GRAIs";
+            }
             zoutCsvFileName = $"{ClearContainerFilePath}/{zoutFileNameOnly}";
 
+            if (!string.IsNullOrEmpty(TicketNum))
+            {
 
-            zoutLocationCsvFileNameOnly =
-                $"{siteId} IGPS_DEPOT_LOCATION ZOUT {currentDateString} {igpsDepotLocation.Count} CONTAINERS Ticket #{TicketNum}";
+                zoutLocationCsvFileNameOnly =
+                    $"{siteId} IGPS_DEPOT_LOCATION ZOUT {currentDateString} {igpsDepotLocation.Count} CONTAINERS Ticket #{TicketNum}";
+            }
+            else
+            {
+
+                zoutLocationCsvFileNameOnly =
+                $"{siteId} IGPS_DEPOT_LOCATION ZOUT {currentDateString} {igpsDepotLocation.Count} CONTAINERS";
+            }
             zoutLocationCsvFileName = $"{ClearContainerFilePath}/{zoutLocationCsvFileNameOnly}";
 
 
@@ -179,6 +191,11 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             listIgpsDepotGln.Clear();
+            csv.Clear();
+            csv2.Clear();
+            listIgpsDepotGln.Clear();
+            igpsDepotLocation.Clear();
+            GC.Collect();
         }
 
         public async Task SaveSnapShot(string txtNumToBeDeleted,
@@ -211,11 +228,29 @@ namespace iGPS_Help_Desk.Controllers
             var csv = new StringBuilder();
             var csv2 = new StringBuilder();
 
-            snapshotFileNameOnly = $"{siteId} IGPS_DEPOT_GLN SNAPSHOT {currentDateString} {grais} GRAIs Ticket #{TicketNum}";
+            if (!string.IsNullOrEmpty(TicketNum))
+            {
+
+                snapshotFileNameOnly = $"{siteId} IGPS_DEPOT_GLN SNAPSHOT {currentDateString} {grais} GRAIs Ticket #{TicketNum}";
+            }
+            else
+            {
+                snapshotFileNameOnly = $"{siteId} IGPS_DEPOT_GLN SNAPSHOT {currentDateString} {grais} GRAIs";
+
+            }
             snapshotCsvFileName = $"{ClearContainerFilePath}/{snapshotFileNameOnly}";
 
-            snapshotLocationCsvFileNameOnly =
+            if (!string.IsNullOrEmpty(TicketNum))
+            {
+                snapshotLocationCsvFileNameOnly =
                 $"{siteId} IGPS_DEPOT_LOCATION SNAPSHOT {currentDateString} {igpsDepotLocationCount} CONTAINERS Ticket #{TicketNum}";
+            }
+            else
+            {
+
+                snapshotLocationCsvFileNameOnly =
+                $"{siteId} IGPS_DEPOT_LOCATION SNAPSHOT {currentDateString} {igpsDepotLocationCount} CONTAINERS";
+            }
             snapshotLocationCsvFileName = $"{ClearContainerFilePath}/{snapshotLocationCsvFileNameOnly}";
 
             sourceFilePaths.Add(snapshotCsvFileName);
@@ -357,8 +392,8 @@ namespace iGPS_Help_Desk.Controllers
             }
         }
 
-        public async Task SaveCsvOfIndividualGrais(string txtZoutCount, List<string> txtGraisToClear, string glnClear,
-            int rand)
+        public async Task SaveCsvOfIndividualGrais(string txtZoutCount, List<string> txtGraisToClear,
+            int rand, string glnClear = "", string ticketNum = "")
         {
             ClearContainerFilePath = GetCurrentFolderPath();
             var grais = txtZoutCount;
@@ -384,9 +419,15 @@ namespace iGPS_Help_Desk.Controllers
 
             // Date will be part of file name
             currentDateString = currentDate.Date.ToLongDateString();
-            zoutFileNameOnly = $"{siteId} ZOUT {glnClear} {currentDateString} {grais} GRAIs";
+            if (!string.IsNullOrEmpty(ticketNum))
+            {
+                zoutFileNameOnly = $"{siteId} ZOUT {glnClear} {currentDateString} {grais} GRAIs Ticket #{ticketNum}";
+            }
+            else
+            {
+                zoutFileNameOnly = $"{siteId} ZOUT {glnClear} {currentDateString} {grais} GRAIs";
+            }
 
-            //zoutCsvFileName = Path.Combine(ClearContainerFilePath, zoutFileNameOnly);
             zoutCsvFileName = $"{ClearContainerFilePath}/{zoutFileNameOnly}";
 
             foreach (IGPS_DEPOT_GLN gln in igpsDepotGln)
@@ -421,5 +462,6 @@ namespace iGPS_Help_Desk.Controllers
             }
 
             igpsDepotGln.Clear();
-        }    }
+        }
+    }
 }

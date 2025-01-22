@@ -10,12 +10,12 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class BaseController
     {
-        protected IgpsDepotGlnRepository _igpsDepotGlnRepository = new IgpsDepotGlnRepository();
-        protected IgpsDepotLocationRepository _igpsDepotLocationRepository = new IgpsDepotLocationRepository();
-        protected OrderRequestNewHeaderRepository _orderRequestNewHeaderRepository = new OrderRequestNewHeaderRepository();
-        protected RollbackRepository _rollbackRepository = new RollbackRepository();
-        protected ILogger _logger = Log.ForContext<Igps>();
-        protected string ConcatStringFromList(List<string> listOfString)
+        public IgpsDepotGlnRepository _igpsDepotGlnRepository = new IgpsDepotGlnRepository();
+        public IgpsDepotLocationRepository _igpsDepotLocationRepository = new IgpsDepotLocationRepository();
+        public OrderRequestNewHeaderRepository _orderRequestNewHeaderRepository = new OrderRequestNewHeaderRepository();
+        public RollbackRepository _rollbackRepository = new RollbackRepository();
+        public ILogger _logger = Log.ForContext<Igps>();
+        public string ConcatStringFromList(List<string> listOfString)
         {
             listOfString.ForEach(x =>
             {
@@ -24,7 +24,7 @@ namespace iGPS_Help_Desk.Controllers
             
             return string.Join(",", listOfString.Select(i => $"'{i}'"));
         }
-        protected string GetCurrentSiteid()
+        public string GetCurrentSiteid()
         {
             return ConfigurationManager.AppSettings.Get("siteId");
         }
