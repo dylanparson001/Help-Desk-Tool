@@ -14,7 +14,6 @@ namespace iGPS_Help_Desk.Controllers
         public IgpsDepotLocationRepository _igpsDepotLocationRepository = new IgpsDepotLocationRepository();
         public OrderRequestNewHeaderRepository _orderRequestNewHeaderRepository = new OrderRequestNewHeaderRepository();
         public RollbackRepository _rollbackRepository = new RollbackRepository();
-        public ILogger _logger = Log.ForContext<Igps>();
         public string ConcatStringFromList(List<string> listOfString)
         {
             listOfString.ForEach(x =>

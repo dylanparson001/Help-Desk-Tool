@@ -17,6 +17,8 @@ namespace iGPS_Help_Desk.Views
     {
         private Timer closeTimer;
         private readonly ILogger _logger = Log.ForContext<Igps>();
+        private readonly ILogger _rollbackLogger = Log.ForContext("Rollback", true);
+
         private List<IGPS_DEPOT_GLN> igpsDepotGln = new List<IGPS_DEPOT_GLN>();
         private List<string> ordersEntered = new List<string>();
         private bool showButtonClicked = false;
@@ -795,6 +797,8 @@ namespace iGPS_Help_Desk.Views
                     reloadGlnRollbacks();
                     await reloadOrderRollback();
                     InitialLoad();
+                    _rollbackLogger.Information("Second rollback attempt completed successfully after GRAIs were cleared");
+                    
                     MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

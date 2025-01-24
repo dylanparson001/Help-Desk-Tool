@@ -1,36 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Models;
+using Serilog;
 
 namespace iGPS_Help_Desk.Controllers
 {
     public class ClearContainerController : BaseController
     {
+        private readonly ILogger _logger = Log.ForContext("ClearContainer", true);
         public async Task<(List<IGPS_DEPOT_GLN>, List<IGPS_DEPOT_LOCATION>)> GetDnus()
         {
             // Get List of dnus
-            List<string> dnuList = await _igpsDepotLocationRepository.ReadDnus();
+            List<string> dnuList = await GetDnusFromDb();
 
-            // Check for null
-            if (dnuList == null)
-            {
-                throw new Exception("No DNUs Found");
-            }
+            dnuList = CheckDnusFromList(dnuList);
 
             // concat '', to items in list
             string stringGlns = ConcatStringFromList(dnuList);
 
             //  Get the containers from IGPS_DEPOT_GLN table
-            List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns);
+            List<IGPS_DEPOT_GLN> glnList = await GetGlnsFromList(stringGlns);
 
             List<IGPS_DEPOT_LOCATION> locationList =
                 await _igpsDepotLocationRepository.ReadContainersFromList(dnuList);
 
 
             return (glnList.OrderBy(x => x.Gln).ToList(), locationList.OrderBy(x => x.Gln).ToList());
+        }
+        // Filters Non DNU Containers from list, if any exist
+        // Separated logic for testing
+        public List<string> CheckDnusFromList(List<string> listOfContainers)
+        {
+            var checkedList = listOfContainers.Where(x => x.ToUpper().Contains("DNU")).ToList();
+
+            if (checkedList.Count == 0)
+            {
+                throw new Exception("No DNUs Found");
+            }
+
+            foreach( var container in checkedList)
+            {
+                if (!container.ToUpper().Contains("DNU"))
+                {
+                    listOfContainers.Remove(container);
+                }
+            }
+            return checkedList;
+        }
+        private async Task<List<string>> GetDnusFromDb()
+        {
+            return await _igpsDepotLocationRepository.ReadDnus();
+        }
+
+        private async Task<List<IGPS_DEPOT_GLN>> GetGlnsFromList(string glns)
+        {
+            return await _igpsDepotGlnRepository.ReadContainersFromList(glns);
         }
 
         public async Task<List<IGPS_DEPOT_GLN>> GetContainersFromList(List<string> containerList)
@@ -47,7 +76,6 @@ namespace iGPS_Help_Desk.Controllers
         {
             var result = new List<IGPS_DEPOT_LOCATION>();
 
-            //string stringGlns = ConcatStringFromList(containerList);
 
             result = await _igpsDepotLocationRepository.ReadContainersFromList(containerList);
             return result;
@@ -55,7 +83,6 @@ namespace iGPS_Help_Desk.Controllers
 
         public async Task<(List<IGPS_DEPOT_GLN>, int)> GetAllContainers()
         {
-            //var result = await _igpsDepotGlnRepository.ReadAllContainers();
             var result = await _igpsDepotGlnRepository.ReadAllContainersBatch();
             return result;
         }
@@ -67,9 +94,10 @@ namespace iGPS_Help_Desk.Controllers
             {
                 return;
             }
-            if (glnList.Count == 0) {
+            if (glnList.Count == 0)
+            {
                 return;
-            
+
             }
             int count = await _igpsDepotGlnRepository.GetCountOfTable();
 
@@ -80,7 +108,7 @@ namespace iGPS_Help_Desk.Controllers
             string stringLocationToDelete;
             if (glnList == null) return;
 
-            
+
             string listToRead = ConcatStringFromList(glnList);
             // List from db
             List<IGPS_DEPOT_GLN> listFromDb = await _igpsDepotGlnRepository.ReadContainersFromList(listToRead);
@@ -117,6 +145,7 @@ namespace iGPS_Help_Desk.Controllers
             {
                 _igpsDepotLocationRepository.DeleteContainersFromList(stringLocationToDelete);
             }
+
         }
 
         public async Task<List<string>> GetGhostGrais()

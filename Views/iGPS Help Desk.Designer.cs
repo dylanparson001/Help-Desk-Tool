@@ -451,9 +451,9 @@
             // 
             // btnSelectRollbackContainer
             // 
-            this.btnSelectRollbackContainer.Location = new System.Drawing.Point(663, 255);
+            this.btnSelectRollbackContainer.Location = new System.Drawing.Point(643, 256);
             this.btnSelectRollbackContainer.Name = "btnSelectRollbackContainer";
-            this.btnSelectRollbackContainer.Size = new System.Drawing.Size(145, 25);
+            this.btnSelectRollbackContainer.Size = new System.Drawing.Size(165, 24);
             this.btnSelectRollbackContainer.TabIndex = 19;
             this.btnSelectRollbackContainer.Text = "Select Rollback Container";
             this.btnSelectRollbackContainer.UseVisualStyleBackColor = true;

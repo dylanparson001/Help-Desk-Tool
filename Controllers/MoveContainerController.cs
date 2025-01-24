@@ -2,18 +2,19 @@
 using iGPS_Help_Desk.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace iGPS_Help_Desk.Controllers
 {
     public class MoveContainerController : BaseController
     {
+        private readonly ILogger _logger = Log.ForContext("ClearContainer", true);
         public async Task<List<IGPS_DEPOT_LOCATION>> ReadAllContainers()
         {
             var result = await _igpsDepotLocationRepository.ReadAllContainers();
 
             return result;
         }
-
 
 
         public async Task<List<IGPS_DEPOT_GLN>> ReadGraisFromContainer(string gln)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,8 +10,10 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class RollbackController : BaseController
     {
+        private readonly ILogger _logger = Log.ForContext("Rollback", true);
         public async Task<string> GetTrailerNumber(string orderId)
         {
+            
             return await _orderRequestNewHeaderRepository.GetTrailerNumber(orderId);
         }
 
@@ -22,12 +25,15 @@ namespace iGPS_Help_Desk.Controllers
         {
             try
             {
-
+                _logger.Information($"First attempt to rollback for order {orderId} into GLN {gln} has started...");
                 await _orderRequestNewHeaderRepository.Rollback(orderId, gln);
+                _logger.Information($"First attempt to rollback for order {orderId} into GLN {gln} has been completed.");
+
             }
 
             catch (Exception ex)
             {
+                _logger.Error(ex.Message);
                 throw;
             }
         }

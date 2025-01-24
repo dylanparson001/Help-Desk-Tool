@@ -14,12 +14,27 @@ namespace iGPS_Help_Desk
         [STAThread]
         static void Main()
         {
-            
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
+            // Logger setup 
+            Log.Logger = new LoggerConfiguration()
+                // Clear Container Logger
+                .WriteTo.Logger(lc => lc
+                    .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("ClearContainer"))
+                    .WriteTo.File("./Log/ClearContainerLog_.txt", rollingInterval: RollingInterval.Month))
+                // Rollback logger
+                .WriteTo.Logger(lc => lc
+                    .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("Rollback"))
+                    .WriteTo.File("./Log/RollbackLog_.txt", rollingInterval: RollingInterval.Month))
+                // Error Logger
+                .WriteTo.File("./Log/ErrorLog_.txt", rollingInterval: RollingInterval.Month, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+                .CreateLogger();
+
+
             string siteId = ConfigurationManager.AppSettings.Get("siteId");
-            
+
             // Show site id form if there is none in the config file
             if (siteId.Length == 0)
             {
@@ -34,10 +49,6 @@ namespace iGPS_Help_Desk
             if (fLogin.ShowDialog() == DialogResult.OK)
             {
                 fLogin.Close();
-                // Configure Serilog to write log messages to a text file
-                Log.Logger = new LoggerConfiguration()
-                    .WriteTo.File("./Log/log.txt", rollingInterval: RollingInterval.Month)
-                    .CreateLogger();
 
                 Application.Run(new Igps());
 
@@ -45,7 +56,7 @@ namespace iGPS_Help_Desk
                 Log.CloseAndFlush();
 
             }
- 
+
         }
     }
 }

@@ -25,18 +25,41 @@ namespace iGPS_Help_Desk.Tests
             _locationRespository = new Mock<IgpsDepotLocationRepository>();
         }
         [Test]
-        public async Task GetDnusTest_FindsDNUsWhenExists()
+        public async Task GetDnusTest_FindsDNUsWhenExists_UpperCase()
         {
-
+            // Arrange
             var mockContainerList = new List<IGPS_DEPOT_LOCATION>
             {
-                new IGPS_DEPOT_LOCATION("DNU", "READY", "MIXED", "TEST", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("DNU1", "READY", "MIXED", "TEST", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("DNU2", "READY", "MIXED", "TEST", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "TEST", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "DNU", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12346", "READY", "MIXED", "nodnu", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12347", "READY", "MIXED", "DnU", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12348", "READY", "MIXED", "dNuuu", "DTEST00001", 540),
             };
-            var DnuResult = _locationRespository.Object.ReadDnus();
-            Assert.That(DnuResult, Is.Null);
+
+            // Act
+            var dnuResultList = _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
+            
+            // Assert
+            Assert.That(dnuResultList.Count, Is.EqualTo(4));
+            Assert.That(dnuResultList.Where(x => !x.ToUpper().Contains("DNU")), Is.Empty);
+        }
+        [Test]
+        public async Task GetDNUsTest_HasOneDnuReturned()
+        {
+            // Arrange
+            var mockContainerList = new List<IGPS_DEPOT_LOCATION>
+            {
+                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "dnu", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12346", "READY", "MIXED", "no", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12347", "READY", "MIXED", "", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12348", "READY", "MIXED", "", "DTEST00001", 540),
+            };
+
+            // Act
+            var dnuResultList = _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
+            
+            // Assert
+            Assert.That(dnuResultList.Count, Is.EqualTo(1));
         }
     }
 }
