@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
 using Serilog;
 
@@ -13,6 +14,13 @@ namespace iGPS_Help_Desk.Controllers
     public class ClearContainerController : BaseController
     {
         private readonly ILogger _logger = Log.ForContext("ClearContainer", true);
+        private readonly IIgpsDepotGlnRepository _igpsDepotGlnRepository;
+
+        public ClearContainerController(IIgpsDepotGlnRepository igpsDepotGlnRepository)
+        {
+            _igpsDepotGlnRepository = igpsDepotGlnRepository;
+        }
+
         public async Task<(List<IGPS_DEPOT_GLN>, List<IGPS_DEPOT_LOCATION>)> GetDnus()
         {
             // Get List of dnus

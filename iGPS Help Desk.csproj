@@ -128,6 +128,8 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\RollbackController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
+    <Compile Include="Interfaces\IIgpsDepotGlnRepository.cs" />
+    <Compile Include="Interfaces\IIgpsDepotLocationRepository.cs" />
     <Compile Include="Models\IGPS_DEPOT_GLN.cs" />
     <Compile Include="Models\IGPS_DEPOT_LOCATION.cs" />
     <Compile Include="Models\FacilityContainerStatus.cs" />

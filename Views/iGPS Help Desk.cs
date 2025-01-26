@@ -1,4 +1,5 @@
 ﻿using iGPS_Help_Desk.Controllers;
+using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Repositories;
 using Serilog;
@@ -18,14 +19,35 @@ namespace iGPS_Help_Desk.Views
         private Timer closeTimer;
         private readonly ILogger _logger = Log.ForContext<Igps>();
         private readonly ILogger _rollbackLogger = Log.ForContext("Rollback", true);
-
         private List<IGPS_DEPOT_GLN> igpsDepotGln = new List<IGPS_DEPOT_GLN>();
-        private List<string> ordersEntered = new List<string>();
+
+
+        private ClearContainerController _clearContainerController;
+        private CsvFileController _csvFileController;
+        private MoveContainerController _moveContainerController;
+        private OrderController _orderController;
+        private RollbackController _rollbackController;
+        private SiteController _siteController;
+
         private bool showButtonClicked = false;
         private bool saveButtonClicked = false;
         private static string TicketNum = string.Empty;
-        public Igps()
+        public Igps( 
+            ClearContainerController clearContainerController,
+            CsvFileController csvFileController,
+            MoveContainerController moveContainerController,
+            OrderController orderController,
+            RollbackController rollbackController,
+            SiteController siteController
+            )
         {
+            _clearContainerController = clearContainerController;
+            _csvFileController = csvFileController;
+            _moveContainerController = moveContainerController;
+            _orderController = orderController;
+            _rollbackController = rollbackController;
+            _siteController = siteController;
+
             InitializeComponent();
             InitialLoad();
             var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
