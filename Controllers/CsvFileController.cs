@@ -1,4 +1,6 @@
-﻿using iGPS_Help_Desk.Models;
+﻿using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Views;
 using Serilog;
 using System;
@@ -14,7 +16,9 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class CsvFileController : BaseController
     {
-        private ClearContainerController _clearContainerController = new ClearContainerController();
+        private readonly IIgpsDepotGlnRepository _igpsDepotGlnRepository;
+        private readonly IIgpsDepotLocationRepository _igpsDepotLocationRepository;
+        private ClearContainerController _clearContainerController;
         private readonly ILogger _logger = Log.ForContext<Igps>();
 
         private static List<string> sourceFilePaths = new List<string>();
@@ -39,6 +43,16 @@ namespace iGPS_Help_Desk.Controllers
         private static string ClearContainerFilePath = "";
         private static string siteId = ConfigurationManager.AppSettings.Get("siteId");
         private static string TicketNum = "";
+
+        public CsvFileController(IIgpsDepotGlnRepository igpsDepotGlnRepository,
+                IIgpsDepotLocationRepository igpsDepotLocationRepository,
+                ClearContainerController clearContainerController)
+        {
+            _igpsDepotGlnRepository = igpsDepotGlnRepository;
+            _igpsDepotLocationRepository = igpsDepotLocationRepository;
+            _clearContainerController = clearContainerController;
+
+        }
 
         public static string GetCurrentFolderPath()
         {

@@ -1,4 +1,5 @@
-﻿using iGPS_Help_Desk.Models;
+﻿using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class OrderController : BaseController
     {
+        private readonly IOrderRequestNewHeaderRepository _orderRequestNewHeaderRepository;
+
+        public OrderController(IOrderRequestNewHeaderRepository orderRequestNewHeaderRepository)
+        {
+            _orderRequestNewHeaderRepository = orderRequestNewHeaderRepository;
+        }
         public async Task<List<OrderRequestNewHeader>> GetBolsFromList(List<string> bolList)
         {
             var result = await _orderRequestNewHeaderRepository.GetOrdersFromList(bolList);
@@ -31,7 +38,7 @@ namespace iGPS_Help_Desk.Controllers
         }
         public async Task<string> GetCountOfOrderId(string orderId)
         {
-            return await _rollbackRepository.ReadCountFromOrderId(orderId);
+            return await _orderRequestNewHeaderRepository.ReadCountFromOrderId(orderId);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iGPS_Help_Desk.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -8,7 +9,7 @@ using System.Windows.Forms;
 
 namespace iGPS_Help_Desk.Models.Repositories
 {
-    public class IgpsDepotLocationRepository : BaseRepository
+    public class IgpsDepotLocationRepository : BaseRepository, IIgpsDepotLocationRepository
     {
 
         public async Task<List<IGPS_DEPOT_LOCATION>> ReadAllContainers()

@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Controllers;
 using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Repositories;
 using iGPS_Help_Desk.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,13 +79,15 @@ namespace iGPS_Help_Desk
 
             // Forms
             services.AddTransient<Igps>();
-            services.AddTransient<ClearGraisForm>();
             services.AddTransient<EnterSiteId>();
             services.AddTransient<LoginForm>();
             services.AddTransient<SettingsForm>();
+            services.AddTransient<ClearGraisForm>();
 
             // Repositories
             services.AddScoped<IIgpsDepotGlnRepository, IgpsDepotGlnRepository>();
+            services.AddScoped<IIgpsDepotLocationRepository, IgpsDepotLocationRepository>();
+            services.AddScoped<IOrderRequestNewHeaderRepository, OrderRequestNewHeaderRepository>();
 
             // Controllers
             services.AddScoped<ClearContainerController>();

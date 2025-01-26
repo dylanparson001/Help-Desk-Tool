@@ -11,21 +11,22 @@ namespace iGPS_Help_Desk.Views
 {
     public partial class ClearGraisForm : Form
     {
-        private readonly MoveContainerController _moveContainerController = new MoveContainerController();
-        private readonly ClearContainerController _clearContainerController = new ClearContainerController();
-        private readonly CsvFileController _csvFileController = new CsvFileController();
+        private readonly MoveContainerController _moveContainerController;
+        private readonly ClearContainerController _clearContainerController;
+        private readonly CsvFileController _csvFileController;
         private readonly string _fromGln;
         private readonly List<string> listOfFromGrais = new List<string>();
         List<string> listOfToGrais = new List<string>();
         private readonly ILogger _logger = Log.ForContext<Igps>();
         private string generationPrefix;
 
-        private ClearGraisForm()
+        public ClearGraisForm(string fromGln, ClearContainerController clearContainerController, CsvFileController csvFileController, MoveContainerController moveContainerController)
         {
             InitializeComponent();
-        }
-        public ClearGraisForm(string fromGln) : this()
-        {
+
+            _moveContainerController = moveContainerController;
+            _clearContainerController = clearContainerController;
+            _csvFileController = csvFileController;
 
             _fromGln = fromGln;
 
@@ -54,6 +55,7 @@ namespace iGPS_Help_Desk.Views
                 listContainers = await _moveContainerController.ReadGraisFromContainer(_fromGln);
             }
 
+            updateGraiList(listContainers);
             lblFromGraisCount.Text = $"Container Count: {listContainers.Count}";
         }
 

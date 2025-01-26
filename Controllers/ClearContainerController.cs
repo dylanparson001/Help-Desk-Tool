@@ -15,16 +15,19 @@ namespace iGPS_Help_Desk.Controllers
     {
         private readonly ILogger _logger = Log.ForContext("ClearContainer", true);
         private readonly IIgpsDepotGlnRepository _igpsDepotGlnRepository;
+        private readonly IIgpsDepotLocationRepository _igpsDepotLocationRepository;
 
-        public ClearContainerController(IIgpsDepotGlnRepository igpsDepotGlnRepository)
+        public ClearContainerController(IIgpsDepotGlnRepository igpsDepotGlnRepository, IIgpsDepotLocationRepository igpsDepotLocationRepository)
         {
             _igpsDepotGlnRepository = igpsDepotGlnRepository;
+            _igpsDepotLocationRepository = igpsDepotLocationRepository;
         }
 
         public async Task<(List<IGPS_DEPOT_GLN>, List<IGPS_DEPOT_LOCATION>)> GetDnus()
         {
             // Get List of dnus
-            List<string> dnuList = await GetDnusFromDb();
+            
+            List<string> dnuList = await _igpsDepotLocationRepository.ReadDnus();
 
             dnuList = CheckDnusFromList(dnuList);
 
@@ -32,7 +35,7 @@ namespace iGPS_Help_Desk.Controllers
             string stringGlns = ConcatStringFromList(dnuList);
 
             //  Get the containers from IGPS_DEPOT_GLN table
-            List<IGPS_DEPOT_GLN> glnList = await GetGlnsFromList(stringGlns);
+            List<IGPS_DEPOT_GLN> glnList = await _igpsDepotGlnRepository.ReadContainersFromList(stringGlns); ;
 
             List<IGPS_DEPOT_LOCATION> locationList =
                 await _igpsDepotLocationRepository.ReadContainersFromList(dnuList);
@@ -59,15 +62,6 @@ namespace iGPS_Help_Desk.Controllers
                 }
             }
             return checkedList;
-        }
-        private async Task<List<string>> GetDnusFromDb()
-        {
-            return await _igpsDepotLocationRepository.ReadDnus();
-        }
-
-        private async Task<List<IGPS_DEPOT_GLN>> GetGlnsFromList(string glns)
-        {
-            return await _igpsDepotGlnRepository.ReadContainersFromList(glns);
         }
 
         public async Task<List<IGPS_DEPOT_GLN>> GetContainersFromList(List<string> containerList)

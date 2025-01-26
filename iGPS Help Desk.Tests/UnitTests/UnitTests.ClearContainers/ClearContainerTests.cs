@@ -10,20 +10,75 @@ using iGPS_Help_Desk.Models.Repositories;
 using FakeItEasy;
 using Moq;
 using iGPS_Help_Desk.Models;
+using iGPS_Help_Desk.Interfaces;
 
 namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
 {
     public class ClearContainerTests
     {
         private ClearContainerController _controller;
-        private Mock<IgpsDepotLocationRepository> _locationRespository;
-
+        private Mock<IIgpsDepotGlnRepository> _mockDepoGlntRespository;
+        private Mock<IIgpsDepotLocationRepository> _mockDepotLocationRepository;
         [SetUp]
         public void SetUp()
         {
-            _controller = new ClearContainerController();
-            _locationRespository = new Mock<IgpsDepotLocationRepository>();
+            _mockDepoGlntRespository = new Mock<IIgpsDepotGlnRepository>();
+            _mockDepotLocationRepository = new Mock<IIgpsDepotLocationRepository>();
+            _controller = new ClearContainerController(_mockDepoGlntRespository.Object, _mockDepotLocationRepository.Object);
         }
+
+        /// <summary>
+        /// Test for controller where repos return 3 DNU containers
+        /// </summary>
+        /// <returns></returns>
+
+        [Test]
+        public async Task GetDnusTest_FindsDNUsWhenExists()
+        {
+            // Arrange
+            _mockDepoGlntRespository.Setup(x =>
+                x.ReadContainersFromList(It.IsAny<string>()))
+                .ReturnsAsync(() =>
+                    new List<IGPS_DEPOT_GLN>()
+                    {
+                        new IGPS_DEPOT_GLN("DNU", "123", DateTime.Now),
+                        new IGPS_DEPOT_GLN("DNU", "1234", DateTime.Now),
+                        new IGPS_DEPOT_GLN("DNU", "1245", DateTime.Now),
+                    });
+
+            _mockDepotLocationRepository.Setup(x =>
+                x.ReadContainersFromList(It.IsAny<List<string>>()))
+                .ReturnsAsync(() =>
+                    new List<IGPS_DEPOT_LOCATION>()
+                    {
+                        new IGPS_DEPOT_LOCATION("123", "READY", "MIXED", "DNU", "DTEST00001", 540),
+                        new IGPS_DEPOT_LOCATION("123", "READY", "MIXED", "DNU", "DTEST00001", 540),
+                        new IGPS_DEPOT_LOCATION("123", "READY", "MIXED", "DNU", "DTEST00001", 540)
+
+                    }
+                );
+            _mockDepotLocationRepository.Setup(x =>
+                x.ReadDnus())
+                .ReturnsAsync(() =>
+                    new List<string>()
+                    {
+                        "DNU",
+                        "DNU",
+                        "DNU"
+                    }
+                );
+
+            _controller = new ClearContainerController(_mockDepoGlntRespository.Object, _mockDepotLocationRepository.Object);
+
+            var dnuTestResult = await _controller.GetDnus();
+
+            Assert.That(dnuTestResult.Item1, Has.Count.EqualTo(3));
+        }
+
+        /// <summary>
+        /// Test for filtering method finding DNUs from a potential list that may not have them, realistically shouldnt happen 
+        /// </summary>
+        /// <returns></returns>
         [Test]
         public async Task GetDnusTest_FindsDNUsWhenExists_UpperCase()
         {
@@ -74,7 +129,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
             };
 
             // Act & Assert
-            var exception = Assert.Throws<Exception>( () =>
+            var exception = Assert.Throws<Exception>(() =>
                 {
                     _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
                 }

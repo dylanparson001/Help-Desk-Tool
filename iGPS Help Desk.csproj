@@ -130,6 +130,7 @@
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Interfaces\IIgpsDepotGlnRepository.cs" />
     <Compile Include="Interfaces\IIgpsDepotLocationRepository.cs" />
+    <Compile Include="Interfaces\IOrderRequestNewHeaderRepository.cs" />
     <Compile Include="Models\IGPS_DEPOT_GLN.cs" />
     <Compile Include="Models\IGPS_DEPOT_LOCATION.cs" />
     <Compile Include="Models\FacilityContainerStatus.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="Repositories\IgpsDepotGlnRepository.cs" />
     <Compile Include="Repositories\IgpsDepotLocationRepository.cs" />
     <Compile Include="Repositories\OrderRequestNewHeaderRepository.cs" />
-    <Compile Include="Repositories\RollbackRepository.cs" />
     <Compile Include="Views\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,6 +198,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\" />
     <Folder Include="Images\" />
     <Folder Include="Properties\" />
   </ItemGroup>
