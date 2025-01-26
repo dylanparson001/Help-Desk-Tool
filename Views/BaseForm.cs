@@ -9,12 +9,6 @@ namespace iGPS_Help_Desk.Views
     {
         protected string _siteId = ConfigurationManager.AppSettings.Get("siteId");
         protected string _clearContainerPath = ConfigurationManager.AppSettings.Get("clearContainerPath");
-        protected readonly ClearContainerController _clearContainerController = new ClearContainerController();
-        protected readonly CsvFileController _csvFileController = new CsvFileController();
-        protected readonly MoveContainerController _moveContainerController = new MoveContainerController();
-        protected readonly OrderController _orderController = new OrderController();
-        protected readonly RollbackController _rollbackController = new RollbackController();
-        protected readonly SiteController _siteController = new SiteController();
         public BaseForm()
         {
             InitializeComponent();

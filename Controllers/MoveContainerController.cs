@@ -3,12 +3,22 @@ using iGPS_Help_Desk.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Serilog;
+using iGPS_Help_Desk.Interfaces;
 
 namespace iGPS_Help_Desk.Controllers
 {
     public class MoveContainerController : BaseController
     {
         private readonly ILogger _logger = Log.ForContext("ClearContainer", true);
+        private readonly IIgpsDepotGlnRepository _igpsDepotGlnRepository;
+        private readonly IIgpsDepotLocationRepository _igpsDepotLocationRepository;
+
+        public MoveContainerController(IIgpsDepotGlnRepository igpsDepotGlnRepository, IIgpsDepotLocationRepository igpsDepotLocationRepository)
+        {
+            _igpsDepotGlnRepository = igpsDepotGlnRepository;
+            _igpsDepotLocationRepository = igpsDepotLocationRepository;
+        }
+
         public async Task<List<IGPS_DEPOT_LOCATION>> ReadAllContainers()
         {
             var result = await _igpsDepotLocationRepository.ReadAllContainers();

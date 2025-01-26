@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.HelperMethods
+namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.BaseControllerMethods
 {
     public class HelperTests
     {

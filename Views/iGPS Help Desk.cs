@@ -1,4 +1,5 @@
 ﻿using iGPS_Help_Desk.Controllers;
+using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Repositories;
 using Serilog;
@@ -18,14 +19,37 @@ namespace iGPS_Help_Desk.Views
         private Timer closeTimer;
         private readonly ILogger _logger = Log.ForContext<Igps>();
         private readonly ILogger _rollbackLogger = Log.ForContext("Rollback", true);
-
         private List<IGPS_DEPOT_GLN> igpsDepotGln = new List<IGPS_DEPOT_GLN>();
-        private List<string> ordersEntered = new List<string>();
+
+        private readonly IOrderRequestNewHeaderRepository _orderRequestNewHeaderRepository;
+        private ClearContainerController _clearContainerController;
+        private CsvFileController _csvFileController;
+        private MoveContainerController _moveContainerController;
+        private OrderController _orderController;
+        private RollbackController _rollbackController;
+        private SiteController _siteController;
+
         private bool showButtonClicked = false;
         private bool saveButtonClicked = false;
         private static string TicketNum = string.Empty;
-        public Igps()
+        public Igps( 
+            IOrderRequestNewHeaderRepository orderRequestNewHeaderRepository,
+            ClearContainerController clearContainerController,
+            CsvFileController csvFileController,
+            MoveContainerController moveContainerController,
+            OrderController orderController,
+            RollbackController rollbackController,
+            SiteController siteController
+            )
         {
+            _orderRequestNewHeaderRepository = orderRequestNewHeaderRepository;
+            _clearContainerController = clearContainerController;
+            _csvFileController = csvFileController;
+            _moveContainerController = moveContainerController;
+            _orderController = orderController;
+            _rollbackController = rollbackController;
+            _siteController = siteController;
+
             InitializeComponent();
             InitialLoad();
             var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -420,7 +444,7 @@ namespace iGPS_Help_Desk.Views
             if (lvPlacards.SelectedItems.Count == 0) return;
 
             var fromGln = lvPlacards.SelectedItems[0].Text;
-            var moveContainerForm = new ClearGraisForm(fromGln);
+            var moveContainerForm = new ClearGraisForm(fromGln, _clearContainerController, _csvFileController, _moveContainerController);
             moveContainerForm.ShowDialog();
         }
 
@@ -776,7 +800,7 @@ namespace iGPS_Help_Desk.Views
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 _logger.Error("Primary key violation: " + ex.Message);
-                var grais = await _csvFileController._orderRequestNewHeaderRepository.GetGraisFromOrderId(orderId);
+                var grais = await _orderRequestNewHeaderRepository.GetGraisFromOrderId(orderId);
                 var graiString = _csvFileController.ConcatStringFromList(grais);
 
                 var rnd = new Random();
@@ -788,12 +812,12 @@ namespace iGPS_Help_Desk.Views
                     ticketNum: ticketNumber
                     );
 
-                await _csvFileController._orderRequestNewHeaderRepository.ClearExistingGrais(graiString);
+                await _orderRequestNewHeaderRepository.ClearExistingGrais(graiString);
 
                 // Attempt Rollback again
                 try
                 {
-                    await _csvFileController._orderRequestNewHeaderRepository.Rollback(orderId, gln);
+                    await _orderRequestNewHeaderRepository.Rollback(orderId, gln);
                     reloadGlnRollbacks();
                     await reloadOrderRollback();
                     InitialLoad();

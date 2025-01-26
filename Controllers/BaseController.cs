@@ -12,10 +12,6 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class BaseController
     {
-        public IgpsDepotGlnRepository _igpsDepotGlnRepository = new IgpsDepotGlnRepository();
-        public IgpsDepotLocationRepository _igpsDepotLocationRepository = new IgpsDepotLocationRepository();
-        public OrderRequestNewHeaderRepository _orderRequestNewHeaderRepository = new OrderRequestNewHeaderRepository();
-        public RollbackRepository _rollbackRepository = new RollbackRepository();
         
         /// <summary>
         /// Concatenates single quotes around each string in a list
