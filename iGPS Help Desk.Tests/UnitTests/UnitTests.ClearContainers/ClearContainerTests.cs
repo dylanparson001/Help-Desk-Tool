@@ -11,7 +11,7 @@ using FakeItEasy;
 using Moq;
 using iGPS_Help_Desk.Models;
 
-namespace iGPS_Help_Desk.Tests
+namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
 {
     public class ClearContainerTests
     {
@@ -38,7 +38,7 @@ namespace iGPS_Help_Desk.Tests
 
             // Act
             var dnuResultList = _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
-            
+
             // Assert
             Assert.That(dnuResultList.Count, Is.EqualTo(4));
             Assert.That(dnuResultList.Where(x => !x.ToUpper().Contains("DNU")), Is.Empty);
@@ -57,9 +57,31 @@ namespace iGPS_Help_Desk.Tests
 
             // Act
             var dnuResultList = _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
-            
+
             // Assert
             Assert.That(dnuResultList.Count, Is.EqualTo(1));
+        }
+        [Test]
+        public async Task GetDNUsTest_NoDNUsInListSent_ExceptionThrownNoDNUsFound()
+        {
+            // Arrange
+            var mockContainerList = new List<IGPS_DEPOT_LOCATION>
+            {
+                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "Test", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12346", "READY", "MIXED", "Tes2", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12347", "READY", "MIXED", "Test1", "DTEST00001", 540),
+                new IGPS_DEPOT_LOCATION("12348", "READY", "MIXED", "Test4", "DTEST00001", 540),
+            };
+
+            // Act & Assert
+            var exception = Assert.Throws<Exception>( () =>
+                {
+                    _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
+                }
+            );
+
+            Assert.That(exception.Message, Is.EqualTo("No DNUs Found"));
+
         }
     }
 }

@@ -88,8 +88,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClearContainerTests.cs" />
+    <Compile Include="UnitTests\UnitTests.ClearContainers\ClearContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\UnitTests.HelperMethods\HelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -101,7 +102,9 @@
       <Name>iGPS Help Desk</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UnitTests\UnitTests.Rollback\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

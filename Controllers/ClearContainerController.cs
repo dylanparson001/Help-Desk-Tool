@@ -43,7 +43,7 @@ namespace iGPS_Help_Desk.Controllers
                 throw new Exception("No DNUs Found");
             }
 
-            foreach( var container in checkedList)
+            foreach (var container in checkedList)
             {
                 if (!container.ToUpper().Contains("DNU"))
                 {

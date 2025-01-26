@@ -34,7 +34,7 @@ namespace iGPS_Help_Desk.Views
 
                 var settings = configFile.AppSettings.Settings;
                 
-                lblVersionNumber.Text = settings["version"].Value;
+                lblVersionNumber.Text = $"v{settings["version"].Value}";
                 int timeout = Int32.Parse(settings["timeout"].Value);
                 // Initialize the timer
                 closeTimer = new Timer();
