@@ -38,13 +38,13 @@ namespace iGPS_Help_Desk
                 // Clear Container Logger
                 .WriteTo.Logger(lc => lc
                     .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("ClearContainer"))
-                    .WriteTo.File("./Log/Clear-Container-Logs/Clear-Container-Log_.txt", rollingInterval: RollingInterval.Month))
+                    .WriteTo.File("./Log/Clear-Container-Logs/Clear-Container-Log.txt", rollingInterval: RollingInterval.Month))
                 // Rollback logger
                 .WriteTo.Logger(lc => lc
                     .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("Rollback"))
-                    .WriteTo.File("./Log/Rollback-Logs/Rollback-Log_.txt", rollingInterval: RollingInterval.Month))
+                    .WriteTo.File("./Log/Rollback-Logs/Rollback-Log.txt", rollingInterval: RollingInterval.Month))
                 // Error Logger
-                .WriteTo.File("./Log/General-Error-Logs/Error-Log_.txt", rollingInterval: RollingInterval.Month, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+                .WriteTo.File("./Log/General-Error-Logs/Error-Log.txt", rollingInterval: RollingInterval.Month, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
                 .CreateLogger();
 
 

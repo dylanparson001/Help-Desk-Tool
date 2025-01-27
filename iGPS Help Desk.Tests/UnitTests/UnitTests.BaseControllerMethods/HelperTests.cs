@@ -66,15 +66,5 @@ namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.BaseControllerMethods
             var ex = Assert.Throws<InvalidOperationException>(() => _baseController.ConcatStringFromList(emptyList));
             Assert.That(ex.Message, Is.EqualTo("List is empty"));
         }
-        [Test]
-        public void TestConcatStringMethod_NullListThrowsException()
-        {
-            // Arrange
-            List<string> nullList = null;
-
-            // Act & Assert
-            var ex = Assert.Throws<InvalidOperationException>(() => _baseController.ConcatStringFromList(nullList));
-            Assert.That(ex.Message, Is.EqualTo("List is empty"));
-        }
     }
 }

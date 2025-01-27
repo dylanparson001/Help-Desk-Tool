@@ -9,7 +9,10 @@ namespace iGPS_Help_Desk.Models
         public string Gln { get; set; }
         public string Grai { get; set; }
         public DateTime Date_Time { get; set; }
-
+        public IGPS_DEPOT_GLN()
+        {
+            
+        }
         public IGPS_DEPOT_GLN(SqlDataReader reader)
         {
             Gln = reader["GLN"].ToString();

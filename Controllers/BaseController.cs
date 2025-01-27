@@ -27,6 +27,7 @@ namespace iGPS_Help_Desk.Controllers
                 throw new InvalidOperationException("List is empty");
             }
 
+
             listOfString.ForEach(x =>
             {
                 x.Trim();

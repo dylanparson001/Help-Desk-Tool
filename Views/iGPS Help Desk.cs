@@ -16,7 +16,7 @@ namespace iGPS_Help_Desk.Views
 {
     public partial class Igps : BaseForm
     {
-        #region private properties
+        #region Private properties
         private Timer closeTimer;
         private readonly ILogger _logger = Log.ForContext<Igps>();
         private readonly ILogger _rollbackLogger = Log.ForContext("Rollback", true);
@@ -34,6 +34,7 @@ namespace iGPS_Help_Desk.Views
         private bool saveButtonClicked = false;
         private static string TicketNum = string.Empty;
         #endregion
+        #region Constructor
         public Igps(
             IOrderRequestNewHeaderRepository orderRequestNewHeaderRepository,
             ClearContainerController clearContainerController,
@@ -60,7 +61,7 @@ namespace iGPS_Help_Desk.Views
                 var settings = configFile.AppSettings.Settings;
 
                 lblVersionNumber.Text = $"v{settings["version"].Value}";
-                int timeout = Int32.Parse(settings["timeout"].Value);
+                int timeout = int.Parse(settings["timeout"].Value);
                 // Initialize the timer
                 closeTimer = new Timer();
                 closeTimer.Interval = timeout; // 30 minutes in milliseconds
@@ -75,7 +76,6 @@ namespace iGPS_Help_Desk.Views
 
             Task.Run(async () =>
             {
-
                 try
                 {
                     var settings = configFile.AppSettings.Settings;
@@ -93,12 +93,13 @@ namespace iGPS_Help_Desk.Views
 
         }
 
+        #endregion
+
+        #region General use private methods
         private void CloseTimer_Tick(object sender, EventArgs e)
         {
             // Timer has elapsed, close the application
         }
-
-        #region General use private methods
         // Parses GLNs from the list entered from form
         private List<string> ParseGln(string glnList)
         {
