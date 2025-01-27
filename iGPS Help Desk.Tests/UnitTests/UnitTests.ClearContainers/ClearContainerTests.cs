@@ -3,11 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using NUnit;
-using iGPS_Help_Desk.Models.Repositories;
-using FakeItEasy;
 using Moq;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Interfaces;
@@ -28,6 +24,98 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
         }
 
         /// <summary>
+        /// Checks that the methods to delete grais do in fact run if all lists are valid (Not null)
+        /// </summary>
+        /// <returns></returns>
+        [Test]
+        public async Task ClearContainerTest_ValidList_DeletesBoth()
+        {
+            // Arrange
+            var listOfGlns = new List<string>
+            {
+                "1234",
+                "12345",
+                "123456",
+                "1234567"
+            };
+
+            // Fake existing grais
+            var existingGrais = new List<IGPS_DEPOT_GLN>()
+                {
+                        new IGPS_DEPOT_GLN("1234", "432", DateTime.Now),
+                        new IGPS_DEPOT_GLN("1234", "5432", DateTime.Now),
+                        new IGPS_DEPOT_GLN("Test", "6543", DateTime.Now),
+                        new IGPS_DEPOT_GLN("Test1", "7657", DateTime.Now),
+                };
+
+            // Fake Existing Containers 
+            var existingContainers = new List<IGPS_DEPOT_LOCATION>
+            {
+                        new IGPS_DEPOT_LOCATION("1234", "READY", "MIXED", "Test", "DTEST00001", 540),
+                        new IGPS_DEPOT_LOCATION("Test", "READY", "MIXED", "Test", "DTEST00001", 540),
+                        new IGPS_DEPOT_LOCATION("Test1", "READY", "MIXED", "Test", "DTEST00001", 540),
+
+            };
+
+            // Mock methods
+            // Returns a count of all GRAIs in table
+            _mockDepoGlntRespository.Setup(x =>
+                x.GetCountOfTable())
+                .ReturnsAsync(It.IsAny<int>()
+                );
+
+            // Returns a list of Grais from IGPS_DEPOT_GLN
+            _mockDepoGlntRespository.Setup(x =>
+            x.ReadContainersFromList(It.IsAny<string>()))
+                .ReturnsAsync(() =>
+                new List<IGPS_DEPOT_GLN>()
+                {
+                        new IGPS_DEPOT_GLN("1234", "432", DateTime.Now),
+                        new IGPS_DEPOT_GLN("Test", "6543", DateTime.Now),
+                        new IGPS_DEPOT_GLN("Test1", "7657", DateTime.Now),
+                }
+                );
+
+            // Returns exisitn container list
+            _mockDepotLocationRepository.Setup(x =>
+            x.ReadContainersFromList(It.IsAny<List<string>>()))
+                .ReturnsAsync(() =>
+                existingContainers
+                );
+
+
+
+            _controller = new ClearContainerController(_mockDepoGlntRespository.Object, _mockDepotLocationRepository.Object);
+            // Act
+            _controller.ClearContainers(listOfGlns);
+
+            // Assert
+            // Delete GRAIs should run once when lists are valid
+            _mockDepoGlntRespository.Verify(repo => repo.DeleteGlnsFromList(It.IsAny<string>()), Times.Once);
+            _mockDepotLocationRepository.Verify(repo => repo.DeleteContainersFromList(It.IsAny<string>()), Times.Exactly(1));
+
+        }
+
+        /// <summary>
+        /// Sends and empty list to controller, controller checks for empty list and takes no action
+        /// </summary>
+        /// <returns></returns>
+        [Test]
+        public async Task ClearContainer_EmptyList_NoDeletesHappen()
+        {
+            // Arrange
+            // Null List
+            var listOfGlns = new List<string>();
+
+            //Act
+            _controller.ClearContainers(listOfGlns);
+
+            //Assert
+            _mockDepoGlntRespository.Verify(repo => repo.DeleteGlnsFromList(It.IsAny<string>()), Times.Never);
+            _mockDepotLocationRepository.Verify(repo => repo.DeleteContainersFromList(It.IsAny<string>()), Times.Never);
+        }
+
+        /// <summary>
         /// Test for controller where repos return 3 DNU containers
         /// </summary>
         /// <returns></returns>
@@ -36,6 +124,8 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
         public async Task GetDnusTest_FindsDNUsWhenExists()
         {
             // Arrange
+
+            // mock repos to send valid lists
             _mockDepoGlntRespository.Setup(x =>
                 x.ReadContainersFromList(It.IsAny<string>()))
                 .ReturnsAsync(() =>

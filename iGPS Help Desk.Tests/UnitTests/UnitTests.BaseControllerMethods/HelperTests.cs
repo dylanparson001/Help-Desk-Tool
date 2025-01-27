@@ -22,7 +22,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.BaseControllerMethods
         /// Tests that the string will be correctly formatted
         /// </summary>
         [Test]
-        public void TestConcatStringMethod()
+        public void TestConcatStringMethod_NormalValidStrings()
         {
             // Arrange
             List<string> list = new List<string>()
@@ -38,6 +38,23 @@ namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.BaseControllerMethods
             // Assert 
             Assert.That(resultString, Is.EqualTo("'Test','Test1','Test2'"));
         }
+        [Test]
+        public void TestConcatStringMethod_EmptyStringsAreValid()
+        {
+            // Arrange
+            List<string> list = new List<string>()
+            {
+                " ",
+                "",
+                "",
+            };
+
+            // Act
+            var resultString = _baseController.ConcatStringFromList(list);
+
+            // Assert 
+            Assert.That(resultString, Is.EqualTo("' ','',''"));
+        }
 
         [Test]
         public void TestConcatStringMethod_EmptyListThrowsException()
@@ -47,6 +64,16 @@ namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.BaseControllerMethods
 
             // Act & Assert
             var ex = Assert.Throws<InvalidOperationException>(() => _baseController.ConcatStringFromList(emptyList));
+            Assert.That(ex.Message, Is.EqualTo("List is empty"));
+        }
+        [Test]
+        public void TestConcatStringMethod_NullListThrowsException()
+        {
+            // Arrange
+            List<string> nullList = null;
+
+            // Act & Assert
+            var ex = Assert.Throws<InvalidOperationException>(() => _baseController.ConcatStringFromList(nullList));
             Assert.That(ex.Message, Is.EqualTo("List is empty"));
         }
     }

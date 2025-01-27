@@ -34,11 +34,34 @@ namespace iGPS_Help_Desk.Controllers
             if (newQuantity > 0 && orderList.Count > 0)
             {
                 await _orderRequestNewHeaderRepository.UpdateRequestedQuantity(newQuantity, orderList);
-            } 
+            }
         }
         public async Task<string> GetCountOfOrderId(string orderId)
         {
             return await _orderRequestNewHeaderRepository.ReadCountFromOrderId(orderId);
+        }
+
+        public async Task<List<string>> GetGraisFromOrderId(string orderId)
+        {
+            if (string.IsNullOrWhiteSpace(orderId))
+            {
+                return null;
+            }
+
+            var result = await _orderRequestNewHeaderRepository.GetGraisFromOrderId(orderId);
+
+            return result;
+        }
+
+        public async Task ClearExistingGrais(string graiString)
+        {
+            if (string.IsNullOrWhiteSpace(graiString))
+            {
+                return;
+            }
+
+            await _orderRequestNewHeaderRepository.ClearExistingGrais(graiString);
+
         }
     }
 }
