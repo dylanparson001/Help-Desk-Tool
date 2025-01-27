@@ -29,13 +29,25 @@ namespace iGPS_Help_Desk.Controllers
         {
             return await _orderRequestNewHeaderRepository.GetSealNumber(orderId);
         }
-        public async Task Rollback(string orderId, string gln)
+        public async Task Rollback(string orderId, string gln, bool firstAttempt)
         {
             try
             {
-                _logger.Information($"First attempt to rollback for order {orderId} into GLN {gln} has started...");
-                await _orderRequestNewHeaderRepository.Rollback(orderId, gln);
-                _logger.Information($"First attempt to rollback for order {orderId} into GLN {gln} has been completed.");
+                if (firstAttempt)
+                {
+                    _logger.Information($"First attempt to rollback for order {orderId} into GLN {gln} has started...");
+                    await _orderRequestNewHeaderRepository.Rollback(orderId, gln);
+                    _logger.Information($"First attempt to rollback for order {orderId} into GLN {gln} has been completed.");
+                }
+                else
+                {
+                    _logger.Information($"Second attempt to rollback for order {orderId} into GLN {gln} has started...");
+
+                    await _orderRequestNewHeaderRepository.Rollback(orderId, gln);
+
+                    _logger.Information("Second rollback attempt completed successfully after GRAIs were cleared");
+
+                }
 
             }
 

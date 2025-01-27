@@ -34,9 +34,5 @@ namespace iGPS_Help_Desk.Controllers
             
             return string.Join(",", listOfString.Select(i => $"'{i}'"));
         }
-        public string GetCurrentSiteid()
-        {
-            return ConfigurationManager.AppSettings.Get("siteId");
-        }
     }
 }
