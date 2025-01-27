@@ -4,57 +4,14 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Models.Repositories;
 
 namespace iGPS_Help_Desk.Repositories
 {
-    public class IgpsDepotGlnRepository : BaseRepository
+    public class IgpsDepotGlnRepository : BaseRepository, IIgpsDepotGlnRepository
     {
-        public async Task<(List<IGPS_DEPOT_GLN>, int)> ReadAllContainers()
-        {
-            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
-            if (test != null)
-            {
-                connection = new SqlConnection(test);
-            }
-
-            List<IGPS_DEPOT_GLN> Glns = new List<IGPS_DEPOT_GLN>();
-
-            string query = "SELECT Gln, GRAI, DATE_TIME FROM IGPS_DEPOT_GLN ORDER BY GLN";
-
-            using (var conn = connection)
-            {
-                try
-                {
-                    conn.Open();
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                }
-
-                SqlCommand command = new SqlCommand(query, conn);
-                command.CommandTimeout = 300;
-                reader = await command.ExecuteReaderAsync();
-
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        IGPS_DEPOT_GLN glnsFromDb = new IGPS_DEPOT_GLN(reader);
-                        Glns.Add(glnsFromDb);
-                    }
-                }
-
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-
-                return (Glns, Glns.Count);
-            }
-        }
         public async Task<List<IGPS_DEPOT_GLN>> SearchGraiFromContainer(string grai, string gln, string generationPrefix)
         {
             grai = $"%{generationPrefix}{grai}%";
@@ -565,5 +522,6 @@ namespace iGPS_Help_Desk.Repositories
 
             return Grais;
         }
+
     }
 }

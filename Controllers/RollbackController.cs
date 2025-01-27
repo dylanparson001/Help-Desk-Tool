@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Repositories;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,6 +13,12 @@ namespace iGPS_Help_Desk.Controllers
     public class RollbackController : BaseController
     {
         private readonly ILogger _logger = Log.ForContext("Rollback", true);
+        private readonly IOrderRequestNewHeaderRepository _orderRequestNewHeaderRepository;
+
+        public RollbackController(IOrderRequestNewHeaderRepository orderRequestNewHeaderRepository)
+        {
+            _orderRequestNewHeaderRepository = orderRequestNewHeaderRepository;
+        }
         public async Task<string> GetTrailerNumber(string orderId)
         {
             
