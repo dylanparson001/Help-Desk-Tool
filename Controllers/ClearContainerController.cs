@@ -29,8 +29,6 @@ namespace iGPS_Help_Desk.Controllers
             
             List<string> dnuList = await _igpsDepotLocationRepository.ReadDnus();
 
-            dnuList = CheckDnusFromList(dnuList);
-
             // concat '', to items in list
             string stringGlns = ConcatStringFromList(dnuList);
 
@@ -42,31 +40,6 @@ namespace iGPS_Help_Desk.Controllers
 
 
             return (glnList.OrderBy(x => x.Gln).ToList(), locationList.OrderBy(x => x.Gln).ToList());
-        }
-
-        /// <summary>
-        /// Filters out any potential non DNU containersS
-        /// </summary>
-        /// <param name="listOfContainers"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public List<string> CheckDnusFromList(List<string> listOfContainers)
-        {
-            var checkedList = listOfContainers.Where(x => x.ToUpper().Contains("DNU")).ToList();
-
-            if (checkedList.Count == 0)
-            {
-                throw new Exception("No DNUs Found");
-            }
-
-            foreach (var container in checkedList)
-            {
-                if (!container.ToUpper().Contains("DNU"))
-                {
-                    listOfContainers.Remove(container);
-                }
-            }
-            return checkedList;
         }
 
         /// <summary>
@@ -173,9 +146,6 @@ namespace iGPS_Help_Desk.Controllers
         {
             List<string> ghostGlns = await _igpsDepotGlnRepository.GetGhostGrais();
 
-            //var ghostGlnsString = ConcatStringFromList(ghostGlns);
-            //var ghostGrais = await _igpsDepotGlnRepository.ReadContainersFromList(ghostGlnsString);
-
             return ghostGlns;
         }
 
@@ -185,7 +155,17 @@ namespace iGPS_Help_Desk.Controllers
 
             var concatenatedList = ConcatStringFromList(listOfGrais);
 
-            _igpsDepotGlnRepository.DeleteGraisFromList(concatenatedList);
+            try
+            {
+
+                _igpsDepotGlnRepository.DeleteGraisFromList(concatenatedList);
+                _logger.Information($"{listOfGrais.Count} grais have been cleared");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+            }
+
         }
 
 

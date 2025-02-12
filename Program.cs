@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Controllers;
 using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Managers;
 using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Repositories;
 using iGPS_Help_Desk.Views;
@@ -60,7 +61,7 @@ namespace iGPS_Help_Desk
                 }
             }
             // Show login form
-            LoginForm fLogin = new LoginForm();
+            LoginForm fLogin = ServiceProvider.GetRequiredService<LoginForm>();
             if (fLogin.ShowDialog() == DialogResult.OK)
             {
                 fLogin.Close();
@@ -96,6 +97,7 @@ namespace iGPS_Help_Desk
             services.AddScoped<MoveContainerController>();
             services.AddScoped<OrderController>();
             services.AddScoped<SiteController>();
+            services.AddScoped<LoginController>();
 
         }
     }

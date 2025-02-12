@@ -13,14 +13,14 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
     public class ClearContainerTests
     {
         private ClearContainerController _controller;
-        private Mock<IIgpsDepotGlnRepository> _mockDepoGlntRespository;
+        private Mock<IIgpsDepotGlnRepository> _mockDepoGlnRespository;
         private Mock<IIgpsDepotLocationRepository> _mockDepotLocationRepository;
         [SetUp]
         public void SetUp()
         {
-            _mockDepoGlntRespository = new Mock<IIgpsDepotGlnRepository>();
+            _mockDepoGlnRespository = new Mock<IIgpsDepotGlnRepository>();
             _mockDepotLocationRepository = new Mock<IIgpsDepotLocationRepository>();
-            _controller = new ClearContainerController(_mockDepoGlntRespository.Object, _mockDepotLocationRepository.Object);
+            _controller = new ClearContainerController(_mockDepoGlnRespository.Object, _mockDepotLocationRepository.Object);
         }
 
         /// <summary>
@@ -59,13 +59,13 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
 
             // Mock methods
             // Returns a count of all GRAIs in table
-            _mockDepoGlntRespository.Setup(x =>
+            _mockDepoGlnRespository.Setup(x =>
                 x.GetCountOfTable())
                 .ReturnsAsync(It.IsAny<int>()
                 );
 
             // Returns a list of Grais from IGPS_DEPOT_GLN
-            _mockDepoGlntRespository.Setup(x =>
+            _mockDepoGlnRespository.Setup(x =>
             x.ReadContainersFromList(It.IsAny<string>()))
                 .ReturnsAsync(() =>
                 new List<IGPS_DEPOT_GLN>()
@@ -79,19 +79,20 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
             // Returns exisitn container list
             _mockDepotLocationRepository.Setup(x =>
             x.ReadContainersFromList(It.IsAny<List<string>>()))
-                .ReturnsAsync(() =>
-                existingContainers
+                .ReturnsAsync
+                (
+                    () => existingContainers
                 );
 
 
 
-            _controller = new ClearContainerController(_mockDepoGlntRespository.Object, _mockDepotLocationRepository.Object);
+            _controller = new ClearContainerController(_mockDepoGlnRespository.Object, _mockDepotLocationRepository.Object);
             // Act
             _controller.ClearContainers(listOfGlns);
 
             // Assert
             // Delete GRAIs should run once when lists are valid
-            _mockDepoGlntRespository.Verify(repo => repo.DeleteGlnsFromList(It.IsAny<string>()), Times.Once);
+            _mockDepoGlnRespository.Verify(repo => repo.DeleteGlnsFromList(It.IsAny<string>()), Times.Once);
             _mockDepotLocationRepository.Verify(repo => repo.DeleteContainersFromList(It.IsAny<string>()), Times.Exactly(1));
 
         }
@@ -111,7 +112,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
             _controller.ClearContainers(listOfGlns);
 
             //Assert
-            _mockDepoGlntRespository.Verify(repo => repo.DeleteGlnsFromList(It.IsAny<string>()), Times.Never);
+            _mockDepoGlnRespository.Verify(repo => repo.DeleteGlnsFromList(It.IsAny<string>()), Times.Never);
             _mockDepotLocationRepository.Verify(repo => repo.DeleteContainersFromList(It.IsAny<string>()), Times.Never);
         }
 
@@ -126,7 +127,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
             // Arrange
 
             // mock repos to send valid lists
-            _mockDepoGlntRespository.Setup(x =>
+            _mockDepoGlnRespository.Setup(x =>
                 x.ReadContainersFromList(It.IsAny<string>()))
                 .ReturnsAsync(() =>
                     new List<IGPS_DEPOT_GLN>()
@@ -152,81 +153,19 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
                 .ReturnsAsync(() =>
                     new List<string>()
                     {
-                        "DNU",
-                        "DNU",
-                        "DNU"
+                        "12DNU",
+                        "DNU321",
+                        "dnu"
                     }
                 );
 
-            _controller = new ClearContainerController(_mockDepoGlntRespository.Object, _mockDepotLocationRepository.Object);
+            _controller = new ClearContainerController(_mockDepoGlnRespository.Object, _mockDepotLocationRepository.Object);
 
             var dnuTestResult = await _controller.GetDnus();
 
             Assert.That(dnuTestResult.Item1, Has.Count.EqualTo(3));
         }
 
-        /// <summary>
-        /// Test for filtering method finding DNUs from a potential list that may not have them, realistically shouldnt happen 
-        /// </summary>
-        /// <returns></returns>
-        [Test]
-        public async Task GetDnusTest_FindsDNUsWhenExists_UpperCase()
-        {
-            // Arrange
-            var mockContainerList = new List<IGPS_DEPOT_LOCATION>
-            {
-                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "DNU", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12346", "READY", "MIXED", "nodnu", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12347", "READY", "MIXED", "DnU", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12348", "READY", "MIXED", "dNuuu", "DTEST00001", 540),
-            };
 
-            // Act
-            var dnuResultList = _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
-
-            // Assert
-            Assert.That(dnuResultList.Count, Is.EqualTo(4));
-            Assert.That(dnuResultList.Where(x => !x.ToUpper().Contains("DNU")), Is.Empty);
-        }
-        [Test]
-        public async Task GetDNUsTest_HasOneDnuReturned()
-        {
-            // Arrange
-            var mockContainerList = new List<IGPS_DEPOT_LOCATION>
-            {
-                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "dnu", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12346", "READY", "MIXED", "no", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12347", "READY", "MIXED", "", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12348", "READY", "MIXED", "", "DTEST00001", 540),
-            };
-
-            // Act
-            var dnuResultList = _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
-
-            // Assert
-            Assert.That(dnuResultList.Count, Is.EqualTo(1));
-        }
-        [Test]
-        public async Task GetDNUsTest_NoDNUsInListSent_ExceptionThrownNoDNUsFound()
-        {
-            // Arrange
-            var mockContainerList = new List<IGPS_DEPOT_LOCATION>
-            {
-                new IGPS_DEPOT_LOCATION("12345", "READY", "MIXED", "Test", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12346", "READY", "MIXED", "Tes2", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12347", "READY", "MIXED", "Test1", "DTEST00001", 540),
-                new IGPS_DEPOT_LOCATION("12348", "READY", "MIXED", "Test4", "DTEST00001", 540),
-            };
-
-            // Act & Assert
-            var exception = Assert.Throws<Exception>(() =>
-                {
-                    _controller.CheckDnusFromList(mockContainerList.Select(x => x.Description).ToList());
-                }
-            );
-
-            Assert.That(exception.Message, Is.EqualTo("No DNUs Found"));
-
-        }
     }
 }

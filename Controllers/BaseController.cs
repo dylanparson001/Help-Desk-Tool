@@ -24,7 +24,7 @@ namespace iGPS_Help_Desk.Controllers
         {
             if (listOfString.Count == 0)
             {
-                throw new InvalidOperationException("List is empty");
+                //throw new InvalidOperationException("List is empty");
             }
 
 
@@ -33,6 +33,10 @@ namespace iGPS_Help_Desk.Controllers
                 x.Trim();
             });
             
+            return JoinStrings(listOfString);
+        }
+        public string JoinStrings(List<string> listOfString)
+        {
             return string.Join(",", listOfString.Select(i => $"'{i}'"));
         }
     }

@@ -65,7 +65,7 @@ namespace iGPS_Help_Desk.Controllers
 
         public static string GetCurrentFolderPath()
         {
-            var filePath = ConfigurationManager.AppSettings.Get("_clearContainerFilePath");
+            var filePath = ConfigurationManager.AppSettings.Get("clearContainerPath");
             if (string.IsNullOrEmpty(filePath))
             {
                 throw new Exception("File path is empty please set in settings");

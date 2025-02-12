@@ -1,22 +1,23 @@
-﻿using Serilog;
+﻿using iGPS_Help_Desk.Managers;
 using System;
-using System.Configuration;
-using System.IO;
 using System.Windows.Forms;
-using BC = BCrypt.Net.BCrypt;
 
 namespace iGPS_Help_Desk.Views
 {
     public partial class LoginForm : BaseForm
     {
+        private readonly LoginController _loginController;
+
         public int ClickCount { get; set; } = 1;
-        public LoginForm()
+        public LoginForm(LoginController loginController)
         {
             InitializeComponent();
+
+            _loginController = loginController;
+
             AcceptButton = btnLogin;
             txtPassword.Select();
             txtPassword.PasswordChar = '\u2022';
-
         }
 
         private void ClickLoginButton(object sender, EventArgs e)
@@ -27,14 +28,9 @@ namespace iGPS_Help_Desk.Views
             }
             string password = txtPassword.Text;
 
-            string filePath = "./adminHash.txt";
-            string valueFromFile = File.ReadAllText(filePath);
-
-            valueFromFile.Trim();
-
             try
             {
-                if (BC.EnhancedVerify(password, valueFromFile))
+                if (_loginController.Login(password))
                 {
                     DialogResult = DialogResult.OK;
                 }
@@ -46,7 +42,7 @@ namespace iGPS_Help_Desk.Views
             }
             catch (NullReferenceException ex)
             {
-                MessageBox.Show($"Message: {ex.Message} Check Config");
+                MessageBox.Show($"Message: {ex.Message}");
             }
         }
 
