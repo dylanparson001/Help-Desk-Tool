@@ -17,9 +17,7 @@ namespace iGPS_Help_Desk.Models.Repositories
         public SqlCommand command;
         public SqlDataReader reader;
         public List<SqlParameter> parameters;
-        private string _pcName = ConfigurationManager.AppSettings.Get("pcName");
         private static Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        private static KeyValueConfigurationCollection settings = configFile.AppSettings.Settings;
         public readonly ILogger _logger = Log.ForContext<Igps>();
         public BaseRepository()
         {
@@ -29,42 +27,6 @@ namespace iGPS_Help_Desk.Models.Repositories
                 connection = new SqlConnection(test);
             }
         }
-
-        public string ConcatStringFromList(List<string> listOfString)
-        {
-            return string.Join(",", listOfString.Select(i => $"'{i}'"));
-        }
-
-        public void Connect()
-        {
-            try
-            {
-               connection.Open();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public void Disconnect()
-        {
-
-            if(connection.State == System.Data.ConnectionState.Open) 
-            {
-                connection.Close();
-            }
-
-        }
-
-        public async Task ExecuteQuery(string query, SqlConnection conn)
-        {
-            SqlCommand command = new SqlCommand(query, conn);
-
-            reader = await command.ExecuteReaderAsync(); 
-        }
-
         public string GetSiteID()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
@@ -104,11 +66,7 @@ namespace iGPS_Help_Desk.Models.Repositories
                 Debug.WriteLine(ex.Message);
                 throw;
             }
-
-
             return result;
-
-
         }
     }
 }

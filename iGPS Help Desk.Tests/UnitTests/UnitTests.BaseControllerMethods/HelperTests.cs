@@ -57,7 +57,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.BaseControllerMethods
         }
 
         [Test]
-        public void TestConcatStringMethod_EmptyListDoesNotThrowsException()
+        public void TestConcatStringMethod_EmptyListReturnsEmptyString()
         {
             // Arrange
             List<string> emptyList = new List<string>();

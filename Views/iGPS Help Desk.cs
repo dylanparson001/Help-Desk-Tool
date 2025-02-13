@@ -1,7 +1,6 @@
 ﻿using iGPS_Help_Desk.Controllers;
 using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
-using iGPS_Help_Desk.Repositories;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -18,8 +17,9 @@ namespace iGPS_Help_Desk.Views
     {
         #region Private properties
         private Timer closeTimer;
-        private readonly ILogger _logger = Log.ForContext<Igps>();
+        private readonly ILogger _logger;
         private readonly ILogger _rollbackLogger = Log.ForContext("Rollback", true);
+        private readonly ILogger _clearContainerLogger = Log.ForContext("ClearContainers", true);
         private List<IGPS_DEPOT_GLN> igpsDepotGln = new List<IGPS_DEPOT_GLN>();
 
         // Containers
@@ -42,7 +42,8 @@ namespace iGPS_Help_Desk.Views
             MoveContainerController moveContainerController,
             OrderController orderController,
             RollbackController rollbackController,
-            SiteController siteController
+            SiteController siteController,
+            ILogger logger
             )
         {
             _clearContainerController = clearContainerController;
@@ -51,6 +52,8 @@ namespace iGPS_Help_Desk.Views
             _orderController = orderController;
             _rollbackController = rollbackController;
             _siteController = siteController;
+            _logger = logger;
+            _logger = Log.ForContext<Igps>();
 
             InitializeComponent();
             InitialLoad();
@@ -62,6 +65,7 @@ namespace iGPS_Help_Desk.Views
 
                 lblVersionNumber.Text = $"v{settings["version"].Value}";
                 int timeout = int.Parse(settings["timeout"].Value);
+
                 // Initialize the timer
                 closeTimer = new Timer();
                 closeTimer.Interval = timeout; // 30 minutes in milliseconds
@@ -786,11 +790,16 @@ namespace iGPS_Help_Desk.Views
                 Cursor = Cursors.WaitCursor;
                 // First attempt 
                 await _rollbackController.Rollback(orderId, gln, firstAttempt);
+
                 reloadGlnRollbacks();
+
                 await reloadOrderRollback();
+
                 InitialLoad();
+
                 MessageBox.Show($"Rollback Completed successfully into {gln}", "Rollback Completed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             }
 
             // Primary Key Violation, need to remove GRAIs from IGPS_DEPOT_GLN Table
@@ -801,7 +810,7 @@ namespace iGPS_Help_Desk.Views
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                 var grais = await _orderController.GetGraisFromOrderId(orderId);
-                var graiString = _csvFileController.ConcatStringFromList(grais);
+                var graiString = _orderController.ConcatStringFromList(grais);
 
                 var rnd = new Random();
                 int random = rnd.Next(1, 1000);
@@ -817,7 +826,6 @@ namespace iGPS_Help_Desk.Views
                 // Attempt Rollback again
                 try
                 {
-                    // firstAttempt = false
                     await _rollbackController.Rollback(orderId, gln, firstAttempt);
                     reloadGlnRollbacks();
                     await reloadOrderRollback();

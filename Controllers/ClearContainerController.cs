@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Logger;
 using iGPS_Help_Desk.Models;
 using Serilog;
 
@@ -13,14 +14,18 @@ namespace iGPS_Help_Desk.Controllers
 {
     public class ClearContainerController : BaseController
     {
-        private readonly ILogger _logger = Log.ForContext("ClearContainer", true);
+        private readonly ILogger _logger;
         private readonly IIgpsDepotGlnRepository _igpsDepotGlnRepository;
         private readonly IIgpsDepotLocationRepository _igpsDepotLocationRepository;
 
-        public ClearContainerController(IIgpsDepotGlnRepository igpsDepotGlnRepository, IIgpsDepotLocationRepository igpsDepotLocationRepository)
+        public ClearContainerController(IIgpsDepotGlnRepository igpsDepotGlnRepository, 
+            IIgpsDepotLocationRepository igpsDepotLocationRepository,
+            ILoggerFactory loggerFactory
+            )
         {
             _igpsDepotGlnRepository = igpsDepotGlnRepository;
             _igpsDepotLocationRepository = igpsDepotLocationRepository;
+            _logger = loggerFactory.CreateContextualLogger("ClearContainer");
         }
 
         public async Task<(List<IGPS_DEPOT_GLN>, List<IGPS_DEPOT_LOCATION>)> GetDnus()
@@ -151,7 +156,7 @@ namespace iGPS_Help_Desk.Controllers
 
         public void ClearGrais(List<string> listOfGrais)
         {
-            if (listOfGrais == null) return;
+            if (listOfGrais == null || listOfGrais.Count == 0) return;
 
             var concatenatedList = ConcatStringFromList(listOfGrais);
 

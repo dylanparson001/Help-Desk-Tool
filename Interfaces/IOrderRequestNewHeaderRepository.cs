@@ -18,7 +18,9 @@ namespace iGPS_Help_Desk.Interfaces
         Task<List<string>> GetGraisFromOrderId(string orderId);
         Task ClearExistingGrais(string grais);
         Task<string> ReadCountFromOrderId(string gln);
-
+        Task<bool> RollbackInsertGrais(string orderId, string gln);
+        Task<bool> RollbackUpdateProcessingStatus(string orderId);
+        Task<bool> RollbackDeleteGraisFromOrderId(string orderId);
 
     }
 }
