@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Windows.Forms;
 using iGPS_Help_Desk.Controllers;
 using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Logger;
 using iGPS_Help_Desk.Managers;
 using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Repositories;
@@ -34,21 +35,8 @@ namespace iGPS_Help_Desk
             // Build service proviedr
             ServiceProvider = services.BuildServiceProvider();
 
-            // Logger setup 
-            Log.Logger = new LoggerConfiguration()
-                // Clear Container Logger
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("ClearContainer"))
-                    .WriteTo.File("./Log/Clear-Container-Logs/Clear-Container-Log.txt", rollingInterval: RollingInterval.Month))
-                // Rollback logger
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("Rollback"))
-                    .WriteTo.File("./Log/Rollback-Logs/Rollback-Log.txt", rollingInterval: RollingInterval.Month))
-                // Error Logger
-                .WriteTo.File("./Log/General-Error-Logs/Error-Log.txt", rollingInterval: RollingInterval.Month, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
-                .CreateLogger();
 
-
+            
             string siteId = ConfigurationManager.AppSettings.Get("siteId");
 
             // Show site id form if there is none in the config file
@@ -78,6 +66,22 @@ namespace iGPS_Help_Desk
         private static void ConfigureServices(ServiceCollection services)
         {
 
+            // Logger setup 
+            Log.Logger = new LoggerConfiguration()
+                // Clear Container Logger
+                .WriteTo.Logger(lc => lc
+                    .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("ClearContainer"))
+                    .WriteTo.File("./Log/Clear-Container-Logs/Clear-Container-Log.txt", rollingInterval: RollingInterval.Month))
+                // Rollback logger
+                .WriteTo.Logger(lc => lc
+                    .Filter.ByIncludingOnly(evt => evt.Properties.ContainsKey("Rollback"))
+                    .WriteTo.File("./Log/Rollback-Logs/Rollback-Log.txt", rollingInterval: RollingInterval.Month))
+                // Error Logger
+                .WriteTo.File("./Log/General-Error-Logs/Error-Log.txt", rollingInterval: RollingInterval.Month, restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error)
+                .CreateLogger();
+            services.AddSingleton<ILogger>(Log.Logger);
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+
             // Forms
             services.AddTransient<Igps>();
             services.AddTransient<EnterSiteId>();
@@ -98,6 +102,7 @@ namespace iGPS_Help_Desk
             services.AddScoped<OrderController>();
             services.AddScoped<SiteController>();
             services.AddScoped<LoginController>();
+
 
         }
     }

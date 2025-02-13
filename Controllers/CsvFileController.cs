@@ -1,4 +1,5 @@
 ﻿using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Logger;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Views;
@@ -55,12 +56,14 @@ namespace iGPS_Help_Desk.Controllers
 
         public CsvFileController(IIgpsDepotGlnRepository igpsDepotGlnRepository,
                 IIgpsDepotLocationRepository igpsDepotLocationRepository,
-                ClearContainerController clearContainerController)
+                ClearContainerController clearContainerController,
+                ILoggerFactory loggerFactory
+                )
         {
             _igpsDepotGlnRepository = igpsDepotGlnRepository;
             _igpsDepotLocationRepository = igpsDepotLocationRepository;
             _clearContainerController = clearContainerController;
-
+            _logger = loggerFactory.CreateContextualLogger("Error");
         }
 
         public static string GetCurrentFolderPath()

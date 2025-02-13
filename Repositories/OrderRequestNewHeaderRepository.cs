@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace iGPS_Help_Desk.Repositories
 {
@@ -222,24 +224,19 @@ namespace iGPS_Help_Desk.Repositories
 
         }
 
-        public async Task Rollback(string orderId, string gln)
+        public async Task<bool> RollbackInsertGrais(string orderId, string gln)
         {
+            bool isSuccess = true;
+
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
             if (test != null)
             {
                 connection = new SqlConnection(test);
             }
+
             string insertQuery = "INSERT INTO IGPS_DEPOT_GLN ([GLN], [GRAI], [DATE_TIME]) " +
-                                 "SELECT @GLN, AssetId, GETUTCDATE() " +
-                                 "FROM dbo.OrderRequestProcessed_Detail WHERE OrderId = @OrderId;";
-
-            string updateQuery = "UPDATE OrderRequestNew_Header " +
-                                 "SET Processing_Status = 'CANCELLED' " +
-                                 "WHERE OrderId = @OrderId;";
-
-            string deleteQuery = "DELETE FROM OrderRequestProcessed_Detail WHERE OrderId = @OrderId;";
-
-
+                     "SELECT @GLN, AssetId, GETUTCDATE() " +
+                     "FROM dbo.OrderRequestProcessed_Detail WHERE OrderId = @OrderId;";
             using (var conn = connection)
             {
                 try
@@ -253,27 +250,16 @@ namespace iGPS_Help_Desk.Repositories
                         insertCommand.Parameters.AddWithValue("@GLN", gln);
                         await insertCommand.ExecuteNonQueryAsync();
                     }
-
-                    // Update
-                    using (var updateCommand = new SqlCommand(updateQuery, conn))
-                    {
-                        updateCommand.Parameters.AddWithValue("@OrderId", orderId);
-                        await updateCommand.ExecuteNonQueryAsync();
-                    }
-
-                    // Delete
-                    using (var deleteCommand = new SqlCommand(deleteQuery, conn))
-                    {
-                        deleteCommand.Parameters.AddWithValue("@OrderId", orderId);
-                        await deleteCommand.ExecuteNonQueryAsync();
-                    }
+                    isSuccess = true;
                 }
                 catch (SqlException ex) when (ex.Number == 2627)
                 {
+                    isSuccess = false;
                     throw;
                 }
                 catch (Exception ex)
                 {
+                    isSuccess = false;
                     _logger.Error(ex.Message);
                     throw;
                 }
@@ -284,9 +270,102 @@ namespace iGPS_Help_Desk.Repositories
                         conn.Close();
                     }
                 }
+                return isSuccess;
             }
         }
+        public async Task<bool> RollbackUpdateProcessingStatus(string orderId)
+        {
+            bool isSuccess = false;
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
 
+            string updateQuery = "UPDATE OrderRequestNew_Header " +
+                                 "SET Processing_Status = 'CANCELLED' " +
+                                 "WHERE OrderId = @OrderId;";
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+                    
+                    // Update
+                    using (var updateCommand = new SqlCommand(updateQuery, conn))
+                    {
+                        updateCommand.Parameters.AddWithValue("@OrderId", orderId);
+                        await updateCommand.ExecuteNonQueryAsync();
+                    }
+                    isSuccess = true;
+                }
+                catch (SqlException ex) when (ex.Number == 2627)
+                {
+                    isSuccess = false;
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    isSuccess = false;
+                    _logger.Error(ex.Message);
+                    throw;
+                }
+                finally
+                {
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                }
+                return isSuccess;
+            }
+        }
+        public async Task<bool> RollbackDeleteGraisFromOrderId(string orderId)
+        {
+            bool isSuccess = false;
+            var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
+            if (test != null)
+            {
+                connection = new SqlConnection(test);
+            }
+
+            string deleteQuery = "DELETE FROM OrderRequestProcessed_Detail WHERE OrderId = @OrderId;";
+
+            using (var conn = connection)
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Delete
+                    using (var deleteCommand = new SqlCommand(deleteQuery, conn))
+                    {
+                        deleteCommand.Parameters.AddWithValue("@OrderId", orderId);
+                        await deleteCommand.ExecuteNonQueryAsync();
+                    }
+                    isSuccess = true;
+                }
+                catch (SqlException ex) when (ex.Number == 2627)
+                {
+                    isSuccess = false;
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    isSuccess = false;
+                    _logger.Error(ex.Message);
+                    throw;
+                }
+                finally
+                {
+                    if (conn.State == System.Data.ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                }
+                return isSuccess;
+            }
+        }
         public async Task<List<string>> GetGraisFromOrderId(string orderId)
         {
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
@@ -409,5 +488,9 @@ namespace iGPS_Help_Desk.Repositories
             }
         }
 
+        public Task Rollback(string orderId, string gln)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

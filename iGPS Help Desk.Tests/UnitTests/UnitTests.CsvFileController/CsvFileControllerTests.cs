@@ -1,12 +1,11 @@
 ﻿using iGPS_Help_Desk.Controllers;
 using iGPS_Help_Desk.Interfaces;
-using iGPS_Help_Desk.Repositories;
-using Moq;
+using iGPS_Help_Desk.Logger;
+using NSubstitute;
 using NUnit.Framework;
+using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.CsvFileControllerTests
@@ -15,17 +14,28 @@ namespace iGPS_Help_Desk.Tests.UnitTests.UnitTests.CsvFileControllerTests
     {
         private CsvFileController _csvFileController;
         private ClearContainerController _clearContainerController;
-        private Mock<IIgpsDepotGlnRepository> _mockDepotGlnRepository;
-        private Mock<IIgpsDepotLocationRepository> _mockDepotLocationRepository;
+
+        #region logger
+        private ILogger _mockLogger;
+        private ILoggerFactory _mockLoggerFactory;
+
+        #endregion
+
+        private IIgpsDepotGlnRepository _mockDepotGlnRepository;
+        private IIgpsDepotLocationRepository _mockDepotLocationRepository;
         
         [SetUp]
         public void SetupCsvFileController()
         {
-            _mockDepotGlnRepository = new Mock<IIgpsDepotGlnRepository>();
-            _mockDepotLocationRepository = new Mock<IIgpsDepotLocationRepository>();
-            _clearContainerController = new ClearContainerController(_mockDepotGlnRepository.Object, _mockDepotLocationRepository.Object);
+            _mockDepotGlnRepository = Substitute.For<IIgpsDepotGlnRepository>();
 
-            _csvFileController = new CsvFileController(_mockDepotGlnRepository.Object, _mockDepotLocationRepository.Object, _clearContainerController);
+            //_mockDepotLocationRepository = new Mock<IIgpsDepotLocationRepository>();
+            _mockDepotLocationRepository = Substitute.For<IIgpsDepotLocationRepository>();
+            _mockLoggerFactory = Substitute.For<LoggerFactory>();
+
+            _clearContainerController = new ClearContainerController(_mockDepotGlnRepository, _mockDepotLocationRepository, _mockLoggerFactory);
+
+            _csvFileController = new CsvFileController(_mockDepotGlnRepository, _mockDepotLocationRepository, _clearContainerController, _mockLoggerFactory);
         }
 
         public async Task TestGettingFolderPath_EmptyPath_ThrowsException()
