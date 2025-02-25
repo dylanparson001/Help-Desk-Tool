@@ -68,6 +68,7 @@ namespace iGPS_Help_Desk.Views
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(211, 20);
             this.txtPassword.TabIndex = 3;
+            this.txtPassword.TextChanged += new System.EventHandler(this.checkText);
             // 
             // label2
             // 

@@ -1,4 +1,5 @@
-﻿using iGPS_Help_Desk.Models;
+﻿using iGPS_Help_Desk.Enums;
+using iGPS_Help_Desk.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace iGPS_Help_Desk.Interfaces
     public interface IOrderRequestNewHeaderRepository
     {
         Task<List<OrderRequestNewHeader>> GetOrdersFromList(List<string> bols);
-        Task RemoveOrders(List<string> orderIds);
+        Task SetOrderStatus(List<string> orderIds, OrderStatus newStatus);
         Task UpdateRequestedQuantity(int newQuantity, List<string> orderIds);
         Task<string> GetTrailerNumber(string orderId);
         Task<string> GetSealNumber(string orderId);

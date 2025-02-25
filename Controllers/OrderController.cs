@@ -1,4 +1,5 @@
-﻿using iGPS_Help_Desk.Interfaces;
+﻿using iGPS_Help_Desk.Enums;
+using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,12 @@ namespace iGPS_Help_Desk.Controllers
         public async Task RemoveSelectedOrders(List<string> orderList)
         {
             if (orderList.Count > 0)
-                await _orderRequestNewHeaderRepository.RemoveOrders(orderList);
+                await _orderRequestNewHeaderRepository.SetOrderStatus(orderList, OrderStatus.Cancelled);
+        }
+        public async Task SetSelectedOrdersToOpen(List<string> orderList)
+        {
+            if (orderList.Count > 0)
+                await _orderRequestNewHeaderRepository.SetOrderStatus(orderList, OrderStatus.Open);
         }
 
         public async Task UpdateRequestedQuantity(int newQuantity, List<string> orderList)

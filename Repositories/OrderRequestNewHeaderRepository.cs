@@ -1,4 +1,5 @@
-﻿using iGPS_Help_Desk.Interfaces;
+﻿using iGPS_Help_Desk.Enums;
+using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Models;
 using iGPS_Help_Desk.Models.Repositories;
 using System;
@@ -66,17 +67,32 @@ namespace iGPS_Help_Desk.Repositories
             return result;
 
         }
-        public async Task RemoveOrders(List<string> orderIds)
+        public async Task SetOrderStatus(List<string> orderIds, OrderStatus newStatus)
         {
+            string query = string.Empty;
+
+            switch (newStatus)
+            {
+                case OrderStatus.Cancelled:
+                    query = $"UPDATE OrderRequestNew_Header" +
+                        $" SET PROCESSING_STATUS = 'CANCELLED' " +
+                        $"WHERE OrderId IN ({string.Join(",", orderIds.Select((_, index) => $"@param{index}"))})";
+
+                    break;
+                case OrderStatus.Open:
+                    query = $"UPDATE OrderRequestNew_Header" +
+                        $" SET PROCESSING_STATUS = NULL " +
+                        $"WHERE OrderId IN ({string.Join(",", orderIds.Select((_, index) => $"@param{index}"))})";
+
+                    break;
+            }
+
             var test = ConfigurationManager.ConnectionStrings["connectionString"]?.ConnectionString;
             if (test != null)
             {
                 connection = new SqlConnection(test);
             }
 
-            string query = $"UPDATE OrderRequestNew_Header" +
-                $" SET PROCESSING_STATUS = 'CANCELLED' " +
-                $"WHERE OrderId IN ({string.Join(",", orderIds.Select((_, index) => $"@param{index}"))})";
 
             using (var conn = connection)
             {
@@ -290,7 +306,7 @@ namespace iGPS_Help_Desk.Repositories
                 try
                 {
                     conn.Open();
-                    
+
                     // Update
                     using (var updateCommand = new SqlCommand(updateQuery, conn))
                     {

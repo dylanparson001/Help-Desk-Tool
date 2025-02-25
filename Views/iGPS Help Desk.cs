@@ -125,8 +125,10 @@ namespace iGPS_Help_Desk.Views
             lvGlnContent.Items.Clear();
         }
         // Deletes GLNS from IGPS_DEPOT_GLN and IGPS_DEPOT_LOCATION
-        private void ClickClearContainers(object sender, EventArgs e)
+        private async void ClickClearContainers(object sender, EventArgs e)
         {
+
+            bool deleteGraisOnlyChecked = chkDeleteGraisOnly.Checked;
             if (!saveButtonClicked)
                 if (!saveButtonClicked)
                 {
@@ -143,25 +145,39 @@ namespace iGPS_Help_Desk.Views
             // Initial List from user of glns (will be parsed to get rid of spaces, returns, quotes, etc)
             List<string> glnList = new List<string>();
 
-            // Parsed list
             glnList = ParseGln(txtContainersToClear.Text);
-            DialogResult result = MessageBox.Show(
-                $"Are you sure you want to delete {lvGlnContent.Items.Count} Grais and " +
-                $"{glnList.Count} containers?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            // Check the user's response
+            string confirmationMessage = string.Empty;
+            string resultMessage = string.Empty;
+
+            if (!deleteGraisOnlyChecked)
+            {
+
+                confirmationMessage = $"Are you sure you want to delete {lvGlnContent.Items.Count} Grais and " +
+                    $"{glnList.Count} containers?";
+                resultMessage = $"{txtNumToBeDeleted.Text} Grais have been cleared and {glnList.Count} Containers have been deleted";
+            }
+            else
+            {
+                confirmationMessage = $"Are you sure you want to delete {lvGlnContent.Items.Count} Grais (Container will not be deleted)?";
+                resultMessage = $"{txtNumToBeDeleted.Text} Grais have been deleted";
+            }
+
+            DialogResult result = MessageBox.Show(confirmationMessage, "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
             if (result == DialogResult.Yes)
             {
-                _clearContainerController.ClearContainers(glnList);
+                await Task.Run(async () => await _clearContainerController.ClearContainers(glnList, deleteGraisOnlyChecked));
+
                 lvGlnContent.Items.Clear();
                 lblErrorMessage.Visible = false;
-            }
-            MessageBox.Show($"{txtNumToBeDeleted.Text} Grais have been deleted from {glnList.Count} Containers have been cleared", "Containers Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             saveButtonClicked = false;
-            GC.Collect();
             txtTicketNumber.Text = string.Empty;
-            txtNumToBeDeleted.Text = "0";
-            txtContainersToClear.Text = "";
+            ShowContent();
+                MessageBox.Show(resultMessage, "Containers Cleared", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
 
         // Updates list in view
@@ -497,6 +513,32 @@ namespace iGPS_Help_Desk.Views
             if (userChoice == DialogResult.Yes)
             {
                 await _orderController.RemoveSelectedOrders(orderIdList);
+                await ReloadShowOrders();
+            }
+
+        }
+        private async void AddToOpenOrders(object sender, EventArgs e)
+        {
+            var orderIdList = new List<string>();
+
+            if (lvOrders.CheckedItems.Count == 0)
+            {
+                lblError.Text = "No orders selected";
+                lblError.Visible = true;
+                return;
+            }
+            lblError.Visible = false;
+            for (int i = 0; i < lvOrders.CheckedItems.Count; i++)
+            {
+                orderIdList.Add(lvOrders.CheckedItems[i].Text.Trim());
+            }
+
+            DialogResult userChoice = MessageBox.Show($"Are you sure you want to add {orderIdList.Count}" +
+                $" orders to iSum?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (userChoice == DialogResult.Yes)
+            {
+                await _orderController.SetSelectedOrdersToOpen(orderIdList);
                 await ReloadShowOrders();
             }
 
@@ -951,5 +993,7 @@ namespace iGPS_Help_Desk.Views
             LoadRollbackContainers(result);
         }
         #endregion
+
+
     }
 }

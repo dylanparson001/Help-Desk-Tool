@@ -98,7 +98,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
 
             _controller = new ClearContainerController(_mockDepoGlnRespository, _mockDepotLocationRepository, _mockLoggerFactory);
             // Act
-            _controller.ClearContainers(_listOfGlns);
+            await _controller.ClearContainers(_listOfGlns);
 
             // Assert
             // Delete GRAIs should run once when lists are valid
