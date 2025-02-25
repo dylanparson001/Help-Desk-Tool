@@ -18,6 +18,7 @@ namespace iGPS_Help_Desk.Views
             AcceptButton = btnLogin;
             txtPassword.Select();
             txtPassword.PasswordChar = '\u2022';
+
         }
 
         private void ClickLoginButton(object sender, EventArgs e)
@@ -71,6 +72,20 @@ namespace iGPS_Help_Desk.Views
                     ClickCount = 1;
                     break;
 
+            }
+        }
+
+        private void checkText(object sender, EventArgs e)
+        {
+            var capsLock = IsKeyLocked(Keys.CapsLock);
+
+            if (capsLock)
+            {
+                lblInvalidPassword.Text = "Caps Lock Is Enabled";
+            }
+            else
+            {
+                lblInvalidPassword.Text = string.Empty;
             }
         }
     }

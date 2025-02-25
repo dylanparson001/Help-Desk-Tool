@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.StatusChange = new System.Windows.Forms.TabControl();
             this.tabClearContainers = new System.Windows.Forms.TabPage();
+            this.chkDeleteGraisOnly = new System.Windows.Forms.CheckBox();
             this.txtTicketNumber = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.lblErrorMessage = new System.Windows.Forms.Label();
@@ -102,6 +103,7 @@
             this.AssetCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button2 = new System.Windows.Forms.Button();
             this.tabRemoveOrders = new System.Windows.Forms.TabPage();
+            this.button7 = new System.Windows.Forms.Button();
             this.cbCheckAllOrders = new System.Windows.Forms.CheckBox();
             this.btnChangeQuantity = new System.Windows.Forms.Button();
             this.lblError = new System.Windows.Forms.Label();
@@ -153,6 +155,7 @@
             // 
             // tabClearContainers
             // 
+            this.tabClearContainers.Controls.Add(this.chkDeleteGraisOnly);
             this.tabClearContainers.Controls.Add(this.txtTicketNumber);
             this.tabClearContainers.Controls.Add(this.label14);
             this.tabClearContainers.Controls.Add(this.lblErrorMessage);
@@ -175,6 +178,16 @@
             this.tabClearContainers.TabIndex = 2;
             this.tabClearContainers.Text = "Clear Containers";
             this.tabClearContainers.UseVisualStyleBackColor = true;
+            // 
+            // chkDeleteGraisOnly
+            // 
+            this.chkDeleteGraisOnly.AutoSize = true;
+            this.chkDeleteGraisOnly.Location = new System.Drawing.Point(721, 484);
+            this.chkDeleteGraisOnly.Name = "chkDeleteGraisOnly";
+            this.chkDeleteGraisOnly.Size = new System.Drawing.Size(136, 21);
+            this.chkDeleteGraisOnly.TabIndex = 26;
+            this.chkDeleteGraisOnly.Text = "Delete GRAIs only?";
+            this.chkDeleteGraisOnly.UseVisualStyleBackColor = true;
             // 
             // txtTicketNumber
             // 
@@ -355,9 +368,9 @@
             this.btnClearContainers.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.btnClearContainers.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClearContainers.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnClearContainers.Location = new System.Drawing.Point(737, 504);
+            this.btnClearContainers.Location = new System.Drawing.Point(721, 504);
             this.btnClearContainers.Name = "btnClearContainers";
-            this.btnClearContainers.Size = new System.Drawing.Size(120, 39);
+            this.btnClearContainers.Size = new System.Drawing.Size(136, 39);
             this.btnClearContainers.TabIndex = 2;
             this.btnClearContainers.Text = "Clear Containers";
             this.btnClearContainers.UseVisualStyleBackColor = false;
@@ -810,6 +823,7 @@
             // 
             // tabRemoveOrders
             // 
+            this.tabRemoveOrders.Controls.Add(this.button7);
             this.tabRemoveOrders.Controls.Add(this.cbCheckAllOrders);
             this.tabRemoveOrders.Controls.Add(this.btnChangeQuantity);
             this.tabRemoveOrders.Controls.Add(this.lblError);
@@ -825,6 +839,16 @@
             this.tabRemoveOrders.Text = "Order Removal";
             this.tabRemoveOrders.UseVisualStyleBackColor = true;
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(312, 508);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(140, 31);
+            this.button7.TabIndex = 10;
+            this.button7.Text = "Add To Open Orders";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.AddToOpenOrders);
+            // 
             // cbCheckAllOrders
             // 
             this.cbCheckAllOrders.AutoSize = true;
@@ -838,9 +862,9 @@
             // 
             // btnChangeQuantity
             // 
-            this.btnChangeQuantity.Location = new System.Drawing.Point(246, 492);
+            this.btnChangeQuantity.Location = new System.Drawing.Point(458, 508);
             this.btnChangeQuantity.Name = "btnChangeQuantity";
-            this.btnChangeQuantity.Size = new System.Drawing.Size(106, 44);
+            this.btnChangeQuantity.Size = new System.Drawing.Size(140, 31);
             this.btnChangeQuantity.TabIndex = 8;
             this.btnChangeQuantity.Text = "Change Quantity";
             this.btnChangeQuantity.UseVisualStyleBackColor = true;
@@ -851,7 +875,7 @@
             this.lblError.AutoSize = true;
             this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblError.ForeColor = System.Drawing.Color.Red;
-            this.lblError.Location = new System.Drawing.Point(370, 516);
+            this.lblError.Location = new System.Drawing.Point(16, 475);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(42, 20);
             this.lblError.TabIndex = 7;
@@ -907,9 +931,9 @@
             // 
             // btnRemoveOrders
             // 
-            this.btnRemoveOrders.Location = new System.Drawing.Point(136, 492);
+            this.btnRemoveOrders.Location = new System.Drawing.Point(166, 508);
             this.btnRemoveOrders.Name = "btnRemoveOrders";
-            this.btnRemoveOrders.Size = new System.Drawing.Size(104, 44);
+            this.btnRemoveOrders.Size = new System.Drawing.Size(140, 31);
             this.btnRemoveOrders.TabIndex = 4;
             this.btnRemoveOrders.Text = "Remove Selected Orders";
             this.btnRemoveOrders.UseVisualStyleBackColor = true;
@@ -917,9 +941,9 @@
             // 
             // btnShowOrder
             // 
-            this.btnShowOrder.Location = new System.Drawing.Point(20, 492);
+            this.btnShowOrder.Location = new System.Drawing.Point(20, 508);
             this.btnShowOrder.Name = "btnShowOrder";
-            this.btnShowOrder.Size = new System.Drawing.Size(110, 44);
+            this.btnShowOrder.Size = new System.Drawing.Size(140, 31);
             this.btnShowOrder.TabIndex = 2;
             this.btnShowOrder.Text = "Show Orders";
             this.btnShowOrder.UseVisualStyleBackColor = true;
@@ -1091,5 +1115,7 @@
         private System.Windows.Forms.Label lblVersionNumber;
         private System.Windows.Forms.TextBox rollbackTicket;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.CheckBox chkDeleteGraisOnly;
     }
 }

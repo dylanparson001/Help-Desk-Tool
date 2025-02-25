@@ -81,7 +81,7 @@ namespace iGPS_Help_Desk.Controllers
         /// Clears containers and associated in GRAIs in the IGPS_DEPOT_LOCATION and IGPS_DEPOT_GLN table respectively
         /// </summary>
         /// <param name="glnList"></param>
-        public async void ClearContainers(List<string> glnList)
+        public async Task ClearContainers(List<string> glnList, bool deleteGraisOnly = false)
         {
             if (glnList == null)
             {
@@ -132,17 +132,19 @@ namespace iGPS_Help_Desk.Controllers
             stringToDelete = ConcatStringFromList(listToDelete);
             stringLocationToDelete = ConcatStringFromList(listLocationToDelete);
 
-            _logger.Information(
-                $"{stringLocationToDelete} containers with {listFromDb.Count} Grai(s) have been cleared and deleted");
 
             if (stringToDelete.Length > 0)
             {
                 _igpsDepotGlnRepository.DeleteGlnsFromList(stringToDelete);
+                _logger.Information($"{listFromDb.Count} Grai(s) have been deleted");
+
             }
 
-            if (stringLocationToDelete.Length > 0)
+            if (stringLocationToDelete.Length > 0 && !deleteGraisOnly)
             {
                 _igpsDepotLocationRepository.DeleteContainersFromList(stringLocationToDelete);
+                _logger.Information($"{listLocationToDelete.Count} containers have been cleared and deleted");
+
             }
 
         }
