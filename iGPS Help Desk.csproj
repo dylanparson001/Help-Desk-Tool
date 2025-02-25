@@ -146,6 +146,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\RollbackController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
+    <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Interfaces\IIgpsDepotGlnRepository.cs" />
     <Compile Include="Interfaces\IIgpsDepotLocationRepository.cs" />
     <Compile Include="Interfaces\IOrderRequestNewHeaderRepository.cs" />
