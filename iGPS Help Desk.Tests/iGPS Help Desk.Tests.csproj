@@ -134,11 +134,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTests\UnitTests.ClearContainers\ClearContainerTests.cs" />
+    <Compile Include="UnitTests\ClearContainers\ClearContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTests\UnitTests.BaseControllerMethods\HelperTests.cs" />
-    <Compile Include="UnitTests\UnitTests.CsvFileController\CsvFileControllerTests.cs" />
-    <Compile Include="UnitTests\UnitTests.Rollback\RollbackControllerTests.cs" />
+    <Compile Include="UnitTests\BaseControllerMethods\HelperTests.cs" />
+    <Compile Include="UnitTests\CsvFileController\CsvFileControllerTests.cs" />
+    <Compile Include="UnitTests\Rollback\RollbackControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

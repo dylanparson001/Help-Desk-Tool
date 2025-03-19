@@ -1,7 +1,6 @@
 ﻿using iGPS_Help_Desk.Interfaces;
 using iGPS_Help_Desk.Logger;
 using iGPS_Help_Desk.Models;
-using iGPS_Help_Desk.Models.Repositories;
 using iGPS_Help_Desk.Views;
 using Serilog;
 using System;

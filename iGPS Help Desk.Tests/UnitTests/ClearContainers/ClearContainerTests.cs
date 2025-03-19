@@ -1,14 +1,13 @@
 ﻿using iGPS_Help_Desk.Controllers;
+using iGPS_Help_Desk.Interfaces;
+using iGPS_Help_Desk.Logger;
+using iGPS_Help_Desk.Models;
+using NSubstitute;
 using NUnit.Framework;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using iGPS_Help_Desk.Models;
-using iGPS_Help_Desk.Interfaces;
-using NSubstitute;
-using Serilog;
-using NSubstitute.Core.Arguments;
-using iGPS_Help_Desk.Logger;
 
 namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
 {
@@ -189,6 +188,24 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
             _mockDepoGlnRespository.Received(1).DeleteGlnsFromList(Arg.Any<string>());
             _mockDepotLocationRepository.Received(0).DeleteContainersFromList(Arg.Any<string>());
         }
+        [Test]
+        public async Task ControllerOnlyDeletesGraisIfGraisOnlyCheckboxIsTrue()
+        {
+            // Arrange
+            _mockDepoGlnRespository.ReadContainersFromList(Arg.Any<string>()).Returns(_existingGrais);
+            _mockDepotLocationRepository.ReadContainersFromList(Arg.Any<List<string>>()).Returns(_existingContainers);
+
+            _controller = new ClearContainerController(_mockDepoGlnRespository, _mockDepotLocationRepository, _mockLoggerFactory);
+
+            // Act
+            await _controller.ClearContainers(_listOfGlns, true);
+
+
+            // Assert
+            // Grais should be deleted, clear containers should not run
+            _mockDepoGlnRespository.Received(1).DeleteGlnsFromList(Arg.Any<string>());
+            _mockDepotLocationRepository.Received(0).DeleteContainersFromList(Arg.Any<string>());
+        }
 
         [Test]
         public async Task Logging_LoggerShouldBeRunWhenContainersAreCleared()
@@ -212,7 +229,7 @@ namespace iGPS_Help_Desk.Tests.UnitTests.ClearContainers
             _controller.ClearContainers(_listOfGlns);
 
             // Assert
-            _mockLogger.Received(1).Information(Arg.Is<string>(msg => msg.Contains("Grai(s) have been cleared and deleted")));
+            _mockLogger.Received(1).Information(Arg.Is<string>(msg => msg.Contains("Grai(s) have been deleted")));
         }
 
 
