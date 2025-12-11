@@ -1,18 +1,9 @@
 ﻿# Help Desk Tool
 This tool is to help the help desk perform common tasks for the depots, clearing containers, GRAI removal, removing orders and rollbacks. 
 
-
-## Instructions For Installation
-- Copy Release / Help-Desk-Tool Folder into a folder on the iSum computer (likely epcsolutions)
-- Run iGPS Help Desk.exe
-- Enter Path to folder that you would like to save all csvs for containers being cleared to. 
-- Double Check Site ID is showing correctly
-
-- All logs different requests will be in the Help-Desk-Tool/Log folder
-
 ## Instructions for Clear Container Request
 - Enter list of GLNs that will be cleared. There should be no commas, quotes, only the GLN and a new line.
-- Click Show Content, information from IGPS_DEPOT_GLN table should appear in the right table
+- Click Show Content, information from  table should appear in the right table
 - Click Save Content, if taking a snapshot it will take a bit longer. On older computers the snapshot may fail out due to low memory. closing other apps should fix this, if not you can save without the snapshot
 - Once confirmed that the csv saved successfully, click Clear Containers (red button)
 - Confirm you want to delete the containers and click Yes
